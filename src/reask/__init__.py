@@ -1,8 +1,9 @@
 """/reask: a Claude Code skill that re-asks a pending question as a self-contained briefing."""
 
+from importlib.metadata import version
 from importlib.resources import files
 
-__version__ = "0.1.0"
+__version__ = version(__package__)
 
 
 def skill_text() -> str:

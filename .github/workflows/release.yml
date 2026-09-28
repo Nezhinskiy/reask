@@ -1,0 +1,130 @@
+# Publishes from the tag through PyPI Trusted Publishing: a short-lived OIDC token instead of a
+# stored API token, and build attestations so the artefacts say where they came from.
+# See RELEASING.md for the one-time setup this depends on.
+name: release
+
+on:
+  push:
+    # Final semver tags only. The version check below compares the tag to pyproject.toml's
+    # literal version, which a prerelease tag (v0.1.0-rc1) can never match.
+    tags: ["v[0-9]+.[0-9]+.[0-9]+"]
+
+permissions:
+  contents: read
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    permissions:
+      id-token: write       # attest-build-provenance signs through OIDC
+      attestations: write
+      contents: read
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      - uses: astral-sh/setup-uv@c18668ad3cf93ea998bef934396af7bb5c839dc7 # v10.2.0
+        with:
+          enable-cache: true
+          python-version: "3.13"
+      - name: Install
+        run: uv sync --locked
+      - name: Version discipline, against the tag
+        # A tag naming a version no source carries is the one release mistake PyPI will not let
+        # you undo.
+        run: uv run python scripts/check_version.py --tag "$GITHUB_REF_NAME"
+      - name: Tests
+        run: uv run pytest -q
+      - name: Build
+        run: uv build
+      - uses: actions/attest-build-provenance@4d101475d8b20a2381f78447822ac1eab6504dd8 # v4.2.2
+        with:
+          subject-path: "dist/*"
+      - uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
+        with:
+          name: dist
+          path: dist/
+
+  # GitHub auto-creates an environment that a job names and the repository lacks, with no
+  # protection rules, so `environment: pypi` would read like a human gate while asking nobody.
+  # This fails the release instead of letting an unapproved tag reach PyPI, which cannot be
+  # retracted.
+  environment-gate:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - name: The pypi environment is a gate and not a name GitHub invented
+        env:
+          GH_TOKEN: ${{ github.token }}
+          REPOSITORY: ${{ github.repository }}
+          ENVIRONMENT: pypi
+          # The environments endpoint is not readable by every default token. An administrator
+          # can set this repository variable to stand in for the read, never for the answer:
+          # an environment that reads back with zero rules still fails.
+          DECLARED: ${{ vars.PYPI_ENVIRONMENT_PROTECTED }}
+        run: |
+          rules="$(gh api "repos/$REPOSITORY/environments/$ENVIRONMENT" \
+            --jq '.protection_rules | length' 2>/dev/null || true)"
+          case "$rules" in
+            ''|*[!0-9]*)
+              if [ "$DECLARED" = "true" ]; then
+                echo "::warning::$ENVIRONMENT's protection rules could not be read; PYPI_ENVIRONMENT_PROTECTED stands in for the read"
+                exit 0
+              fi
+              echo "::error::$ENVIRONMENT's protection rules could not be read and PYPI_ENVIRONMENT_PROTECTED is not true; see RELEASING.md"
+              exit 1
+              ;;
+          esac
+          if [ "$rules" -eq 0 ]; then
+            echo "::error::the $ENVIRONMENT environment has no protection rules, so nothing waits for an approval; see RELEASING.md"
+            exit 1
+          fi
+          echo "$ENVIRONMENT has $rules protection rule(s)"
+
+  publish:
+    needs: [build, environment-gate]
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    # The human gate: a tag pushed by mistake waits for an approval here.
+    environment:
+      name: pypi
+      url: https://pypi.org/project/reask/
+    permissions:
+      id-token: write       # Trusted Publishing: no stored API token anywhere
+      contents: read
+    steps:
+      - uses: actions/download-artifact@3e5f45b2cfb9172054b4087a40e8e0b5a5461e7c # v8.0.1
+        with:
+          name: dist
+          path: dist/
+      - uses: pypa/gh-action-pypi-publish@dc37677b2e1c63e2034f94d8a5b11f265b73ba33 # v1.14.2
+
+  # Independent of `publish`, so a failed upload does not cost the Release, and behind the same
+  # environment, so a mistaken tag does not become a public Release either. One approval covers
+  # both jobs.
+  github-release:
+    needs: [build, environment-gate]
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    environment: pypi
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      - uses: actions/download-artifact@3e5f45b2cfb9172054b4087a40e8e0b5a5461e7c # v8.0.1
+        with:
+          name: dist
+          path: dist/
+      - name: The release's own changelog section
+        run: |
+          python3 - "${GITHUB_REF_NAME#v}" <<'PY' > "$RUNNER_TEMP/notes.md"
+          import re, sys
+          text = open("CHANGELOG.md", encoding="utf-8").read()
+          version = sys.argv[1]
+          match = re.search(rf"^## {re.escape(version)} .*?(?=^## |\Z)", text, re.S | re.M)
+          assert match, f"CHANGELOG.md has no section for {version}"
+          print(match.group(0).split("\n", 1)[1].strip())
+          PY
+      - name: The GitHub Release
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: gh release create "$GITHUB_REF_NAME" --verify-tag --title "reask ${GITHUB_REF_NAME#v}" --notes-file "$RUNNER_TEMP/notes.md" dist/*

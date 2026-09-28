@@ -1,0 +1,52 @@
+name: ci
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+
+permissions:
+  contents: read
+
+# The newest push to a pull request is the one that counts; a run on main is never cancelled,
+# because it is the record that main is green.
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: ${{ github.event_name == 'pull_request' }}
+
+jobs:
+  checks:
+    runs-on: ${{ matrix.os }}
+    # A public repository: anyone can open a pull request, so no job runs unbounded.
+    timeout-minutes: 10
+    strategy:
+      fail-fast: false
+      matrix:
+        # Every supported interpreter on Linux, and macOS once, because that is where most
+        # Claude Code users install the skill and `install` resolves `~` there.
+        include:
+          - { os: ubuntu-latest, python: "3.11" }
+          - { os: ubuntu-latest, python: "3.12" }
+          - { os: ubuntu-latest, python: "3.13" }
+          - { os: macos-latest, python: "3.13" }
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      - uses: astral-sh/setup-uv@c18668ad3cf93ea998bef934396af7bb5c839dc7 # v10.2.0
+        with:
+          enable-cache: true
+          python-version: ${{ matrix.python }}
+      - name: Install
+        run: uv sync --locked
+      - name: Tests
+        run: uv run pytest -q
+      - name: Version discipline
+        run: uv run python scripts/check_version.py
+      - name: Build
+        run: uv build
+      - name: An installed wheel installs the skill
+        # Tests import the checkout; only the built wheel says whether SKILL.md shipped.
+        run: |
+          uv venv "$RUNNER_TEMP/wheel"
+          uv pip install --python "$RUNNER_TEMP/wheel/bin/python" dist/*.whl
+          "$RUNNER_TEMP/wheel/bin/reask" install --skills-dir "$RUNNER_TEMP/skills"
+          cmp "$RUNNER_TEMP/skills/reask/SKILL.md" src/reask/SKILL.md

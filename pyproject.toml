@@ -1,12 +1,12 @@
 [project]
 name = "reask"
-dynamic = ["version"]
+version = "0.1.0"
 description = "A Claude Code skill that re-asks a pending question as a self-contained briefing"
 readme = "README.md"
 license = "MIT"
 license-files = ["LICENSE"]
 authors = [{ name = "Mikhail Nezhinsky" }]
-requires-python = ">=3.10"
+requires-python = ">=3.11"
 keywords = ["claude", "claude-code", "skill", "agent"]
 classifiers = [
     "Environment :: Console",
@@ -24,9 +24,6 @@ reask = "reask.cli:main"
 [build-system]
 requires = ["hatchling>=1.27"]
 build-backend = "hatchling.build"
-
-[tool.hatch.version]
-path = "src/reask/__init__.py"
 
 [dependency-groups]
 dev = ["pytest>=8"]
