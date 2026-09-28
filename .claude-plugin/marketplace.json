@@ -1,0 +1,18 @@
+{
+  "$schema": "https://json.schemastore.org/claude-code-marketplace.json",
+  "name": "reask",
+  "owner": {
+    "name": "Mikhail Nezhinsky",
+    "url": "https://github.com/Nezhinskiy"
+  },
+  "description": "Install reask as a Claude Code plugin.",
+  "plugins": [
+    {
+      "name": "reask",
+      "source": "./",
+      "description": "Re-ask a pending question as a self-contained briefing: context, a live example, options with pros and cons, a recommendation, one question.",
+      "license": "MIT",
+      "keywords": ["questions", "decisions", "clarification", "briefing"]
+    }
+  ]
+}

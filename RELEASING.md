@@ -2,8 +2,13 @@
 
 A release is a pushed `vX.Y.Z` tag. `.github/workflows/release.yml` checks the tag against the
 sources, tests, builds and attests, then waits for one approval on the `pypi` environment before
-uploading to PyPI through Trusted Publishing and creating the GitHub Release. There is no PyPI
-token anywhere.
+uploading to PyPI through Trusted Publishing and creating the GitHub Release with the wheel,
+the sdist and `reask-skill.zip` for claude.ai. There is no PyPI token anywhere.
+
+The plugin marketplace and `npx skills` read the default branch, not the tag, so for those two
+channels `main` is the release: whatever `SKILL.md` it carries is what they install. Claude Code
+offers a plugin update when `.claude-plugin/plugin.json`'s `version` changes, which is why every
+release bumps it along with the rest.
 
 ## 1. One-time setup
 
@@ -38,8 +43,9 @@ curl -sS -o /dev/null -w '%{http_code}\n' https://pypi.org/pypi/reask/json      
    uv run pytest -q
    ```
 
-2. **Set the version** in `pyproject.toml` (the only place it is written by hand;
-   `reask.__version__` reads the installed metadata), then refresh the lock:
+2. **Set the version** in the three places written by hand: `pyproject.toml`,
+   `.claude-plugin/plugin.json` and `metadata.version` in `SKILL.md`'s frontmatter
+   (`reask.__version__` reads the installed metadata). Then refresh the lock:
 
    ```bash
    uv sync
@@ -49,17 +55,19 @@ curl -sS -o /dev/null -w '%{http_code}\n' https://pypi.org/pypi/reask/json      
    Its body becomes the GitHub Release notes verbatim, so write it for users.
 
    ```bash
-   uv run python scripts/check_version.py          # "one version everywhere: X.Y.Z"
+   uv run python scripts/check_skill.py            # "... one version everywhere: X.Y.Z"
    git commit -am "chore(release): X.Y.Z"
-   git push origin main
    ```
 
-4. **Tag and push the tag.** Final versions only: `release.yml` does not trigger on `v0.2.0-rc1`.
+4. **Tag and push the tag, then `main`.** Final versions only: `release.yml` does not trigger on
+   `v0.2.0-rc1`. The tag goes first so PyPI and the Release are cut from it; pushing `main` is
+   what ships the new version to plugin and `npx skills` users.
 
    ```bash
-   uv run python scripts/check_version.py --tag vX.Y.Z
+   uv run python scripts/check_skill.py --tag vX.Y.Z
    git tag vX.Y.Z
    git push origin vX.Y.Z
+   git push origin main
    ```
 
 5. **Approve and watch.** `build` runs first; `publish` and `github-release` then wait for the

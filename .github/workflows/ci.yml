@@ -39,8 +39,8 @@ jobs:
         run: uv sync --locked
       - name: Tests
         run: uv run pytest -q
-      - name: Version discipline
-        run: uv run python scripts/check_version.py
+      - name: Skill package and version discipline
+        run: uv run python scripts/check_skill.py
       - name: Build
         run: uv build
       - name: An installed wheel installs the skill
@@ -49,4 +49,25 @@ jobs:
           uv venv "$RUNNER_TEMP/wheel"
           uv pip install --python "$RUNNER_TEMP/wheel/bin/python" dist/*.whl
           "$RUNNER_TEMP/wheel/bin/reask" install --skills-dir "$RUNNER_TEMP/skills"
-          cmp "$RUNNER_TEMP/skills/reask/SKILL.md" src/reask/SKILL.md
+          cmp "$RUNNER_TEMP/skills/reask/SKILL.md" SKILL.md
+
+  # The two install channels that read the repository itself rather than the wheel. Versions are
+  # pinned so a release of either tool cannot turn this red without a change here.
+  skill:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      - uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
+        with:
+          node-version: "22"
+      - name: npx skills discovers exactly this skill
+        run: |
+          npx --yes skills@1.7.0 add . --list | tee "$RUNNER_TEMP/list.txt"
+          grep -q "Found 1 skill" "$RUNNER_TEMP/list.txt"
+          grep -q "reask" "$RUNNER_TEMP/list.txt"
+      - name: The Claude Code plugin and marketplace validate
+        run: |
+          npm install --global @anthropic-ai/claude-code@2.1.284
+          claude plugin validate .claude-plugin/plugin.json --strict
+          claude plugin validate .claude-plugin/marketplace.json --strict

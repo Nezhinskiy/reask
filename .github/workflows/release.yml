@@ -31,7 +31,7 @@ jobs:
       - name: Version discipline, against the tag
         # A tag naming a version no source carries is the one release mistake PyPI will not let
         # you undo.
-        run: uv run python scripts/check_version.py --tag "$GITHUB_REF_NAME"
+        run: uv run python scripts/check_skill.py --tag "$GITHUB_REF_NAME"
       - name: Tests
         run: uv run pytest -q
       - name: Build
@@ -124,6 +124,11 @@ jobs:
           assert match, f"CHANGELOG.md has no section for {version}"
           print(match.group(0).split("\n", 1)[1].strip())
           PY
+      - name: A skill zip for claude.ai (Settings > Capabilities > Skills > upload)
+        run: |
+          mkdir -p "$RUNNER_TEMP/zip/reask"
+          cp SKILL.md LICENSE "$RUNNER_TEMP/zip/reask/"
+          (cd "$RUNNER_TEMP/zip" && zip -r "$GITHUB_WORKSPACE/dist/reask-skill.zip" reask)
       - name: The GitHub Release
         env:
           GH_TOKEN: ${{ github.token }}

@@ -1,0 +1,15 @@
+{
+  "$schema": "https://json.schemastore.org/claude-code-plugin-manifest.json",
+  "name": "reask",
+  "description": "Re-ask a pending question as a self-contained briefing: context, a live example, options with pros and cons, a recommendation, one question.",
+  "version": "0.1.0",
+  "author": {
+    "name": "Mikhail Nezhinsky",
+    "url": "https://github.com/Nezhinskiy"
+  },
+  "homepage": "https://github.com/Nezhinskiy/reask",
+  "repository": "https://github.com/Nezhinskiy/reask",
+  "license": "MIT",
+  "keywords": ["questions", "decisions", "clarification", "briefing"],
+  "skills": ["./"]
+}

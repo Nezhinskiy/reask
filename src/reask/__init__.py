@@ -2,10 +2,17 @@
 
 from importlib.metadata import version
 from importlib.resources import files
+from pathlib import Path
 
-__version__ = version(__package__)
+__version__ = version("reask")
+
+# The repository's root SKILL.md is the one copy; the wheel carries it as reask/SKILL.md
+# (pyproject.toml, force-include). An editable install has no such copy, so it reads the root.
+_CHECKOUT_SKILL = Path(__file__).resolve().parents[2] / "SKILL.md"
 
 
 def skill_text() -> str:
     """Return the bundled SKILL.md."""
-    return files(__package__).joinpath("SKILL.md").read_text(encoding="utf-8")
+    bundled = files("reask").joinpath("SKILL.md")
+    source = bundled if bundled.is_file() else _CHECKOUT_SKILL
+    return source.read_text(encoding="utf-8")
