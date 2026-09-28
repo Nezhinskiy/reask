@@ -63,7 +63,8 @@ jobs:
           node-version: "22"
       - name: npx skills discovers exactly this skill
         run: |
-          npx --yes skills@1.7.0 add . --list | tee "$RUNNER_TEMP/list.txt"
+          # The CLI colours its output on CI too, splitting "Found 1 skill" with escape codes.
+          npx --yes skills@1.7.0 add . --list | sed 's/\x1b\[[0-9;?]*[A-Za-z]//g' | tee "$RUNNER_TEMP/list.txt"
           grep -q "Found 1 skill" "$RUNNER_TEMP/list.txt"
           grep -q "reask" "$RUNNER_TEMP/list.txt"
       - name: The Claude Code plugin and marketplace validate
