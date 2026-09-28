@@ -3,6 +3,7 @@
 import argparse
 import shutil
 import sys
+from collections.abc import Callable
 from pathlib import Path
 
 from reask import __version__, skill_text
@@ -13,7 +14,8 @@ DEFAULT_SKILLS_DIR = Path.home() / ".claude" / "skills"
 def _target(args: argparse.Namespace) -> Path:
     if args.project:
         return Path.cwd() / ".claude" / "skills" / "reask" / "SKILL.md"
-    return args.skills_dir / "reask" / "SKILL.md"
+    skills_dir: Path = args.skills_dir
+    return skills_dir / "reask" / "SKILL.md"
 
 
 def _install(args: argparse.Namespace) -> int:
@@ -68,7 +70,8 @@ def main(argv: list[str] | None = None) -> int:
     sub.add_parser("print", help="print SKILL.md to stdout").set_defaults(func=_print)
 
     args = parser.parse_args(argv)
-    return args.func(args)
+    command: Callable[[argparse.Namespace], int] = args.func
+    return command(args)
 
 
 if __name__ == "__main__":

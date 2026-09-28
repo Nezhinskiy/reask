@@ -3,3 +3,8 @@ __pycache__/
 .venv/
 dist/
 .pytest_cache/
+.coverage
+.coverage.*
+coverage.xml
+.mypy_cache/
+.ruff_cache/

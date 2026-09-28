@@ -1,0 +1,37 @@
+name: Install problem
+description: An install channel failed, or installed the wrong thing
+labels: ["install"]
+body:
+  - type: dropdown
+    id: channel
+    attributes:
+      label: Install channel
+      options:
+        - Claude Code plugin
+        - Skills CLI (npx skills)
+        - Python package (reask install)
+        - claude.ai zip upload
+        - Copied by hand
+    validations:
+      required: true
+  - type: textarea
+    id: what
+    attributes:
+      label: What you ran, and what happened
+      description: The exact command and its full output.
+      render: shell
+    validations:
+      required: true
+  - type: textarea
+    id: expected
+    attributes:
+      label: What you expected instead
+    validations:
+      required: true
+  - type: input
+    id: platform
+    attributes:
+      label: OS, and the tool's version
+      description: "For example: macOS 27, Claude Code 2.1.284 / skills 1.7.0 / Python 3.13"
+    validations:
+      required: true

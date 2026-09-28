@@ -40,7 +40,7 @@ def versions(root: Path) -> dict[str, str | None]:
         "uv.lock": locked,
         ".claude-plugin/plugin.json": plugin.get("version"),
         "SKILL.md metadata.version": _field(frontmatter, r'^\s+version:\s*"?([^"\s]+)"?\s*$'),
-        "CHANGELOG.md (first ## heading)": _field(changelog, r"^## (\S+)"),
+        "CHANGELOG.md (first released ## heading)": _field(changelog, r"^## (?!Unreleased\b)(\S+)"),
     }
 
 
@@ -62,7 +62,9 @@ def structure(root: Path) -> list[str]:
     if description is None:
         problems.append("SKILL.md description must be one double-quoted line")
     elif len(description) > DESCRIPTION_LIMIT:
-        problems.append(f"SKILL.md description is {len(description)} chars, over {DESCRIPTION_LIMIT}")
+        problems.append(
+            f"SKILL.md description is {len(description)} chars, over {DESCRIPTION_LIMIT}"
+        )
     plugin = json.loads((root / ".claude-plugin" / "plugin.json").read_text(encoding="utf-8"))
     market = json.loads((root / ".claude-plugin" / "marketplace.json").read_text(encoding="utf-8"))
     if plugin.get("name") != NAME or plugin.get("skills") != ["./"]:

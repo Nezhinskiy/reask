@@ -1,0 +1,29 @@
+name: Proposal
+description: A change to what the skill does or how it is distributed
+labels: ["proposal"]
+body:
+  - type: markdown
+    attributes:
+      value: >
+        The briefing's five parts and its word budget are deliberate. A proposal that shows a
+        real situation the current skill handles badly is the most useful kind.
+  - type: textarea
+    id: situation
+    attributes:
+      label: The situation
+      description: When does this come up? A transcript or a concrete example is best.
+    validations:
+      required: true
+  - type: textarea
+    id: proposal
+    attributes:
+      label: What you propose
+    validations:
+      required: true
+  - type: textarea
+    id: cost
+    attributes:
+      label: What it costs
+      description: >
+        Every sentence in SKILL.md is read by the agent on every use. What would this add, and
+        what could it displace?
