@@ -3,7 +3,7 @@
 Newest first. Every entry is written for users: a release's section becomes its GitHub Release
 notes.
 
-## Unreleased
+## 0.3.0 (2026-09-29)
 
 - Every re-ask now starts from the context, whatever the question: what is being built, why the
   decision matters now, and every task number, document code or name from the session explained.
