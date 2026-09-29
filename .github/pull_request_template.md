@@ -1,9 +1,4 @@
-<!--
-Conventional Commits title, describing intent:
-  fix(skill): keep the recommended option's cons at full strength
-not:
-  update SKILL.md
--->
+<!-- Title in Conventional Commits form, describing intent; see CONTRIBUTING.md. -->
 
 ## What this changes, and why
 
@@ -13,13 +8,6 @@ not:
 
 <!--
 For a SKILL.md change: a before and an after transcript of the same situation, and the agent and
-model you ran them on. For code: what you ran, pasted, not paraphrased.
-For each new assertion: the line of code you broke and the test that went red.
+model you ran them on. For code: what you ran, pasted, not paraphrased, and for each new
+assertion the line of code you broke to watch it fail.
 -->
-
-## Checklist
-
-- [ ] `uv run pytest --cov`, `ruff`, `mypy` and `scripts/check_skill.py` pass locally
-- [ ] `SKILL.md` stays language-neutral and within its own word budgets
-- [ ] A line under `## Unreleased` in `CHANGELOG.md`, if users would notice
-- [ ] Not a security fix (if it is, see [SECURITY.md](../SECURITY.md) first)

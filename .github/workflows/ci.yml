@@ -20,16 +20,21 @@ jobs:
     runs-on: ${{ matrix.os }}
     # A public repository: anyone can open a pull request, so no job runs unbounded.
     timeout-minutes: 10
+    defaults:
+      run:
+        shell: bash
     strategy:
       fail-fast: false
       matrix:
-        # Every supported interpreter on Linux, and macOS once, because that is where most
-        # Claude Code users install the skill and `install` resolves `~` there.
+        # Every supported interpreter on Linux, and the newest on macOS and Windows, where home
+        # directories, symbolic links and console encodings differ.
         include:
           - { os: ubuntu-latest, python: "3.11" }
           - { os: ubuntu-latest, python: "3.12" }
           - { os: ubuntu-latest, python: "3.13" }
-          - { os: macos-latest, python: "3.13" }
+          - { os: ubuntu-latest, python: "3.14" }
+          - { os: macos-latest, python: "3.14" }
+          - { os: windows-latest, python: "3.14" }
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
@@ -43,16 +48,14 @@ jobs:
       - name: Tests, with full line and branch coverage
         run: uv run pytest -q --cov
       - name: Skill package and version discipline
-        run: uv run python scripts/check_skill.py
+        run: uv run python -m scripts.check_skill
       - name: Build
         run: uv build
       - name: An installed wheel installs the skill
         # Tests import the checkout; only the built wheel says whether SKILL.md shipped.
         run: |
-          uv venv "$RUNNER_TEMP/wheel"
-          uv pip install --python "$RUNNER_TEMP/wheel/bin/python" dist/*.whl
-          "$RUNNER_TEMP/wheel/bin/reask" install --skills-dir "$RUNNER_TEMP/skills"
-          cmp "$RUNNER_TEMP/skills/reask/SKILL.md" SKILL.md
+          uv run --isolated --no-project --with dist/*.whl reask install --skills-dir build/skills
+          cmp build/skills/reask/SKILL.md skills/reask/SKILL.md
 
   lint:
     name: Lint and types
@@ -75,10 +78,11 @@ jobs:
       - name: Types
         run: uv run mypy
 
-  # The two install channels that read the repository itself rather than the wheel. Versions are
-  # pinned so a release of either tool cannot turn this red without a change here.
+  # The two install channels that read the repository itself rather than the wheel, each
+  # installed into a scratch home. Versions are pinned so a release of either tool cannot turn
+  # this red without a change here.
   skill:
-    name: Skill installs (plugin, Skills CLI)
+    name: Skill installs (Skills CLI, plugin)
     runs-on: ubuntu-latest
     timeout-minutes: 10
     steps:
@@ -88,16 +92,23 @@ jobs:
       - uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
         with:
           node-version: "22"
-      - name: npx skills discovers exactly this skill
+      - name: The Skills CLI installs exactly the skill folder
+        env:
+          HOME: ${{ runner.temp }}/home
         run: |
-          # The CLI colours its output on CI too, splitting "Found 1 skill" with escape codes.
-          npx --yes skills@1.7.0 add . --list | sed 's/\x1b\[[0-9;?]*[A-Za-z]//g' | tee "$RUNNER_TEMP/list.txt"
-          grep -q "Found 1 skill" "$RUNNER_TEMP/list.txt"
-          grep -q "reask" "$RUNNER_TEMP/list.txt"
-      - name: The Claude Code plugin and marketplace validate
+          npx --yes skills@1.7.0 add . --global --agent claude-code --yes
+          test "$(cd "$HOME/.claude/skills/reask" && find . -type f)" = "./SKILL.md"
+          cmp "$HOME/.claude/skills/reask/SKILL.md" skills/reask/SKILL.md
+      - name: The plugin and marketplace validate, and the plugin installs
+        env:
+          CLAUDE_CONFIG_DIR: ${{ runner.temp }}/claude
         run: |
-          npx --yes @anthropic-ai/claude-code@2.1.284 plugin validate .claude-plugin/plugin.json --strict
-          npx --yes @anthropic-ai/claude-code@2.1.284 plugin validate .claude-plugin/marketplace.json --strict
+          claude() { npx --yes @anthropic-ai/claude-code@2.1.284 "$@"; }
+          claude plugin validate .claude-plugin/plugin.json --strict
+          claude plugin validate .claude-plugin/marketplace.json --strict
+          claude plugin marketplace add ./
+          claude plugin install reask@reask
+          cmp "$CLAUDE_CONFIG_DIR"/plugins/cache/reask/reask/*/skills/reask/SKILL.md skills/reask/SKILL.md
 
   # Static security audit of every workflow: injection, excessive permissions, unpinned actions,
   # credential persistence, cache poisoning in release paths.

@@ -10,6 +10,5 @@
   "homepage": "https://github.com/Nezhinskiy/reask",
   "repository": "https://github.com/Nezhinskiy/reask",
   "license": "MIT",
-  "keywords": ["questions", "decisions", "clarification", "briefing"],
-  "skills": ["./"]
+  "keywords": ["questions", "decisions", "clarification", "briefing"]
 }

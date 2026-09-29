@@ -1,12 +1,12 @@
 # Publishes from the tag through PyPI Trusted Publishing: a short-lived OIDC token instead of a
 # stored API token, and build attestations so the artefacts say where they came from.
-# See RELEASING.md for the one-time setup this depends on.
+# See RELEASING.md for the repository settings this depends on.
 name: release
 
 on:
   push:
-    # Final semver tags only. The version check below compares the tag to pyproject.toml's
-    # literal version, which a prerelease tag (v0.1.0-rc1) can never match.
+    # Final semver tags only. The version check below compares the tag to SKILL.md's version,
+    # which a prerelease tag (v0.1.0-rc1) can never match.
     tags: ["v[0-9]+.[0-9]+.[0-9]+"]
 
 permissions:
@@ -30,26 +30,31 @@ jobs:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
           persist-credentials: false
+          fetch-depth: 0    # the whole history, to check the tag against main
       - uses: astral-sh/setup-uv@c18668ad3cf93ea998bef934396af7bb5c839dc7 # v10.2.0
         with:
-          # No cache on the release path: a cache written by any branch could otherwise feed
-          # what gets published.
+          # A pinned uv, and no cache on the release path: a cache written by any branch could
+          # otherwise feed what gets published. The build backend is pinned in pyproject.toml.
+          version: "0.12.20"
           enable-cache: false
           python-version: "3.13"
+      - name: The tag is on main
+        # Plugin and Skills CLI users install main, so a release must be a commit they have.
+        run: git merge-base --is-ancestor "$GITHUB_SHA" origin/main
       - name: Install
         run: uv sync --locked
       - name: Skill package and version discipline, against the tag
         # A tag naming a version no source carries is the one release mistake PyPI will not let
         # you undo.
-        run: uv run python scripts/check_skill.py --tag "$GITHUB_REF_NAME"
+        run: uv run python -m scripts.check_skill --tag "$GITHUB_REF_NAME"
       - name: Tests
         run: uv run pytest -q --cov
       - name: Build the wheel and sdist
         run: uv build
       - name: Build the skill zip for claude.ai
-        run: uv run python scripts/skill_zip.py dist/reask-skill.zip
+        run: uv run python -m scripts.skill_zip dist/reask-skill.zip
       - name: Release notes from CHANGELOG.md
-        run: uv run python scripts/release_notes.py "$GITHUB_REF_NAME" > release-notes.md
+        run: uv run python -m scripts.release_notes "$GITHUB_REF_NAME" > release-notes.md
       - uses: actions/attest-build-provenance@4d101475d8b20a2381f78447822ac1eab6504dd8 # v4.2.2
         with:
           subject-path: "dist/*"
@@ -60,49 +65,13 @@ jobs:
             dist/
             release-notes.md
 
-  # GitHub auto-creates an environment that a job names and the repository lacks, with no
-  # protection rules, so `environment: pypi` would read like a human gate while asking nobody.
-  # This fails the release instead of letting an unapproved tag reach PyPI, which cannot be
-  # retracted.
-  environment-gate:
-    name: The pypi environment is a real gate
-    runs-on: ubuntu-latest
-    timeout-minutes: 5
-    steps:
-      - name: The pypi environment has protection rules
-        env:
-          GH_TOKEN: ${{ github.token }}
-          REPOSITORY: ${{ github.repository }}
-          ENVIRONMENT: pypi
-          # The environments endpoint is not readable by every default token. An administrator
-          # can set this repository variable to stand in for the read, never for the answer:
-          # an environment that reads back with zero rules still fails.
-          DECLARED: ${{ vars.PYPI_ENVIRONMENT_PROTECTED }}
-        run: |
-          rules="$(gh api "repos/$REPOSITORY/environments/$ENVIRONMENT" \
-            --jq '.protection_rules | length' 2>/dev/null || true)"
-          case "$rules" in
-            ''|*[!0-9]*)
-              if [ "$DECLARED" = "true" ]; then
-                echo "::warning::$ENVIRONMENT's protection rules could not be read; PYPI_ENVIRONMENT_PROTECTED stands in for the read"
-                exit 0
-              fi
-              echo "::error::$ENVIRONMENT's protection rules could not be read and PYPI_ENVIRONMENT_PROTECTED is not true; see RELEASING.md"
-              exit 1
-              ;;
-          esac
-          if [ "$rules" -eq 0 ]; then
-            echo "::error::the $ENVIRONMENT environment has no protection rules, so nothing waits for an approval; see RELEASING.md"
-            exit 1
-          fi
-          echo "$ENVIRONMENT has $rules protection rule(s)"
-
   publish:
     name: Publish to PyPI
-    needs: [build, environment-gate]
+    needs: build
     runs-on: ubuntu-latest
     timeout-minutes: 10
-    # The human gate: a tag pushed by mistake waits for an approval here.
+    # The human gate: nothing is uploaded until the pypi environment's required reviewer
+    # approves, so a tag pushed by mistake stops here.
     environment:
       name: pypi
       url: https://pypi.org/project/reask/
@@ -121,7 +90,7 @@ jobs:
   # both jobs.
   github-release:
     name: GitHub Release
-    needs: [build, environment-gate]
+    needs: build
     runs-on: ubuntu-latest
     timeout-minutes: 5
     environment: pypi

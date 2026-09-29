@@ -8,3 +8,4 @@ dist/
 coverage.xml
 .mypy_cache/
 .ruff_cache/
+build/

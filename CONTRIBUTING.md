@@ -1,8 +1,8 @@
 # Contributing to reask
 
 Thank you for helping. reask is small on purpose: one skill file and a thin installer. Most
-valuable contributions are to the wording of [`SKILL.md`](SKILL.md), and they are judged by how
-an agent behaves with the change, not by how the prose reads.
+valuable contributions are to the wording of [`SKILL.md`](skills/reask/SKILL.md), and they are
+judged by how an agent behaves with the change, not by how the prose reads.
 
 ## Before you start
 
@@ -21,9 +21,9 @@ A pull request that changes the skill's wording should show the behaviour it fix
 2. **After**: the same situation with your change, on the same agent and model.
 3. **Which agent and model** you ran it on.
 
-Keep to the file's own rules: say each thing once, plain words, every option keeps its hearing.
-The skill must stay language-neutral: examples and headings in English, with the instruction to
-answer in the user's language intact. The description in the frontmatter decides when agents
+Keep to the file's own rules: say each thing once, plain words, fair to every option. The skill
+must stay language-neutral: examples and headings in English, with the instruction to answer in
+the user's language intact. The description in the frontmatter decides when agents
 load the skill; change it only with an example of the trigger it fixes.
 
 ## Development
@@ -35,17 +35,17 @@ git clone https://github.com/Nezhinskiy/reask && cd reask
 uv sync
 ```
 
-Every check CI runs:
+The checks that need only Python:
 
 ```bash
-uv run pytest --cov                   # 100% line and branch coverage is required
+uv run pytest --cov                  # 100% line and branch coverage is required
 uv run ruff check . && uv run ruff format --check .
-uv run mypy                           # strict
-uv run python scripts/check_skill.py  # one SKILL.md, valid frontmatter, one version everywhere
-npx --yes skills@1.7.0 add . --list   # the Skills CLI finds exactly one skill
-npx --yes @anthropic-ai/claude-code@2.1.284 plugin validate .claude-plugin/plugin.json --strict
-uvx zizmor@1.30.1 --pedantic .github/workflows   # only if you touched a workflow
+uv run mypy                          # strict
+uv run python -m scripts.check_skill # one skill folder, valid frontmatter, one version everywhere
 ```
+
+CI also installs the skill with the Skills CLI and as a plugin, and audits the workflows; the
+exact commands and pinned tool versions are in [`ci.yml`](.github/workflows/ci.yml).
 
 To try your working copy in Claude Code, install it as a local plugin:
 

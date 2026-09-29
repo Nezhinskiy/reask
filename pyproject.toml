@@ -1,6 +1,6 @@
 [project]
 name = "reask"
-version = "0.1.0"
+dynamic = ["version"]
 description = "An agent skill that re-asks a pending question as a self-contained briefing"
 readme = "README.md"
 license = "MIT"
@@ -18,8 +18,8 @@ classifiers = [
     "Programming Language :: Python :: 3.11",
     "Programming Language :: Python :: 3.12",
     "Programming Language :: Python :: 3.13",
+    "Programming Language :: Python :: 3.14",
     "Topic :: Software Development",
-    "Typing :: Typed",
 ]
 
 [project.urls]
@@ -35,9 +35,22 @@ reask = "reask.cli:main"
 requires = ["hatchling>=1.27"]
 build-backend = "hatchling.build"
 
-# The repository's root SKILL.md is the single source; the wheel carries a copy inside the package.
+# SKILL.md's metadata.version is the package version, so the skill and the package cannot disagree.
+[tool.hatch.version]
+path = "skills/reask/SKILL.md"
+pattern = 'version: "(?P<version>[^"]+)"'
+
+# skills/reask/SKILL.md is the single source; the wheel carries a copy inside the package.
 [tool.hatch.build.targets.wheel.force-include]
-"SKILL.md" = "reask/SKILL.md"
+"skills/reask/SKILL.md" = "reask/SKILL.md"
+
+# What building and testing need; the repository's CI and community files stay on GitHub.
+[tool.hatch.build.targets.sdist]
+include = ["/src", "/skills", "/scripts", "/tests", "/.claude-plugin", "/CHANGELOG.md"]
+
+[tool.uv]
+# The release attests whatever the build backend produces, so the backend is pinned too.
+build-constraint-dependencies = ["hatchling==1.32.4"]
 
 [dependency-groups]
 dev = ["pytest>=9", "pytest-cov>=7", "ruff>=0.16", "mypy>=2.3"]

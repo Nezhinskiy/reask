@@ -1,7 +1,7 @@
-"""Build the skill zip that claude.ai accepts: a `reask/` folder holding SKILL.md and LICENSE.
+"""Build the skill zip that claude.ai accepts: a `reask/` folder holding the skill and LICENSE.
 
-Entries carry a fixed timestamp and permissions, so the same sources give the same bytes and
-the attestation over the zip is reproducible.
+Entries carry zipfile's fixed default timestamp rather than the files' mtimes, so the same
+sources always give the same bytes.
 """
 
 import argparse
@@ -9,18 +9,20 @@ import zipfile
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parent.parent
-FILES = ("SKILL.md", "LICENSE")
-EPOCH = (1980, 1, 1, 0, 0, 0)
+SKILL = ROOT / "skills" / "reask"
 
 
-def build(destination: Path, root: Path = ROOT) -> None:
+def build(destination: Path) -> None:
+    # The whole skill folder, as the other channels ship it, plus the licence it names.
+    files = (p for p in SKILL.rglob("*") if p.is_file())
+    entries = {f"reask/{p.relative_to(SKILL).as_posix()}": p for p in files}
+    entries["reask/LICENSE"] = ROOT / "LICENSE"
     destination.parent.mkdir(parents=True, exist_ok=True)
     with zipfile.ZipFile(destination, "w", zipfile.ZIP_DEFLATED) as archive:
-        for name in FILES:
-            info = zipfile.ZipInfo(f"reask/{name}", date_time=EPOCH)
-            info.external_attr = 0o644 << 16
+        for name in sorted(entries):
+            info = zipfile.ZipInfo(name)
             info.compress_type = zipfile.ZIP_DEFLATED
-            archive.writestr(info, (root / name).read_bytes())
+            archive.writestr(info, entries[name].read_bytes())
 
 
 def main(argv: list[str] | None = None) -> int:
