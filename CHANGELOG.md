@@ -3,6 +3,15 @@
 Newest first. Every entry is written for users: a release's section becomes its GitHub Release
 notes.
 
+## Unreleased
+
+- A re-ask is now sized to what you are missing: a yes/no question or two familiar options comes
+  back in a few lines, several options in a short briefing, and only a decision you have lost the
+  thread of gets the full five-part briefing.
+- Before recommending, the agent argues against its own first lean and checks the fact it rests
+  on with a quick read-only look at your project. If that changes the recommendation, or surfaces
+  a better option, the re-ask says so in one line and offers the new option as an answer.
+
 ## 0.1.0 (2026-09-29)
 
 First release.
