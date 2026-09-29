@@ -1,0 +1,51 @@
+name: Skill behaviour
+description: The agent re-asked badly, skipped a part, decided for you, or did not trigger
+labels: ["skill"]
+body:
+  - type: textarea
+    id: transcript
+    attributes:
+      label: Transcript
+      description: >
+        The question the agent asked, what you said (for example `/reask`), and the agent's
+        briefing, verbatim. Remove anything private. The transcript is the reproduction.
+      render: markdown
+    validations:
+      required: true
+  - type: textarea
+    id: wrong
+    attributes:
+      label: What was wrong with it
+      description: Which part of the briefing failed, and how. Quote the line if you can.
+    validations:
+      required: true
+  - type: textarea
+    id: expected
+    attributes:
+      label: What you expected instead
+    validations:
+      required: true
+  - type: input
+    id: agent
+    attributes:
+      label: Agent, version and model
+      description: "For example: Claude Code 2.1.284, Claude Opus 5.5"
+    validations:
+      required: true
+  - type: dropdown
+    id: install
+    attributes:
+      label: How reask is installed
+      options:
+        - Claude Code plugin
+        - Skills CLI (npx skills)
+        - Python package (reask install)
+        - claude.ai zip upload
+        - Copied by hand
+    validations:
+      required: true
+  - type: input
+    id: version
+    attributes:
+      label: reask version
+      description: "`metadata.version` in the installed SKILL.md, or the commit you installed"

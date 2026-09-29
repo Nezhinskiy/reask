@@ -1,4 +1,4 @@
-"""/reask: a Claude Code skill that re-asks a pending question as a self-contained briefing."""
+"""reask: an agent skill that re-asks a pending question as a self-contained briefing."""
 
 from importlib.metadata import version
 from importlib.resources import files
@@ -6,9 +6,9 @@ from pathlib import Path
 
 __version__ = version("reask")
 
-# The repository's root SKILL.md is the one copy; the wheel carries it as reask/SKILL.md
-# (pyproject.toml, force-include). An editable install has no such copy, so it reads the root.
-_CHECKOUT_SKILL = Path(__file__).resolve().parents[2] / "SKILL.md"
+# skills/reask/SKILL.md is the one copy; the wheel carries it as reask/SKILL.md
+# (pyproject.toml, force-include). An editable install has no such copy, so it reads the source.
+_CHECKOUT_SKILL = Path(__file__).resolve().parents[2] / "skills" / "reask" / "SKILL.md"
 
 
 def skill_text() -> str:

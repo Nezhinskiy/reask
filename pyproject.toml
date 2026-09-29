@@ -1,21 +1,31 @@
 [project]
 name = "reask"
-version = "0.1.0"
-description = "A Claude Code skill that re-asks a pending question as a self-contained briefing"
+dynamic = ["version"]
+description = "An agent skill that re-asks a pending question as a self-contained briefing"
 readme = "README.md"
 license = "MIT"
 license-files = ["LICENSE"]
 authors = [{ name = "Mikhail Nezhinsky" }]
 requires-python = ">=3.11"
-keywords = ["claude", "claude-code", "skill", "agent"]
+keywords = ["claude", "claude-code", "agent-skills", "skill", "ai-agents", "llm"]
 classifiers = [
+    "Development Status :: 3 - Alpha",
     "Environment :: Console",
     "Intended Audience :: Developers",
+    "Operating System :: OS Independent",
     "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3 :: Only",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Programming Language :: Python :: 3.13",
+    "Programming Language :: Python :: 3.14",
+    "Topic :: Software Development",
 ]
 
 [project.urls]
 Homepage = "https://github.com/Nezhinskiy/reask"
+Source = "https://github.com/Nezhinskiy/reask"
+Changelog = "https://github.com/Nezhinskiy/reask/blob/main/CHANGELOG.md"
 Issues = "https://github.com/Nezhinskiy/reask/issues"
 
 [project.scripts]
@@ -25,9 +35,48 @@ reask = "reask.cli:main"
 requires = ["hatchling>=1.27"]
 build-backend = "hatchling.build"
 
-# The repository's root SKILL.md is the single source; the wheel carries a copy inside the package.
+# SKILL.md's metadata.version is the package version, so the skill and the package cannot disagree.
+[tool.hatch.version]
+path = "skills/reask/SKILL.md"
+pattern = 'version: "(?P<version>[^"]+)"'
+
+# skills/reask/SKILL.md is the single source; the wheel carries a copy inside the package.
 [tool.hatch.build.targets.wheel.force-include]
-"SKILL.md" = "reask/SKILL.md"
+"skills/reask/SKILL.md" = "reask/SKILL.md"
+
+# What building and testing need; the repository's CI and community files stay on GitHub.
+[tool.hatch.build.targets.sdist]
+include = ["/src", "/skills", "/scripts", "/tests", "/.claude-plugin", "/CHANGELOG.md"]
+
+[tool.uv]
+# The release attests whatever the build backend produces, so the backend is pinned too.
+build-constraint-dependencies = ["hatchling==1.32.4"]
 
 [dependency-groups]
-dev = ["pytest>=8"]
+dev = ["pytest>=9", "pytest-cov>=7", "ruff>=0.16", "mypy>=2.3"]
+
+[tool.ruff]
+line-length = 100
+target-version = "py311"
+
+[tool.ruff.lint]
+select = ["E", "F", "W", "I", "B", "UP", "SIM", "RUF", "PT", "C4", "PL"]
+ignore = ["PLR2004"]  # magic values: tests compare against literal exit codes and limits
+
+[tool.mypy]
+strict = true
+files = ["src", "scripts", "tests"]
+
+[tool.pytest.ini_options]
+pythonpath = ["."]
+addopts = ["--strict-markers", "--strict-config"]
+
+[tool.coverage.run]
+source = ["reask", "scripts"]
+branch = true
+
+[tool.coverage.report]
+fail_under = 100
+show_missing = true
+skip_covered = true
+exclude_also = ['if __name__ == "__main__":']

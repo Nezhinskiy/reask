@@ -1,21 +1,28 @@
-"""Check the skill package: one SKILL.md, its frontmatter, the plugin manifests, one version.
+"""Check the skill package: one skill folder, its frontmatter, the plugin manifests, one version.
 
-The version lives in pyproject.toml, uv.lock, .claude-plugin/plugin.json, SKILL.md's
-metadata.version, CHANGELOG.md's first heading and, when given, the release tag; all must agree.
-`__version__` is read from the installed metadata, so it cannot drift and is not a source here.
+The version is written in three places: SKILL.md's metadata.version (which is also the Python
+package's version, through pyproject.toml's [tool.hatch.version]), .claude-plugin/plugin.json,
+and CHANGELOG.md's newest release heading. When given, the release tag is a fourth. All must agree.
 Run with no arguments in CI and with `--tag vX.Y.Z` in the release workflow.
+
+The frontmatter is read with regular expressions rather than a YAML parser, to keep the project
+free of dependencies. That is why the description must be one double-quoted line.
 """
 
 import argparse
 import json
 import re
 import sys
-import tomllib
 from pathlib import Path
+from typing import Any
+
+from scripts import release_notes
 
 ROOT = Path(__file__).resolve().parent.parent
 NAME = "reask"
+SKILL = Path("skills") / NAME / "SKILL.md"
 DESCRIPTION_LIMIT = 1024  # the Agent Skills specification's cap
+IGNORED = {".git", ".venv", "build", "dist"}
 
 
 def _frontmatter(skill: str) -> str | None:
@@ -28,32 +35,34 @@ def _field(frontmatter: str, pattern: str) -> str | None:
     return match.group(1) if match else None
 
 
+def _json(root: Path, name: str) -> dict[str, Any]:
+    data: dict[str, Any] = json.loads((root / ".claude-plugin" / name).read_text("utf-8"))
+    return data
+
+
 def versions(root: Path) -> dict[str, str | None]:
-    project = tomllib.loads((root / "pyproject.toml").read_text(encoding="utf-8"))["project"]
-    lock = tomllib.loads((root / "uv.lock").read_text(encoding="utf-8"))
-    locked = next((p["version"] for p in lock["package"] if p["name"] == project["name"]), None)
-    plugin = json.loads((root / ".claude-plugin" / "plugin.json").read_text(encoding="utf-8"))
-    frontmatter = _frontmatter((root / "SKILL.md").read_text(encoding="utf-8")) or ""
-    changelog = (root / "CHANGELOG.md").read_text(encoding="utf-8")
+    frontmatter = _frontmatter((root / SKILL).read_text(encoding="utf-8")) or ""
     return {
-        "pyproject.toml": project["version"],
-        "uv.lock": locked,
-        ".claude-plugin/plugin.json": plugin.get("version"),
-        "SKILL.md metadata.version": _field(frontmatter, r'^\s+version:\s*"?([^"\s]+)"?\s*$'),
-        "CHANGELOG.md (first ## heading)": _field(changelog, r"^## (\S+)"),
+        "SKILL.md metadata.version": _field(frontmatter, r'^\s+version:\s*"([^"]+)"\s*$'),
+        ".claude-plugin/plugin.json": _json(root, "plugin.json").get("version"),
+        "CHANGELOG.md's newest release": release_notes.latest(
+            (root / "CHANGELOG.md").read_text(encoding="utf-8")
+        ),
     }
 
 
 def structure(root: Path) -> list[str]:
     problems = []
     skills = sorted(
-        str(p.relative_to(root))
+        p.relative_to(root).as_posix()
         for p in root.rglob("SKILL.md")
-        if not {".git", ".venv", "dist"} & set(p.relative_to(root).parts)
+        if not IGNORED & set(p.relative_to(root).parts)
     )
-    if skills != ["SKILL.md"]:
-        problems.append(f"expected one SKILL.md at the root, found {skills}")
-    frontmatter = _frontmatter((root / "SKILL.md").read_text(encoding="utf-8"))
+    if skills != [SKILL.as_posix()]:
+        problems.append(f"expected exactly one skill, {SKILL.as_posix()}; found {skills}")
+        if not (root / SKILL).is_file():
+            return problems
+    frontmatter = _frontmatter((root / SKILL).read_text(encoding="utf-8"))
     if frontmatter is None:
         return [*problems, "SKILL.md must begin with YAML frontmatter"]
     if _field(frontmatter, r"^name:\s*(\S+)\s*$") != NAME:
@@ -62,11 +71,15 @@ def structure(root: Path) -> list[str]:
     if description is None:
         problems.append("SKILL.md description must be one double-quoted line")
     elif len(description) > DESCRIPTION_LIMIT:
-        problems.append(f"SKILL.md description is {len(description)} chars, over {DESCRIPTION_LIMIT}")
-    plugin = json.loads((root / ".claude-plugin" / "plugin.json").read_text(encoding="utf-8"))
-    market = json.loads((root / ".claude-plugin" / "marketplace.json").read_text(encoding="utf-8"))
-    if plugin.get("name") != NAME or plugin.get("skills") != ["./"]:
-        problems.append(f'plugin.json must be named {NAME!r} with "skills": ["./"]')
+        problems.append(
+            f"SKILL.md description is {len(description)} chars, over {DESCRIPTION_LIMIT}"
+        )
+    # The plugin finds the skill through the default skills/ directory; a "skills" override
+    # would load something else.
+    plugin = _json(root, "plugin.json")
+    if plugin.get("name") != NAME or "skills" in plugin:
+        problems.append(f'plugin.json must be named {NAME!r} and must not override "skills"')
+    market = _json(root, "marketplace.json")
     entries = [(p.get("name"), p.get("source")) for p in market.get("plugins", [])]
     if entries != [(NAME, "./")]:
         problems.append(f'marketplace.json must list one plugin {NAME!r} with source "./"')
@@ -74,16 +87,22 @@ def structure(root: Path) -> list[str]:
 
 
 def check(root: Path, tag: str | None = None) -> list[str]:
+    problems = structure(root)
+    if not (root / SKILL).is_file():
+        return problems
     found = versions(root)
+    expected = found["SKILL.md metadata.version"]
     if tag is not None:
-        found["tag"] = tag.removeprefix("v") if tag.startswith("v") else None
-    expected = found["pyproject.toml"]
-    mismatched = [
-        f"{name}: {value!r} != pyproject.toml's {expected!r}"
+        found["tag"] = tag[1:] if tag.startswith("v") else None
+    problems += [
+        f"{name}: {value!r} != SKILL.md's {expected!r}"
         for name, value in found.items()
         if value != expected
     ]
-    return structure(root) + mismatched
+    changelog = (root / "CHANGELOG.md").read_text(encoding="utf-8")
+    if expected is not None and release_notes.notes(changelog, expected) is None:
+        problems.append(f"CHANGELOG.md has no release notes for {expected}")
+    return problems
 
 
 def main(argv: list[str] | None = None) -> int:
@@ -95,7 +114,8 @@ def main(argv: list[str] | None = None) -> int:
     for problem in problems:
         print(f"::error::{problem}", file=sys.stderr)
     if not problems:
-        print(f"skill package ok, one version everywhere: {versions(args.root)['pyproject.toml']}")
+        version = versions(args.root)["SKILL.md metadata.version"]
+        print(f"skill package ok, one version everywhere: {version}")
     return 1 if problems else 0
 
 
