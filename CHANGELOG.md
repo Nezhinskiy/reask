@@ -3,6 +3,21 @@
 Newest first. Every entry is written for users: a release's section becomes its GitHub Release
 notes.
 
+## Unreleased
+
+- Every re-ask now starts from the context, whatever the question: what is being built, why the
+  decision matters now, and every task number, document code or name from the session explained.
+  0.2.0 cut this for questions with few options, which left short re-asks that could not be
+  answered without scrolling back.
+- Depth now follows the question's difficulty and the agent's confidence rather than the number of
+  options: the less sure it is, the more evidence it gives, up to the facts on each side and what
+  would tip a close call.
+- A reference by number or code (a task, a ticket, a rule, a section, a pull request) now comes
+  with what it says, so you never have to open it to follow the question.
+- Every option again comes with pros and cons, however short.
+- Asked several questions at once, you can bounce only the ones you cannot answer; each gets the
+  same depth, and the answers you gave are kept.
+
 ## 0.2.0 (2026-09-29)
 
 - A re-ask is now sized to what you are missing: a yes/no question or two familiar options comes
