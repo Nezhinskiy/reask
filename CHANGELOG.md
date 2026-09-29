@@ -3,7 +3,7 @@
 Newest first. Every entry is written for users: a release's section becomes its GitHub Release
 notes.
 
-## Unreleased
+## 0.2.0 (2026-09-29)
 
 - A re-ask is now sized to what you are missing: a yes/no question or two familiar options comes
   back in a few lines, several options in a short briefing, and only a decision you have lost the
