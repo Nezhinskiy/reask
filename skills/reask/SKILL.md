@@ -8,13 +8,21 @@ metadata:
 
 # /reask
 
-Ask the question you are already waiting on again, written for someone who just walked in and
-remembers nothing. Make that decision answerable: do not decide it for the user, and do not swap
-it for a different question.
+Ask the question you are already waiting on again, so that someone who just walked in, and has
+nothing but this message, can decide. `/reask` on its own means: I have lost the context; give me
+everything I need to choose. Make the decision answerable: do not decide it for the user, and do
+not swap it for a different question.
 
-Write in the language the user writes in, headings included; the English headings below are a
-template. If nothing is pending, say so in one line and ask what they want to decide. If the user
-has already chosen, confirm the choice in one line and carry on.
+Write in the language the user writes in; the English labels below are a template.
+
+## Which questions
+
+- **Several questions were asked together** (a multi-question form, a numbered list): re-ask only
+  the ones the user bounced with `/reask` or with confusion, and keep the answers they already
+  gave. Give the shared context once, then each question as its own block. The last block gets
+  the same depth as the first.
+- **Nothing is pending:** say so in one line and ask what they want to decide.
+- **The user has already chosen:** confirm the choice in one line and carry on.
 
 ## First, re-check your recommendation
 
@@ -29,52 +37,50 @@ write anything:
    fact would live. If it still cannot be checked, say which fact is unchecked and make it what
    would change your mind.
 3. Decide again. The answer may be your first lean, another option, or a better option that
-   surfaced while you argued. A new option joins the options, marked as new, with its costs, and
-   becomes one of the answers in the question.
-4. Say how sure you are: firm, leaning, or a close call. A close call is an honest answer; say
-   what would tip it.
+   surfaced while you argued. A new option joins the options, marked as new, with its pros and
+   cons, and becomes one of the answers in the question.
+4. Say how sure you are: firm, leaning, or a close call.
 5. Report what you found as facts in their parts, never as the story of checking. If the
    recommendation differs from what you leaned to when you asked, add one line that names the
    fact that changed it. If it did not change, say nothing about the re-check.
 
-## Then size it to what the user is missing
+## What every re-ask contains
 
-Pick the size, then write exactly its parts, in this order.
+For each question, in this order, with the part labels in bold:
 
-**Small**, for a yes/no question or two options the user can picture once the context is named:
-one sentence naming what is decided and the fact that separates the answers; one line per
-option, `name: what it buys; what it costs`; one sentence with your recommendation, how sure you
-are, and why; the question. About 60 words, never over 100:
+1. **Context.** Always, and first. What we are building and what it does for the user; where
+   the work stands; what waits on this answer. Then what is already **decided**, and what you
+   **carry over as an assumption**, named as yours, each only when there is a real one. Every
+   reference is unpacked where it first appears (see **References carry their content** below).
+   State facts, not how you found them.
+2. **A live example**, when the options' pros and cons alone do not show the difference, and
+   always for a close call: one concrete case with real values from this work (an actual record,
+   query or number) carried through every option, usually as a small table.
+3. **Options.** Every option, the one you recommend included, with **Pros** and **Cons**: one
+   line per item, the strongest first, and only as many as change the decision. Each con at full
+   strength, as the option's strongest critic would put it. At most three options in full; name
+   any others in one line each. Mark as new only an option that was not in the original question.
+4. **Recommendation.** Which option, how sure you are, and why, from the facts of this situation.
+   The evidence grows as your confidence falls:
+   - **firm:** the fact that settles it;
+   - **leaning:** that fact, plus the strongest argument against your pick and why it does not
+     win;
+   - **close call:** the facts on each side and what would tip it. The live example is required.
+5. **The question.** The decision as one answerable question, asked fresh, with no preamble or
+   lean carried over from the original wording. Ask it with your harness's structured-question
+   tool if it has one (`AskUserQuestion` in Claude Code), all re-asked questions in one call:
+   short labels, recommended first. Otherwise ask it as plain text.
 
-> The nightly export can read from the replica or the primary. The replica lags up to 30 s
-> (`ops/alerts.yml`), and the export reads only yesterday's rows.
-> - Replica: no load on the primary; data up to 30 s old, which yesterday's rows never are.
-> - Primary: always current; competes with checkout traffic at 02:00.
->
-> I recommend the replica, firmly. Replica (recommended) or primary?
+## How deep
 
-**Medium**, for three or more options, or options that trade off on more than one axis: up to
-three sentences on what is decided, what it serves and what waits on it; the options, each as one
-line in the small form or, when they trade off on more than one axis, as **Pros** and **Cons**
-lists of one-line items; your recommendation in up to three lines; the question. At most three
-options in full, a new one included; name any others in one line each. Under 250 words, no
-headings.
+Depth follows the question, not the number of options. Give more context and more evidence when
+the question uses ideas the user must hold at once, when the decision reaches beyond this step,
+and when you are less than firm. A firm answer on familiar ground needs two or three sentences of
+context and no example, about 150 words in all; a design choice you only lean on can take 500.
 
-**Full**, when the user has lost the thread entirely or the difference needs a worked example to
-be seen: the parts below, under headings, under 500 words.
-
-| Part | Contents | At most |
-|---|---|---|
-| **"Where we are"** | What we are building, in terms of what it does for the user; where the work stands; what stops until this is answered. Then what is already **decided**, and what you **carry over as an assumption**, named as yours, each only if there is one. | 5 sentences |
-| **"A live example"** | One concrete case with real values from this work (an actual record, an actual query, an actual number) carried through every option, so the user sees the difference rather than infers it. | ~120 words, usually a table |
-| **"Options"** | Per option, a line of what it is, then **Pros** and **Cons**. At most three in full; name any others in one line each. | 3 pros and 3 cons each |
-| **"What I recommend"** | Which option; why, from the facts of this situation; how sure you are; what would change your mind. | 5 lines |
-| **"The question"** | See below. | 1 question |
-
-In every size, the question is the decision as one answerable question, asked fresh, with no
-preamble or lean carried over from the original wording. Ask it with your harness's
-structured-question tool if it has one (`AskUserQuestion` in Claude Code): short labels,
-recommended first. Otherwise ask it as plain text.
+A re-ask never carries less than the original question did: every fact the original gave is
+still in it, now explained. Past about 600 words for one question, it is really two questions:
+say so and split it.
 
 ## Rules
 
@@ -83,13 +89,16 @@ The fact that settles the decision appears before the recommendation argues from
 sentence that restates the previous one, and every clause that adds emphasis rather than
 information.
 
+**References carry their content.** A reference by number or code (task 6b, TD-237, BR-161, rule
+D1, §8, PR 3a) comes with what it says, as far as it bears on this decision, so the user never has
+to open it: not "per D1", but "D1, the spec's rule that the lookup must hold at 2,000 products per
+user". The same goes for a name from this session (a component, a constant, a feature, "the
+review") and for the source of a number (who measured it, on what). If you do not know what a
+reference says, read it now or leave it out; a name alone explains nothing.
+
 **Plain words.** A term the user would have to look up gets a short gloss at first use:
 `HNSW (a kind of index: slower to build, but never needs retraining)`. A term that does not carry
 the decision is dropped, not glossed.
-
-**Fair to every option.** Every option states its cost, the one you recommend included, at full
-strength, as its strongest critic would put it. Your case for or against an option goes in the
-recommendation, where the user can overrule it.
 
 **Decided means decided.** Only what was actually settled goes in the decided line. Anything you
 inferred is an assumption, and is labelled as yours.
@@ -100,7 +109,7 @@ default.
 **A better question is an aside.** If you now think a different question should be asked, the
 re-ask still covers the original. Add one line after the question naming the better one and why,
 and let the user choose which to answer. A better *option* for the same question is not an aside:
-it goes through step 3 above.
+it goes through step 3 of the re-check.
 
 ## When a picture is faster than prose
 
@@ -116,8 +125,11 @@ when you cannot show a file: then the example stays in prose.
 
 ## Before you send
 
-- The re-ask has exactly the parts of the size you picked, and is under its ceiling.
-- Every option states its cost, the recommended one included.
-- The recommendation went through the re-check. A changed view has its one line; a new option is
-  in the options and in the question.
-- The last thing is the question, in the user's language, with no default action attached.
+Read it as someone who has seen nothing but this message:
+
+- They understand every word, and know what is being built and why this decision matters now.
+- Every numbered reference and session name says what it is, not only what it is called.
+- Every option has pros and cons, the recommended one included.
+- The evidence matches your confidence.
+- Nothing the original question said is missing.
+- Every bounced question got the same depth, and the re-ask ends on the question.

@@ -7,11 +7,12 @@
 **Your agent asked you something and you cannot answer it.** You lost the context, the options
 are jargon, or you cannot see what actually differs between them. Type `/reask`.
 
-The agent asks the same question again, written for someone who just walked in and sized to what
-you are missing. A yes/no question comes back in a few lines. A decision you have lost the thread
-of gets the full briefing: where the work stands, one real example carried through every option,
-the pros *and* cons of each (the one it recommends included), its recommendation, and one
-question you can answer, in under 500 words. Always in your language.
+The agent asks the same question again, written for someone who just walked in: what is being
+built and why this decision matters now, every name from the session explained, the pros *and*
+cons of every option (the one it recommends included), its recommendation, and one question you
+can answer. `/reask` on its own is enough. The harder the question and the less sure the agent
+is, the more context and evidence you get; an easy call it is sure of stays short. Asked several
+questions at once, you can bounce just the ones you cannot answer. Always in your language.
 
 Before it recommends anything, the agent argues against its own first lean and checks the fact
 that lean rests on in your project. When the check changes its mind, or turns up a better option,
@@ -66,7 +67,7 @@ Mid-task, the agent asks:
 
 > Should the price cache key include the locale, or should we normalise currency at read time?
 
-This one needs the full briefing. You type `/reask`, and get:
+You type `/reask`, and get:
 
 > **Where we are and why this comes up.** We are putting a cache in front of the pricing API so
 > product pages stop taking 800 ms. The cache works; what is open is what each entry is keyed
