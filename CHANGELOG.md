@@ -3,6 +3,14 @@
 Newest first. Every entry is written for users: a release's section becomes its GitHub Release
 notes.
 
+## 0.3.1 (2026-10-29)
+
+- The Claude Code plugin has an icon, for its listing in plugin directories.
+- The README shows a real `/reask` briefing, captured from a Claude Code session, in place of the
+  hand-written example, and opens with a one-line install for Claude Code, Codex, Cursor and
+  Gemini CLI.
+- The skill itself is unchanged.
+
 ## 0.3.0 (2026-09-29)
 
 - Every re-ask now starts from the context, whatever the question: what is being built, why the
