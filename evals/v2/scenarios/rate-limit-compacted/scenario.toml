@@ -44,3 +44,17 @@ turns its plugins on within a day of a ticket."""
 # [[stage2.decisions]]
 # ask = "the decision, as the recorded question poses it"
 # needs = "the property of the option the persona calls for, if it decides this one"
+
+[stage2]
+recording = "attempt 1 of 3; the first that met the select rule"
+facts = [
+  "what is being built: a limit of 100 requests per minute per API key on the public API, answered with HTTP 429 and a wait time, needed before a partner launch",
+  "the API runs as 6 replicas, so a counter kept in each pod's memory would let a key through about 6 times its limit",
+  "new keys on the shared Redis need on-call's agreement, after an incident on that Redis",
+  "what each option costs: the gateway plugin depends on the platform team; a Postgres counter adds a database write to every request; a counter in the shared Redis puts every request on that Redis and needs on-call's agreement",
+]
+answered = []
+
+[[stage2.decisions]]
+ask = "where the per-key limit is enforced and counted: the gateway's (Kong) rate-limiting plugin, an app-side counter in Postgres, or an app-side counter in the shared Redis"
+needs = "the one that needs no counter built and run by your team and puts nothing new on the shared Redis"

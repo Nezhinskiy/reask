@@ -11,7 +11,9 @@ The decision in question: {decision}
 
 Using only the message and what you know about your situation, either choose an option for this
 decision, or write the question you would still have to ask the assistant before you could
-choose. PASS only if both hold:
+choose. The assistant's recommendation is only advice: your situation decides. A question about a
+detail that would not change which option you pick does not count as having to ask. PASS only if
+both hold:
 
 1. you can choose without asking anything first;
 2. {needs}
