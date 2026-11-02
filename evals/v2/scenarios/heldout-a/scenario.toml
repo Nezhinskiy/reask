@@ -56,3 +56,24 @@ month."""
 # [[stage2.decisions]]
 # ask = "the decision, as the recorded question poses it"
 # needs = "the property of the option the persona calls for, if it decides this one"
+
+[stage2]
+recording = "attempt 3 of 3; none met the select rule (no recording offered two ways to bound staleness as alternatives; attempt 1 could not read the files and asked only open questions), and attempt 3 is the closest: it asks where the cache lives offering each pod's memory or a shared Redis, and how stale the cached cards may be via their TTL"
+facts = [
+  "what is being built and why now: a cache for the dealer portal's category page, which takes about 1.9 s in the morning rush, almost all of it (about 1.65 s) spent fetching product cards from the product-information system; it has to be under 0.4 s by the dealer conference in mid-November, where the portal is shown live",
+  "the CDN is ruled out: its cache key ignores who is asking and a cache hit skips the login check, so a cached category page, priced with one dealer's confidential contract prices, would be shown to every visitor",
+  "what the plan caches: only the product cards (name, photo, base price) per category; dealer tier, personal prices and stock are still read on every request, so stock stays as fresh as today (up to 5 minutes behind the warehouse) and only the base price, and the tier price computed from it, lags by up to the cache lifetime",
+  "what each place costs: each pod's own memory is fast, needs no new infrastructure and has room, but the 4 pods warm up separately, can show different versions of a card within the cache lifetime, and are slow again on the first request after a deploy; a shared Redis avoids that but does not exist yet and another team would have to set it up",
+  "what to do while the product-information system is down: keep serving the last cards past their lifetime, or return an error as today",
+]
+answered = []
+
+[[stage2.decisions]]
+ask = "how long a cached product card lives (for example 1, 5 or 15 minutes), which sets how long a changed base price takes to reach dealers"
+
+[[stage2.decisions]]
+ask = "where the cache lives: in each pod's own memory, or in a shared cache such as Redis"
+needs = "the one that needs no shared cache service and nothing new set up by anyone"
+
+[[stage2.decisions]]
+ask = "when the product-information system is unavailable: serve the old cards past their lifetime (and for how long), or return an error as today"

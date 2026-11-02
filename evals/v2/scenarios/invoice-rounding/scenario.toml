@@ -49,3 +49,20 @@ service."""
 # [[stage2.decisions]]
 # ask = "the decision, as the recorded question poses it"
 # needs = "the property of the option the persona calls for, if it decides this one"
+
+[stage2]
+recording = "attempt 2 of 3; the first whose question leans to rounding once on the total for every invoice, companies included (attempts 1 and 3 recommended doing it only for buyers without a tax number); it offers that and the split by buyer type, and edited no file"
+facts = [
+  "what is being fixed: on a private shopper's order the invoicing service shows VAT, and so the total, a kopeck off what the shop's checkout charged, because the service rounds VAT on each line and adds the lines up while the checkout computes it once on the order total; it has to be fixed this week",
+  "the tax authority's ruling requires that on an invoice to a buyer with a tax number VAT is computed and rounded on each line and the invoice VAT is the sum of the lines; computing it once on the total is allowed only for buyers without a tax number",
+  "what each choice of scope costs: computing VAT once on the total for every invoice makes every invoice match the checkout but changes VAT on companies' new invoices; doing it only for buyers without a tax number fixes the shoppers' invoices and leaves companies' invoices as they are",
+  "what spreading the VAT over lines costs: splitting the invoice's VAT across its lines keeps the printed VAT column adding up to the invoice's VAT total, but identical lines can differ by a kopeck; not spreading it is simpler, but the column then no longer adds up to the total",
+]
+answered = []
+
+[[stage2.decisions]]
+ask = "whom the change covers: every invoice, companies included, with VAT computed once on the total, or only private buyers without a tax number, with companies' invoices still computed line by line"
+needs = "the one that fixes the shoppers' invoices inside the invoicing service this week and leaves invoices to buyers with a tax number computed line by line, as the tax rules require for them"
+
+[[stage2.decisions]]
+ask = "whether to spread the invoice's VAT across its lines as proposed, so the printed VAT column adds up to the VAT total, or let the column not add up to the total"

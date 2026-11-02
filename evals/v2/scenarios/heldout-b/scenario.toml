@@ -59,3 +59,21 @@ tonight."""
 # [[stage2.decisions]]
 # ask = "the decision, as the recorded question poses it"
 # needs = "the property of the option the persona calls for, if it decides this one"
+
+[stage2]
+recording = "attempt 1 of 3; the first that met the select rule"
+facts = [
+  "what is being done and why now: tonight at 22:00 UTC the production API is to move from the old data centre to a new cluster, in a window announced on the status page; the old data centre's lease ends on 30 November, and the user requires that going back to the old site, if the new cluster misbehaves, works within 15 minutes",
+  "the runbook moves traffic by switching the API's DNS record, which has a one-day TTL: clients that picked up the new address keep it for up to 24 hours, so switching the record back cannot return traffic within 15 minutes and the runbook fails that requirement as written",
+  "the DNS file in the repository is an export from 30 October; if the live TTL was already lowered to about 5 minutes, the runbook as written would meet the 15-minute requirement",
+  "routing tonight through the old site's load balancer to the new cluster, with DNS unchanged: going back is switching the load balancer back, in seconds, but it is a production load-balancer change not reviewed for this window and the runbook has to be rewritten; the DNS move follows later",
+  "doing only preparation tonight (lower the TTL, check the new cluster) and switching DNS at least 24 hours later: going back then works through DNS, at the cost of announcing a new window on the status page",
+]
+answered = []
+
+[[stage2.decisions]]
+ask = "how to run tonight's cutover: send traffic to the new cluster tonight through the old site's load balancer and move DNS later, or do only preparation tonight (lower the TTL) and switch DNS at least 24 hours later"
+needs = "the one under which live API traffic keeps being served by today's site, along today's path, for the next two days"
+
+[[stage2.decisions]]
+ask = "what the live DNS console currently shows as the API record's TTL"

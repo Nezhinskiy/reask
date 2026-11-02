@@ -50,3 +50,17 @@ adding a third is routine for you."""
 # [[stage2.decisions]]
 # ask = "the decision, as the recorded question poses it"
 # needs = "the property of the option the persona calls for, if it decides this one"
+
+[stage2]
+recording = "attempt 2 of 3; the first that met the select rule: it asks where the search runs (pgvector in the existing Postgres, or a per-tenant cache in the API pods), names facts it could not check from the repo (whether the data team can make the pgvector change before December, Enterprise tenant sizes) and edited nothing. Attempt 1 settled on the in-pod design itself and asked only whether to start the pgvector review now or wait for tenant sizes, so it did not ask where the search runs"
+facts = [
+  "what is being built: semantic (vector) search for the help center, where each query searches only one tenant's articles; it ships in December, and Enterprise tenants of unknown size come later",
+  "all the vectors together take more than twice the memory search may add to each API pod, so a full copy in every pod does not fit; an in-pod design can only load each tenant's vectors on demand into a capped cache",
+  "searching in Postgres with pgvector needs the data team to add the extension and convert the vector column on their database, and nothing says that can happen before December; it copes best with large tenants and leaves the pods unchanged",
+  "searching in the API pods needs nothing from the data team, but one large Enterprise tenant could fill or exceed the cache, so it would probably need replacing later",
+]
+answered = []
+
+[[stage2.decisions]]
+ask = "where the vector search runs: in the existing Postgres with pgvector (which needs the data team's change before December), or in the API pods with a per-tenant cache loaded from Postgres, which stays as it is"
+needs = "the one that does not wait on any change to the data team's Postgres, so it can ship in December"

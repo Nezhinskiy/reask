@@ -53,3 +53,17 @@ move to the larger instance last month, so you are happy to let the backfill run
 # [[stage2.decisions]]
 # ask = "the decision, as the recorded question poses it"
 # needs = "the property of the option the persona calls for, if it decides this one"
+
+[stage2]
+recording = "attempt 1 of 3; the first that met the select rule (status of every workstream first, then the ask on the last wave offering a split over nights or throttled daytime runs, no file edited); it also asks whether the last wave already started, which is a question of fact, not a decision"
+facts = [
+  "what is being done: order totals are moving from a text column to an integer column; three of the four backfill waves are done and verified, and the finance dashboard's switch to the new column waits on the last, largest wave (2024-2026, about 3.3 million rows)",
+  "the last wave is queued as one run, but at the speed of the earlier waves it takes about 22 hours, far longer than one night window, and running unthrottled into the day is not allowed",
+  "batches cannot be made bigger to go faster: the runbook caps the batch size because bigger batches made the read replica fall minutes behind and customers saw invoices with stale totals",
+  "what each option costs: splitting the wave by month over about 4-5 nights stays within the runbook and needs no one's agreement but takes most of a week; throttled daytime runs (about 100k rows an hour), alongside the night runs, finish in fewer days but need the DB on-call's agreement",
+]
+answered = []
+
+[[stage2.decisions]]
+ask = "how the last backfill wave is run: split by month across about 4-5 night windows, or throttled daytime runs with the DB on-call's agreement, possibly alongside night runs"
+needs = "the one that finishes the whole last wave within the next two days rather than over most of a week, even though it needs the DB on-call's agreement"

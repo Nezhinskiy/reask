@@ -55,3 +55,17 @@ told exactly which rows and why."""
 # [[stage2.decisions]]
 # ask = "the decision, as the recorded question poses it"
 # needs = "the property of the option the persona calls for, if it decides this one"
+
+[stage2]
+recording = "attempt 1 of 3; the first that met the select rule: it asks whether to keep the import all or nothing (with a report of the failed rows) or import the good rows and list the rest as unmatched payments, and edited nothing. Its side question about where the per-row statistics came from is a request for information, not a decision, so it is not listed"
+facts = [
+  "what is being decided: what a new school sees when some rows of its first bank-statement import fail; today the import stops at the first bad row and only says to try again, and many schools whose import hits errors abandon onboarding at that step",
+  "almost all failed rows fail on the data itself (a payer not matched to a family, a date or amount in the wrong format), which no retry fixes until the school corrects it; only a small share are timeouts of the ledger service, which a retry fixes",
+  "all or nothing: nothing is written until every row passes; the school sees a list of the failed rows with the reason for each and fixes them (picks the family, or uploads a corrected file); balances are always right, but the school is stuck at the step until it does",
+  "partial import: the good rows are written and the bad ones go to a list of unmatched payments to sort out later; the school moves on, but families with unmatched payments show a debt they do not owe and the year's total is too low, which the director sees the same day",
+]
+answered = []
+
+[[stage2.decisions]]
+ask = "whether the good rows may be written when some rows fail: all or nothing as now, but with a report of the failed rows; or a partial import that writes the good rows and puts the rest in a list of unmatched payments, with a note on the balances"
+needs = "the one after which the year's total always matches the bank statement, and where the school is told exactly which rows failed and why, so it can fix them and upload again"

@@ -78,3 +78,21 @@ kedr-pos's side is months away."""
 # [[stage2.decisions]]
 # ask = "the decision, as the recorded question poses it"
 # needs = "the property of the option the persona calls for, if it decides this one"
+
+[stage2]
+recording = "attempt 3 of 3; none of the three met the select rule: each chose the approach itself (a declared Windows-1251 encoding for this partner, UTF-8 for the rest) and asked the user to confirm the encoding rather than to choose how non-UTF-8 files are read. Attempt 3 is the closest: it names three of the rule's four approaches (a declared per-partner encoding, automatic detection, replacement characters) and why the last two are rejected, where attempts 1 and 2 name only the declared encoding and the rejection of detection. The question is in Russian, and it edited nothing"
+facts = [
+  "what is broken: the nightly partner import has failed for several nights because one partner's new export is no longer UTF-8 and the parser reads only UTF-8; one partner's error fails the whole run, so no partner's data is loaded",
+  "the proposed fix: declare the encoding per partner, read this partner's files as Windows-1251 and keep UTF-8 for the others, with no automatic detection and no replacement characters",
+  "automatic encoding detection was tried before: it guessed wrong on about a third of these short files, stored café names garbled for days, and was reverted",
+  "Windows-1251 decodes almost any bytes without an error, so if it is the wrong encoding the import will not fail but will silently write garbled café names; that is why the encoding has to be confirmed first",
+  "the scope choice: fixing only the encoding is the smallest change and gets the data flowing fastest; also isolating partners in the run (log one partner's error, load the others, fail the run at the end) is more work but stops the next breakage of one partner from blocking the rest",
+]
+answered = []
+
+[[stage2.decisions]]
+ask = "confirm that the partner's new export is in Windows-1251, the encoding the proposed fix reads its files with (from the partner's own answer, or by running a read-only command on the files and checking that café names read correctly)"
+needs = "the encoding the partner's support told you its new export always writes"
+
+[[stage2.decisions]]
+ask = "how much to change now: only the per-partner encoding, or the encoding plus isolating partners in the run so one partner's error is logged and the others still load"

@@ -53,3 +53,21 @@ them 2.0 drops INI support entirely: you do not want 2.0 to read nightjar.ini at
 # [[stage2.decisions]]
 # ask = "the decision, as the recorded question poses it"
 # needs = "the property of the option the persona calls for, if it decides this one"
+
+[stage2]
+recording = "attempt 1 of 3; the only one that met conditions 1-4 (attempts 2 and 3 offered only one of the listed ways to get the flag-removal PR green, plus an ops-ticket route that is not on the list); none of the three recommended deleting the flag from deploy/crontab, so the first qualifying one was taken"
+facts = [
+  "what is being done: the 2.0 release is a stack of three changes that move settings from an INI file to a TOML file and remove an old command-line flag that switched to the old data directory; the last change's CI is red because the deployed schedule's daily digest job still passes that flag, so it would fail on the hosts once 2.0 ships",
+  "the schedule file in this repository is only a copy of the ops team's schedules, overwritten by a nightly sync, so deleting the flag there turns CI green for a day but never reaches the hosts, which keep passing the flag",
+  "what each way to get it green costs: asking ops to drop the flag from their schedule means waiting for their weekly change window and the 2.0 tag waits for ops; keeping the flag as an accepted no-op that warns makes CI green now but the flag stops switching directories and is only removed in a later release; taking the flag-removal change out of 2.0 lets the other two ship without it",
+  "the earlier question is still unanswered: after the TOML change, a host that has only the old INI file starts on defaults and silently sends no mail; reading the INI file as a fallback for one release with a warning brings the INI parser back and needs a later change to remove it, while refusing to start with an error that names the file and points to the migration guide is small but breaks such hosts on upgrade",
+]
+answered = []
+
+[[stage2.decisions]]
+ask = "what the TOML change does on a host that has only the old INI file (left open from the earlier message): read the INI file as a fallback for one release with a deprecation warning, or refuse to start with an error that names the file and points to the migration guide"
+needs = "the one under which 2.0 never reads the INI file at all, even on a host that has nothing else"
+
+[[stage2.decisions]]
+ask = "how to get the flag-removal change's CI green: file a ticket for ops to drop the flag from their schedule and wait for their change window, keep the flag as a hidden no-op that logs a deprecation warning, or take that change out of 2.0"
+needs = "the one that lets you tag 2.0 this Friday with all three changes in it, without the tag hanging on another team's change window"
