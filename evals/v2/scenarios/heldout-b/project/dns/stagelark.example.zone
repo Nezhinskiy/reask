@@ -1,0 +1,10 @@
+; stagelark.example, exported from the DNS provider on 2026-10-30.
+; TTLs were raised to one day in March 2025 to cut the provider's per-query bill.
+$ORIGIN stagelark.example.
+$TTL 86400
+@       86400  IN  SOA    ns1.dns-provider.example. hostmaster.stagelark.example. (2026103001 3600 600 1209600 300)
+@       86400  IN  NS     ns1.dns-provider.example.
+@       86400  IN  NS     ns2.dns-provider.example.
+www     86400  IN  CNAME  stagelark-site.web-host.example.
+api     86400  IN  A      203.0.113.10
+status  3600   IN  CNAME  stagelark.status-host.example.

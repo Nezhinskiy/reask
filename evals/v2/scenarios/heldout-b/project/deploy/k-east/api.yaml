@@ -1,0 +1,32 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: stagelark-api
+spec:
+  replicas: 2   # raised to 6 at the start of the OPS-140 window
+  template:
+    spec:
+      containers:
+        - name: api
+          image: stagelark/stagelark-api:2026.10.29
+          env:
+            - name: DATABASE_URL
+              valueFrom: { secretKeyRef: { name: pg-main, key: url } }
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: stagelark-api
+  annotations:
+    k-east.example/load-balancer-ip: 198.51.100.24
+spec:
+  tls:
+    - hosts: [api.stagelark.example]
+      secretName: api-stagelark-tls
+  rules:
+    - host: api.stagelark.example
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend: { service: { name: stagelark-api, port: { number: 80 } } }

@@ -1,0 +1,20 @@
+# Edge CDN in front of portal.glazurnik.example. Run by the platform team.
+# Today the CDN terminates TLS, absorbs bots and caches only static files.
+zone: portal.glazurnik.example
+plan: standard
+
+cache_key:
+  include: [host, path, query]   # the only components the standard plan supports
+  headers: []                    # Vary is ignored on this plan; Authorization is never in the key
+
+on_cache_hit:
+  forward_to_origin: false       # a hit is served from the edge: catalog-api, and its token check, is not called
+
+rules:
+  - path: /static/*
+    cache: on
+    ttl: 7d
+  - path: /catalog/*
+    cache: off
+  - path: /orders/*
+    cache: off

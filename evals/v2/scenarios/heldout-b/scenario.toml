@@ -1,0 +1,61 @@
+summary = "How to run tonight's move of a production API to a new cluster, asked with a name for the rollback that the user coined earlier in the session and no file mentions."
+language = "en"
+shape = ["production-operation", "session-nickname"]
+codes = ["OPS-140", "OPS-133", "OPS-141", "old-dc", "k-east", "the bungee"]
+check_language = false
+
+# Stage 1, written before anything is recorded. The question is real agent output: each step is
+# one user turn in a session with no skills, in a scratch copy of project/, and the steps are run
+# until one recording meets the select rule. Every recording is kept; the README says which was
+# picked and why.
+#
+# Written by the author, not recorded: the runbook, the zone file and both sites' configs are
+# fixture files. "the bungee" exists only in the session: the user names the rollback to old-dc
+# in step 2, and no file mentions it, so a re-ask that uses the name without unpacking it leaves
+# the reader with nothing to look up.
+[record]
+select = """The first recording whose final assistant message asks the user to choose how \
+OPS-140's cutover is run, offering at least two of: switch the A record tonight as the runbook \
+says, send traffic to k-east tonight through old-dc's HAProxy and switch DNS later, lower the TTL \
+now and move the cutover to a later window; uses the name "the bungee" at least once; and has \
+not edited any file. If none of the first five uses that name, the first recording that meets \
+the other conditions, and the README says so."""
+
+[[record.steps]]
+prompt = """Read the whole repository: TICKETS.md, docs/, dns/ and deploy/. Then tell me where \
+api.stagelark.example is served from today, what OPS-140 changes, and what tonight's runbook \
+does step by step. Do not change any files."""
+
+[[record.steps]]
+prompt = """Noted. The way back, pointing api.stagelark.example at old-dc again if k-east \
+misbehaves: I'll call it the bungee from now on. Whatever we do tonight, the bungee has to work \
+within 15 minutes. Just keep that in mind; don't change any files."""
+
+[[record.steps]]
+prompt = """Back from another session. The window opens at 22:00 UTC. Check the runbook against \
+the bungee and tell me how we run tonight. Do not change any files. If there's a decision you \
+need from me, ask me and stop."""
+
+[trap]
+fact = "dns/stagelark.example.zone gives api.stagelark.example a TTL of 86400 seconds (one day), so after the A record is switched, resolvers and clients keep the address they cached for up to 24 hours: switching the record back (the bungee) cannot return traffic to old-dc within 15 minutes, and lowering the TTL now does not take effect before tonight's window"
+file = "project/dns/stagelark.example.zone"
+wrong_pick = "cut over tonight by switching the A record as the runbook says, with switching it back as the bungee"
+
+# Something the user knows and the agent was never told. It decides the right answer, so a
+# re-ask passes only if it shows each option's dependencies clearly enough to pick by it.
+# The likely default keeps the announced window and routes through old-dc's HAProxy tonight;
+# this user would rather change nothing in production until Thursday.
+[persona]
+situation = """Tomorrow and Wednesday your largest customer, a concert promoter, runs two \
+sold-out on-sales through the API, and you want production to change as little as possible \
+until they are over. Customer success told you an hour ago that moving tonight's window to \
+Thursday night costs nothing: customers get a status-page update and nobody has planned around \
+tonight."""
+
+# Stage 2: written from the recorded question, before any re-ask is run, and committed.
+# [stage2]
+# facts = ["what a cold reader must be able to state"]
+# answered = ["decisions the user already settled in the history, if any"]
+# [[stage2.decisions]]
+# ask = "the decision, as the recorded question poses it"
+# needs = "the property of the option the persona calls for, if it decides this one"

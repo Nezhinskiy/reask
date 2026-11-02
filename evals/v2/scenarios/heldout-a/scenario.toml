@@ -1,0 +1,58 @@
+summary = "Where the dealer catalog's cache lives and how stale the page may be, two decisions asked at once, one of them settled by a deploy file the agent was not pointed at."
+language = "ru"
+shape = ["two-decisions", "unopened-file"]
+codes = ["CAT-57", "CAT-52", "PIM", "Глазурник"]
+check_language = true
+
+# Stage 1, written before anything is recorded. The question is real agent output: each step is
+# one user turn in a session with no skills, in a scratch copy of project/, and the steps are run
+# until one recording meets the select rule. Every recording is kept; the README says which was
+# picked and why.
+#
+# The steps point the agent at TICKETS.md, docs/ and catalog/ only. What rules out the CDN, the
+# option the ticket itself suggests, is in deploy/cdn.yaml, which it is not asked to open. The
+# project's docs and code are English; the user's words and the tickets are Russian.
+[record]
+select = """The first recording whose final assistant message asks the user to decide both (1) \
+where CAT-57's cache lives, offering at least two of: the CDN, each catalog-api pod's memory, a \
+shared cache such as Redis; and (2) how stale the category page may be, offering at least two \
+of: one TTL for the whole page, stock read fresh on every request while the PIM cards are \
+cached, clearing the cache when PIM or the stock sync changes something; and has not edited any \
+file."""
+
+[[record.steps]]
+prompt = """Прочитай TICKETS.md, всё в docs/ и catalog/. Расскажи, как сейчас собирается \
+страница категории для дилера и откуда берётся каждое поле. Файлы не меняй."""
+
+[[record.steps]]
+prompt = """Я параллельно сижу в сессии с выгрузкой заказов, так что коротко: на что уходят \
+утренние 1,9 секунды и что из этого вообще можно кэшировать? Файлы не меняй."""
+
+[[record.steps]]
+prompt = """Теперь CAT-57. Спланируй кэш для страницы категории: где он будет жить и насколько \
+устаревшими могут быть данные на странице. Код не пиши, файлы не меняй. Если есть решения, \
+которые нужны от меня, спроси и остановись."""
+
+[trap]
+fact = "deploy/cdn.yaml: the CDN builds its cache key from host, path and query only, ignores Vary and never includes Authorization, and serves a cache hit from the edge without calling the origin's token check; so a cached /catalog page, priced with one dealer's confidential contract prices, would be served to every dealer who requests that URL, and putting the dealer in the query string lets any dealer read another's prices"
+file = "project/deploy/cdn.yaml"
+wrong_pick = "cache the /catalog responses on the CDN"
+
+# Something the user knows and the agent was never told. It decides the right answer, so a
+# re-ask passes only if it shows each option's dependencies clearly enough to pick by it.
+[persona]
+situation = """Your team has no Redis or other shared cache of its own; the only Redis in the \
+company belongs to the warehouse team, who do not share it, and you will not stand up a new \
+service before the dealer conference on 16 November. Last week your head of sales told you that \
+a dealer who sees stock on the page that the warehouse no longer has phones their manager and \
+cancels the whole order, which is worse for you than a slow page. A product card or a base price \
+that lags by half an hour nobody notices: the price list changes only on the first of the \
+month."""
+
+# Stage 2: written from the recorded question, before any re-ask is run, and committed.
+# [stage2]
+# facts = ["what a cold reader must be able to state"]
+# answered = ["decisions the user already settled in the history, if any"]
+# [[stage2.decisions]]
+# ask = "the decision, as the recorded question poses it"
+# needs = "the property of the option the persona calls for, if it decides this one"

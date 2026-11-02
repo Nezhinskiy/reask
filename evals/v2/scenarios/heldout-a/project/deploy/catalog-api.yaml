@@ -1,0 +1,19 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: catalog-api
+spec:
+  replicas: 4
+  template:
+    spec:
+      containers:
+        - name: api
+          image: glazurnik/catalog-api:2026.10.28
+          resources:
+            requests: { memory: 256Mi }
+            limits: { memory: 1Gi }   # typical use at the morning peak: about 300 MiB
+          env:
+            - name: PIM_URL
+              value: http://pim.content.svc
+            - name: DATABASE_URL
+              valueFrom: { secretKeyRef: { name: portal-db, key: url } }
