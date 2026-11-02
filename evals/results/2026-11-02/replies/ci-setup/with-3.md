@@ -1,86 +1,90 @@
-Decided so far: **GitHub Actions**, running on every pull request and on every push to `main`.
+Got it: GitHub Actions, running on pull requests and on pushes to `main`. Here are the other four questions again, with more background.
 
-**What we're building:** a GitHub Actions workflow for `ledgerkit`, a small Python library of double-entry ledger helpers. On every PR and every push to `main` it installs the library, checks the code style, and runs the tests. A red ✗ on a PR means something broke before it gets merged. The repo has `pyproject.toml`, a README and two test files. Both tests are placeholders, and there's no library source code yet. Four answers decide what the workflow file contains.
-
----
-
-### 1. Which Python versions should CI test?
-
-**Context:** CI can run the same tests on several Python versions in parallel. Each version adds one more check on the PR, a minute or two each, and costs nothing on public repos. `pyproject.toml` says the library supports Python 3.10 and newer. The README names two users: billing on 3.10 and the data team on 3.13. The newest Python releases are 3.14 and 3.15 (3.15 came out in October 2026), and 3.10 itself reaches end of life around now.
-
-**Options:**
-- **A. 3.10 and 3.13**
-  - Pros: tests exactly what your two real users run.
-  - Cons: someone on 3.11, 3.12 or 3.14 could hit a break that CI never saw.
-- **B. Every version from 3.10 to 3.13**
-  - Pros: covers every version in between.
-  - Cons: doubles the number of checks, and the in-between versions almost never break on their own.
-- **C. (new) 3.10, 3.13 and the newest Python**
-  - Pros: warns you early about the version the data team will move to next.
-  - Cons: the database driver (psycopg) may not have ready-made packages for 3.15 yet, so CI could fail for reasons that aren't your code.
-
-**Recommendation:** A, leaning. The two ends of the range catch nearly all breaks. The best argument against it is that "3.10 and newer" invites other users, but the README lists only two.
-
-**Question:** Should CI test 3.10 + 3.13, every version from 3.10 to 3.13, or 3.10 + 3.13 + the newest?
+**Background for all four:** I'm setting up automated checks (CI) for `ledgerkit`, a small Python library of double-entry ledger helpers. Two teams use it: billing runs Python 3.10, and the data team runs 3.13. The repo has `pyproject.toml`, a README and two tests. One test is a placeholder. The other gets a real, temporary Postgres database from the `postgresql` helper in the pytest-postgresql plugin. No source package exists yet. Nothing gets written until you answer.
 
 ---
 
-### 2. How should CI get a database for the tests?
+### Q2. Which Python versions should CI test on?
 
-**Context:** `tests/test_ledger.py` uses `postgresql`, a ready-made test helper from the pytest-postgresql plugin. It starts its own temporary PostgreSQL server for the test and shuts it down afterwards. To do that, the PostgreSQL programs have to be installed on the CI machine.
+**Context:** `pyproject.toml` says the library works on Python 3.10 and newer, so 3.10, 3.11, 3.12, 3.13 and the current 3.14. CI would run the tests once per version, in parallel.
 
-**Options:**
-- **A. Install PostgreSQL on the CI machine and leave the tests unchanged**
-  - Pros: tests run the same way on a laptop and in CI.
-  - Cons: the workflow needs an install step and has to point the plugin at the server programs, which aren't on the default path.
-- **B. Run PostgreSQL alongside the job as a separate container (a "service") and switch the test to the plugin's `postgresql_noproc` helper, which connects to a server that's already running**
-  - Pros: picking the PostgreSQL version is a one-line change in the workflow.
-  - Cons: you'd have to change the tests, and on a laptop you'd then need to start a database yourself before running them.
+**Options**
+- **A. Every version from 3.10 to 3.14**
+  - Pros: tests every version the package says it supports. The suite is tiny, and parallel runs add little waiting.
+  - Cons: five runs instead of two. If a dependency has no 3.14 build yet, CI fails for a version neither team uses.
+- **B. Only 3.10 and 3.13, the versions your two teams use**
+  - Pros: covers the oldest and newest versions in real use, with fewer runs.
+  - Cons: 3.11, 3.12 and 3.14 are promised but never tested. A third team on 3.12 would be relying on luck.
 
-**Unchecked fact:** GitHub's standard Ubuntu machines are documented as shipping with one PostgreSQL version preinstalled. If that holds, option A needs no install step for that version. I can't verify it from here.
+**Recommendation:** A, leaning. The package claims support for all of these, and testing them costs almost nothing. The best argument for B is that only two versions matter today. If a 3.14-only failure shows up, I can turn that version into a warning instead of a failure. I haven't checked that `psycopg[binary]` (the Postgres driver) publishes ready-made packages for 3.14.
 
-**Recommendation:** A, leaning. It keeps the tests as written. The best argument for B is easy version pinning, but A can install a specific version too.
-
-**Question:** A or B? And which PostgreSQL version do billing and the data team run in production? CI should test against that version.
+**Question:** Test on every version 3.10–3.14, or only on 3.10 and 3.13?
 
 ---
 
-### 3. How should CI install the library and its tools?
+### Q3. How should the tests get a Postgres database in CI?
 
-**Context:** The dev tools (pytest, its PostgreSQL plugin and ruff) are listed in a newer section of `pyproject.toml` called `[dependency-groups]`. The fast installer **uv** reads that section directly. **pip** reads it only from version 25.1 on. A **lockfile** (`uv.lock`) records the exact version of every package. With one, every CI run installs the same versions. Without one, each run installs the latest allowed versions. Your users never see the lockfile: billing and the data team always get the latest psycopg that `pyproject.toml` allows.
+**Context:** By default, pytest-postgresql's `postgresql` helper starts a fresh Postgres server for the test run using `pg_ctl`, Postgres's own start/stop program. So the machine running the tests needs Postgres installed. The other way is to run Postgres as a separate service that CI starts next to the tests. The plugin connects to that with a different helper, `postgresql_noproc`, which means changing the tests.
 
-**Options:**
-- **A. uv, no lockfile**
-  - Pros: CI tests the same package versions your users will actually install.
-  - Cons: a new release of a package can turn CI red overnight even though your code didn't change.
-- **B. uv with a committed lockfile**
-  - Pros: runs are repeatable, and a failure always comes from a change in your code.
-  - Cons: you test old pinned versions while your users run newer ones, and you have to update the lockfile by hand.
-- **C. pip 25.1+**
-  - Pros: no new tool to learn.
-  - Cons: installs more slowly, and installing the dev tools takes an extra flag.
+**Example:** `test_balance(postgresql)` under each option:
 
-**Recommendation:** A, leaning. For a library, testing what users will actually get matters more than repeatable runs. The best argument for B is that surprise failures are annoying, but they also warn you about a break before billing hits it.
+| | Test code | Where Postgres runs | Developer laptops |
+|---|---|---|---|
+| A | unchanged | started by the test itself on the CI machine | same as CI: needs Postgres installed |
+| B | uses `postgresql_noproc` | a separate Postgres container (an isolated, pre-packaged copy of Postgres) started by CI | need a Postgres server already running |
 
-**Question:** uv without a lockfile, uv with one, or pip?
+**Options**
+- **A. Install Postgres on the CI machine and keep the tests as they are**
+  - Pros: no test changes, and tests behave the same locally and in CI.
+  - Cons: CI has to locate or install the right Postgres binaries. GitHub's Ubuntu machines reportedly come with one Postgres version preinstalled but not on the PATH (I haven't verified this), so pinning a different version means installing it.
+- **B. Run Postgres as a separate service and switch the tests to `postgresql_noproc`**
+  - Pros: choosing the Postgres version is one line (the container image tag), and this is the common CI setup.
+  - Cons: the tests have to change, and developers need a server running before tests will pass.
+
+**Recommendation:** A, leaning. It needs no code changes, and local runs match CI. The best argument for B is that switching Postgres versions is trivial. A wins anyway because one extra install step is cheaper than changing every test and every developer's setup.
+
+**Questions:**
+- **3a.** Install Postgres on the CI machine (A), or run it as a separate service and change the tests (B)?
+- **3b.** Which Postgres major version should CI use? Ideally whatever billing and the data team run in production. If you don't know, I'd use 17.
 
 ---
 
-### 4. Which style checks should CI run?
+### Q4. How should CI install the dependencies, and should exact versions be locked?
 
-**Context:** ruff is the style tool already in your dev list. It has two parts. `ruff check` catches likely bugs and sloppy code, such as unused imports. `ruff format --check` fails CI if code isn't laid out the standard way (the fix is to run `ruff format`). With no settings file, ruff uses its built-in defaults, which already respect "Python 3.10 and newer".
+**Context:** The dev tools (pytest, pytest-postgresql, ruff) are listed under `[dependency-groups]`, a newer `pyproject.toml` section. uv, a fast Python package installer, reads that section directly. pip only reads it from version 25.1 onward. Separately, a lockfile (`uv.lock`) records the exact version of every package, so each CI run installs exactly the same versions until someone updates the file.
 
-**Options:**
-- **A. Both checks, default settings**
-  - Pros: there's almost no code yet, so enforcing formatting now causes no cleanup work.
-  - Cons: contributors' PRs fail until they run the formatter.
-- **B. `ruff check` only**
-  - Pros: CI fails only on real problems, never on layout.
-  - Cons: code layout drifts between contributors.
-- **C. Both checks, plus a ruff settings section that turns on stricter rules**
-  - Pros: catches more.
-  - Cons: you'd have to choose which rules, which is a decision of its own.
+**Options**
+- **A. uv, with a committed `uv.lock`**
+  - Pros: fast, and the same versions on every run, so CI only goes red when your code changed.
+  - Cons: a library's lockfile doesn't apply to the teams that use it. When a new psycopg release breaks things, CI stays green until someone updates the lock, while billing and the data team hit the break right away.
+- **B. uv, without a lockfile (always install the newest allowed versions)**
+  - Pros: CI sees the same new releases your teams will get, so breakage shows up early.
+  - Cons: CI can go red overnight with no code change, for example after a new pytest or ruff release.
+- **C. pip 25.1 or newer**
+  - Pros: no new tool for anyone.
+  - Cons: slower, has no lockfile of its own, and older pip versions ignore `[dependency-groups]` without any warning.
 
-**Recommendation:** A, firm. The codebase is empty, so turning formatting on now costs nothing, and adding it later means one big reformatting commit.
+**Recommendation:** A, leaning. It keeps CI failures tied to your own changes, and updating `uv.lock` occasionally takes care of drift. The best argument for B is that a library should be tested against what its users actually install. If you'd rather catch upstream breakage the day it happens, choose B.
 
-**Question:** Both checks with default settings, `ruff check` only, or stricter rules?
+**Question:** uv with a committed lockfile, uv without one, or pip?
+
+---
+
+### Q5. What should ruff check?
+
+**Context:** ruff is a fast Python tool that does two jobs. The **linter** (`ruff check`) flags likely bugs, such as unused imports or undefined names. The **formatter** check (`ruff format --check`) fails CI if code isn't laid out in its standard style. There is no ruff configuration yet, so it would use its defaults. ruff reads the minimum Python version from `requires-python` on its own.
+
+**Options**
+- **A. Linter and formatter check, default settings**
+  - Pros: style arguments disappear from code reviews, and nothing needs configuring.
+  - Cons: CI fails on layout alone until people get used to running `ruff format` before they push.
+- **B. Linter only, default settings**
+  - Pros: CI only fails on probable bugs, never on layout.
+  - Cons: code layout will drift.
+- **C. Either of the above, plus a `[tool.ruff]` section turning on extra rules** (for example, import sorting)
+  - Pros: stricter checks.
+  - Cons: rules to choose and maintain before there is any code to check.
+
+**Recommendation:** A, firm. With almost no code yet, adopting the formatter now is free, and later it costs a big reformatting change.
+
+**Question:** Linter and formatter with defaults, linter only, or add a custom rule set?

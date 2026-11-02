@@ -1,0 +1,47 @@
+{
+  "ci-setup": {
+    "answerable-ending": false,
+    "cold-reader": false,
+    "grounded-recommendation": false,
+    "pros-and-cons": false,
+    "_words": 317
+  },
+  "dead-code": {
+    "answerable-ending": true,
+    "cold-reader": false,
+    "grounded-recommendation": true,
+    "pros-and-cons": false,
+    "stays-short": true,
+    "_words": 161
+  },
+  "orders-migration": {
+    "answerable-ending": false,
+    "cold-reader": false,
+    "grounded-recommendation": false,
+    "pros-and-cons": false,
+    "_words": 364
+  },
+  "pricing-cache": {
+    "answerable-ending": false,
+    "cold-reader": false,
+    "grounded-recommendation": true,
+    "pros-and-cons": false,
+    "_words": 313
+  },
+  "reliability-plan": {
+    "answerable-ending": false,
+    "codes-explained": false,
+    "cold-reader": false,
+    "grounded-recommendation": true,
+    "pros-and-cons": false,
+    "_words": 248
+  },
+  "token-storage-ru": {
+    "answerable-ending": false,
+    "cold-reader": false,
+    "grounded-recommendation": true,
+    "pros-and-cons": false,
+    "user-language": true,
+    "_words": 278
+  }
+}

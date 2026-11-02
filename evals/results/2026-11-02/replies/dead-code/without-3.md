@@ -1,9 +1,12 @@
-Sorry, that was unclear. Here's the question:
+Sure, here's the short version.
 
-**Can I delete `app/old_utils.py`?** Yes or no.
+**Can I delete `app/old_utils.py`?**
 
-Why I think it's dead code:
-- Nothing in the project uses it.
-- A comment at the top says a newer version in `app/utils.py` replaced it.
+- **What it is:** an old copy of `slugify`. Its own comment says it was replaced by `app/utils.py`.
+- **Why it looks safe:** nothing in this project uses it. `main.py` imports from `app/utils.py`, not this file.
+- **The catch:** it isn't saved in git (the repo has no commits), so once it's deleted it can't be restored.
 
-One thing to know first: the file isn't saved in git, so if I delete it, it's gone for good. If you'd rather keep a copy, I can move it somewhere instead of deleting it.
+Reply with one of these:
+1. **Yes**: I delete it.
+2. **Move it**: I put it somewhere outside `app/` so you keep a copy.
+3. **No**: I leave it alone.

@@ -1,32 +1,28 @@
-I'm waiting on one decision before I write any code: **what the cache key should be.**
+**Context.** Product pages wait about 800 ms each time they call the upstream pricing API for a price. The team agreed on 2026-10-20 to put a Redis cache in front of `get_price` that keeps each price for 10 minutes. Dana owns this, and it has to merge before the Nov 14 sale. The only open point is the cache key, which decides which requests share a stored price. NOTES.md and ticket PRICING-77 both leave it open, and I need it before I can write code.
 
-**Context.** Product pages wait about 800 ms on `pricing_api.get_price`, the call to the upstream pricing API. At standup on 2026-10-20 the team agreed to put a Redis cache with a 10-minute TTL in front of it. Dana owns it, and it has to merge before the Nov 14 sale. The one point left open was the cache key, which is ticket PRICING-77 ("Decide cache key for pricing cache, blocked on design"). Nothing has been changed yet.
+Most products have one euro price that the API converts into each currency. A few products have a separate price per country, set by merchandising. One of them is B-2210, which costs €49.00 in Germany and €45.00 in Austria. Both countries use euros. Ticket PRICING-81 adds 12 more products like this in Q1. `get_price` receives the product code and a locale such as `de-DE`, which is language plus country. We ship 40 locales.
 
-The function being cached is `get_price(sku, locale)` in `pricing/service.py`. A locale is a language plus a country, like `de-DE` or `de-AT`, and we ship 40 of them.
+**Live example:** B-2210, first requested from `de-DE` and then from `de-AT`:
 
-**Decided:** Redis, 10-minute TTL, cache in front of `get_price`.
-**My assumption:** prices up to 10 minutes stale are acceptable, including right after the daily currency-rate update. I take that as part of agreeing to the TTL.
+| Cache key | Austria is shown |
+|---|---|
+| product + currency | €49.00, which is wrong (it reuses Germany's entry) |
+| product + locale | €45.00, which is right |
+| product + country | €45.00, which is right |
 
-**Why the key matters.** Most products have one EUR price that the API converts to the local currency. Some products instead have a fixed price per country, set by merchandising, and two of those countries can share a currency. If the key leaves out the country, the first country to fill the cache sets the price every other country sees:
-
-| Product | Locale | Correct price | Key = product + currency | Key = product + locale |
-|---|---|---|---|---|
-| B-2210 | de-DE | €49.00 | €49.00 (fills the cache) | €49.00 |
-| B-2210 | de-AT | €45.00 | **€49.00, wrong** | €45.00 |
-
-Today 3 products have country prices: B-2210 (Germany/Austria), K-0915 (France/Belgium) and T-3302 (Italy/Spain). Ticket PRICING-81 adds 12 more in Q1. So product + currency is out. That leaves two options:
+So "product + currency" is out. The question is between the other two.
 
 **Options**
 
-**A. Key = product + full locale** (e.g. `B-2210:de-AT`)
-- Pros: Can't return a wrong price, because it's exactly what the upstream API is asked for.
-- Pros: Stays correct whatever merchandising adds later, including PRICING-81.
-- Cons: Each locale fills its own cache entries, so the hit rate is lower than if locales shared entries.
+1. **Product + locale** (`B-2210:de-AT`)
+   - Pros: It can never show a wrong price, because it uses exactly what the API is asked for.
+   - Pros: Nothing about the upstream API needs to be confirmed.
+   - Cons: Each locale stores its own copy, so up to 40 entries per product.
+2. **Product + country** (`B-2210:AT`)
+   - Pros: Locales that share a country (say `de-CH` and `fr-CH`) share one entry, so more requests are served from the cache.
+   - Cons: If the API ever varies prices by language, users silently see wrong prices for up to 10 minutes.
+   - Cons: The gain may be zero. The 8 locales listed in `locales.txt` all have different countries, and the other 32 aren't listed.
 
-**B. Key = product + country only** (e.g. `B-2210:AT`, with `de-CH` and `fr-CH` sharing one entry)
-- Pros: Better hit rate, but only if some country has more than one locale.
-- Cons: Correct only if the upstream API never prices by language. The code doesn't show that, so a wrong guess means silently wrong prices during the sale.
+**Recommendation:** option 1, though I'm leaning rather than certain. The best argument for option 2 is the better hit rate. But I can't confirm that the API ignores language (the API client is a stub), and I can't confirm that any two of our locales share a country. So option 2 risks wrong prices for a gain that may not exist. Even with option 1, any repeat request within 10 minutes skips the 800 ms wait.
 
-**Recommendation: A, firmly.** B only helps if some country ships in two languages. Of the 40 locales, `locales.txt` lists only 8 (de-DE, de-AT, fr-FR, fr-BE, it-IT, es-ES, nl-NL, pl-PL), each a different country. So B's gain may be zero, and its risk is wrong prices. If the full list has countries with two or more locales and you know the API ignores language, B is worth reconsidering.
-
-**Should the cache key be product + full locale (A) or product + country (B)?**
+**Should the cache key be product + locale (option 1) or product + country (option 2)?**

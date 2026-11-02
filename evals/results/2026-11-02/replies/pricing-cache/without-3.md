@@ -1,12 +1,12 @@
-No problem. Here's the question again, from the start.
+Sorry, here it is more simply.
 
-**The task:** add a Redis cache (10-minute TTL) in front of `get_price(sku, locale)`. NOTES.md says the plan is agreed, but one thing is still undecided: what the cache key should be (ticket PRICING-77).
+**The question:** When we save a price in the cache, what do we label it with so we can find it again?
 
-**Why the key matters:** some products have a price set per country, and countries that share a currency can still have different prices. For example, product `B-2210` costs €49.00 in Germany and €45.00 in Austria. If the cache key were just product + currency, an Austrian shopper could see the German price, or the other way round, for up to 10 minutes.
+**The problem with labeling by product + currency:** Some products cost different amounts in different countries, even when those countries use the same currency. For example, product B-2210 is €49 in Germany and €45 in Austria. If the label were just "B-2210 + EUR", a German shopper could load the page first, and then Austrian shoppers would see €49 for the next 10 minutes. That price is wrong for them.
 
-**The question:** which cache key should I use?
+**Your two choices:**
 
-- **A. Product + locale (e.g. `B-2210` + `de-AT`).** This is my recommendation. It's always correct because it matches exactly what the function is called with. The downside is fewer cache hits, since each of the 40 locales gets its own entry.
-- **B. Product + country (e.g. `B-2210` + `AT`).** Locales in the same country share one entry, so there are a few more cache hits. It's only correct if prices never depend on the language part of the locale, and I can't confirm that from the code.
+- **A. Label by product + locale** (like `B-2210` + `de-AT`). This is always correct, because each country and language gets its own saved price. The downside is that more copies get stored, so the cache helps a bit less. This is what I recommend.
+- **B. Label by product + country** (like `B-2210` + `AT`). This stores fewer copies, so it's a little faster. It's only safe if the price never depends on the language. For example, German and French speakers in Switzerland would have to always see the same price. I can't tell from the code whether that's true.
 
-Reply "A" or "B" and I'll write it. If you're not sure, go with A.
+**So: A or B?** If you're not sure, pick A.

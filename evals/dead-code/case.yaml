@@ -9,4 +9,4 @@ context:
 execution:
   max_turns: 10
   allowed_tools: [Read, Glob, Grep, Skill]
-  prompt: "Not sure what you're asking. Ask again."
+  prompt: "Didn't quite get it. Ask again?"

@@ -1,46 +1,51 @@
-I'm waiting on two decisions before I can plan this sprint's reliability work.
+Here's the question again, in simpler terms. I'm asking two things.
 
-**Context:** There's room for 10 dev-days this sprint (two engineers). Three pieces of work compete for it, and together they need 16 days:
+## Question 1: Where do the 10 dev-days go?
 
-- **PLAT-412** (8 days): moves the checkout session store from Redis Sentinel to Redis Cluster. The session store is where logged-in shoppers' checkout state lives. Sentinel runs one primary server, and when it failed on Oct 3 checkout went down for 47 minutes (incident INC-301). Cluster has no single primary like that.
-- **PLAT-415** (2 days): adds alerts when an endpoint's p99 latency (the response time the slowest 1% of requests exceed) gets too high.
-- **ADR-7** (6 days left): an accepted decision to retire checkout v1 by Dec 15. Checkout v2 keeps sessions in Postgres, not Redis. Once this ships, checkout no longer uses Redis at all, and only the admin panel still keeps sessions there.
+**Context.** This sprint you have 10 dev-days (two engineers) for reliability work. On Oct 3, checkout went down for 47 minutes (INC-301). The cause was the Redis server that stores user sessions: it has a single main server, and when that server failed, checkout failed with it. There are two pieces of work that deal with this, and they overlap:
 
-**Decided:** ADR-7 is accepted with a Dec 15 deadline.
-**My assumption:** ADR-7's remaining 6 days come out of this team's 10. Nothing in docs/ confirms who owns it, and the answer would change my recommendation.
+- **PLAT-412** (8 days) rebuilds that Redis setup so it no longer depends on one main server. It fixes the cause directly.
+- **ADR-7** is a decision your team already accepted. By Dec 15, the old checkout gets replaced by checkout v2, which stores sessions in Postgres (a different database) and doesn't use Redis. It has 6 days of work left. Once it's done, the only thing still using Redis sessions is the admin panel.
 
-**The core tension:** PLAT-412 and ADR-7 both remove the failure behind INC-301, but in different ways. PLAT-412 makes Redis more reliable. ADR-7 takes checkout off Redis entirely. Doing both means 8 days spent hardening a store that checkout leaves about six weeks later.
+So if ADR-7 ships, checkout no longer depends on Redis at all, and PLAT-412 would only protect the admin panel. There's also a small ticket, **PLAT-415** (2 days): latency alerts for every endpoint.
 
-| | Days used (of 10) | Checkout still depends on one Redis primary? | Dec 15 deadline |
+**My assumption:** I don't know whether ADR-7's remaining 6 days come out of these 10 days or out of some other budget. The answer changes the options.
+
+**Live example:**
+
+| | Days used | Checkout still depends on Redis? | Risk to Dec 15 |
 |---|---|---|---|
-| A: ADR-7 + PLAT-415 | 8 (2 spare) | No, once ADR-7 ships | On track |
-| B: PLAT-412 + PLAT-415 | 10 | No, after the migration | 6 days still to find in later sprints |
-| C: ADR-7 is staffed elsewhere | depends | depends | n/a here |
+| A: ADR-7 + alerts | 8 of 10 | No, once ADR-7 ships | On track |
+| B: PLAT-412 + alerts | 10 of 10 | Yes, but Redis no longer has a single point of failure | ADR-7 doesn't move this sprint |
+| All three | 16 of 10 | — | Doesn't fit |
 
-## Question 1: What goes into this sprint?
+**Options**
 
-**A. ADR-7 + PLAT-415, and defer PLAT-412 or shrink it to the admin panel**
-- Pros: removes the INC-301 risk for checkout permanently. Keeps Dec 15 on track. Leaves 2 days of slack.
-- Cons: checkout stays on single-primary Redis until ADR-7 cuts over, so an INC-301 repeat is possible in the meantime. The admin panel stays on Sentinel.
+- **A. Do ADR-7 and the alerts. Postpone PLAT-412 or cut it down to the admin panel.**
+  - Pros: removes checkout's dependence on Redis for good, keeps the Dec 15 date, and leaves 2 days spare.
+  - Cons: until ADR-7 ships, checkout still sits on the Redis setup that broke on Oct 3. Also, I don't know whether checkout v2's Postgres has its own single main server, so the same kind of outage might just move there.
+- **B. Do PLAT-412 and the alerts.**
+  - Pros: fixes the exact cause of the Oct 3 outage right away.
+  - Cons: 8 days spent hardening something checkout stops using a few weeks later. ADR-7 doesn't move this sprint, so Dec 15 gets tighter.
+- **C. ADR-7 is paid for from a different budget.** Then the 10 days only cover PLAT-412 and the alerts, and the real question is whether PLAT-412 is still worth 8 days if checkout leaves Redis by Dec 15.
 
-**B. PLAT-412 + PLAT-415**
-- Pros: goes straight at INC-301's cause and uses exactly 10 days.
-- Cons: about 8 days on infrastructure checkout abandons by Dec 15, so what lasts mostly protects the admin panel. ADR-7's 6 days get pushed into the remaining weeks.
+**Recommendation:** A, though I'm leaning, not certain. The strongest argument for B is that it fixes the known cause immediately. It doesn't win because ADR-7 already makes that fix mostly unnecessary for checkout, at a lower cost. One thing would change my mind: if checkout v2's Postgres has the same single-server weakness, the Redis work might still matter for comparison.
 
-**C. ADR-7 doesn't come from this team's capacity**
-- Then the choice is PLAT-412 + PLAT-415 against PLAT-415 alone. PLAT-412 still loses most of its value once ADR-7 ships, whoever does ADR-7.
+**Which do you want this sprint: A, B, or C (ADR-7 is funded elsewhere)?**
 
-**Recommendation: A, leaning.** The deciding fact is that ADR-7 removes checkout's dependence on Redis, which makes most of PLAT-412 temporary. The best case for B is that it protects checkout sooner than ADR-7 would. It doesn't win because ADR-7 fits in this sprint too. If ADR-7 isn't this team's work (option C), my recommendation changes.
+## Question 2: Which uptime target should the plan aim for?
 
-## Question 2: Which availability target should the plan aim for?
+**Context.** Checkout currently promises 99.5% uptime, which allows about 3.6 hours of downtime a month. A draft proposal, RFC-3, would raise that to 99.9%, which allows about 43 minutes a month. The Oct 3 outage alone (47 minutes) would have used up all of that. The head of product hasn't signed off on RFC-3 yet.
 
-**Context:** Checkout's current SLO (the availability target it's measured against) is 99.5%, which allows about 3.6 hours of downtime a month. RFC-3 proposes raising it to 99.9%, about 43 minutes a month. INC-301 alone would have used up that whole budget. RFC-3 is still a draft and needs the head of product's sign-off.
+**Options**
 
-- **Current 99.5%:** Pros: it's the approved target. Cons: we might under-invest if 99.9% gets approved during the sprint.
-- **Proposed 99.9%:** Pros: gets ahead of where the target is probably heading. Cons: it isn't approved, and it would raise the priority of anything that cuts outage minutes.
+- **Plan against 99.5% (the current target).**
+  - Pros: it's the only target actually approved.
+  - Cons: if RFC-3 gets approved mid-sprint, the plan may look too relaxed.
+- **Plan against 99.9%.**
+  - Pros: ready if RFC-3 is approved.
+  - Cons: it plans around a target nobody has approved yet.
 
-**Recommendation: 99.5%, firm.** It's the only approved target. Under either target, option A still ranks first.
+**Recommendation:** 99.5%, and I'm confident about this one, because RFC-3 is still a draft. Either way it barely changes the plan, since A is my pick under both targets.
 
----
-
-**Your answers:** (1) A, B, or C? If C, who owns ADR-7? (2) Plan against 99.5% or 99.9%?
+**Which target should I use: 99.5% or 99.9%?**

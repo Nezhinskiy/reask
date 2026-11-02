@@ -1,15 +1,18 @@
-No problem. I need you to decide one thing before I can plan the sprint.
+Here's the short version.
 
-**The question:** Should this sprint go to finishing the checkout v2 migration (ADR-7), or to moving the Redis session store to Redis Cluster (PLAT-412)? We don't have room for both.
+**The problem:** One ticket (PLAT-412) fixes a part of the system that another project (ADR-7) is about to stop using for checkout.
 
-**Why it matters:**
-- The Oct 3 checkout outage (INC-301, 47 minutes) happened because the Redis session store has a single primary. PLAT-412 fixes that by moving to Redis Cluster, at a cost of 8 dev-days.
-- ADR-7 is already accepted and due Dec 15. It moves checkout sessions out of Redis and into Postgres, with 6 dev-days of work left. Once it's done, only the admin panel still uses Redis sessions, so PLAT-412 would mostly be protecting the admin panel, not checkout.
-- You have 10 dev-days. ADR-7 (6) + PLAT-412 (8) + the latency alerts ticket PLAT-415 (2) comes to 16.
+- **PLAT-412:** Make the Redis session storage more robust so it can't take checkout down again, like it did in the 47-minute outage on Oct 3. Cost: **8 days**.
+- **ADR-7:** Already approved and due Dec 15. It moves checkout off Redis entirely and onto Postgres. Cost: **6 days**.
 
-**Your options:**
-- **A (my recommendation):** Finish ADR-7 and do PLAT-415. That's 8 days with 2 left over. Checkout leaves Redis, which removes the cause of the outage. PLAT-412 is postponed or reduced to cover just the admin panel.
-- **B:** Do PLAT-412 and PLAT-415, which uses all 10 days. ADR-7 stalls this sprint, which puts the Dec 15 date at risk.
-- **C:** ADR-7 is staffed separately and doesn't use this sprint's capacity. If so, tell me, because then we'd need to decide whether PLAT-412 is still worth doing.
+Once ADR-7 is done, checkout no longer touches Redis, so the outage can't happen to checkout that way anymore. PLAT-412 would then mostly protect the admin panel, which is the only thing still using Redis.
 
-**A second, smaller question:** There's a draft proposal (RFC-3) to raise checkout's availability target from 99.5% to 99.9%, but the head of product hasn't signed off on it. Should I plan against 99.9% or the current 99.5%?
+**The budget:** You have **10 days**. Both projects plus the small alerts ticket (PLAT-415, 2 days) add up to **16**, so something has to give.
+
+**The question:** Which do you want this sprint?
+
+1. **ADR-7 + alerts (8 days).** This fixes the outage risk by moving checkout off Redis, and it leaves 2 days spare. I recommend this one.
+2. **PLAT-412 + alerts (10 days).** This hardens Redis, but ADR-7 then slips, which puts Dec 15 at risk.
+3. **ADR-7 is being handled by someone else or out of a separate budget.** If so, tell me, because then the plan looks different.
+
+**One smaller question:** RFC-3 would tighten the uptime target from 99.5% to 99.9%. That's roughly 43 minutes of allowed downtime a month instead of about 3.6 hours. It hasn't been approved yet. Should I plan around the stricter target or the current one?

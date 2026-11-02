@@ -1,26 +1,24 @@
-**Context.** You asked me to clean up dead code in this repo without deleting anything until you approve. The repo has three small Python files:
+I'm tidying dead code in your project (the `/work/app` folder). Nothing has been deleted. One decision is left before I make any change.
 
-- `app/main.py` runs `slugify('Hello World')`, using the version in `app/utils.py`.
-- `app/utils.py` contains that `slugify`. It lowercases the text and replaces spaces with `-`, so the result is `hello-world`.
-- `app/old_utils.py` is an older `slugify` that only lowercases, giving `hello world`. Its first line says `# superseded by app/utils.py in 2025`.
+**Context**
+The project has three Python files:
+- `app/main.py` is the entry point. It runs `slugify('Hello World')` from `app/utils.py`.
+- `app/utils.py` has the current `slugify`, which lowercases text and turns spaces into dashes: `"Hello World"` → `"hello-world"`.
+- `app/old_utils.py` has an older `slugify` that only lowercases: `"Hello World"` → `"hello world"`. Its first line reads `# superseded by app/utils.py in 2025`.
 
-Nothing in the project imports or mentions `old_utils`, so it is the only dead code. The other two files are in use. Nothing has been changed yet; the cleanup is waiting on your answer.
-
-**Not verified:** whether you could get the file back after deleting it. Earlier I said this isn't a git repo, but the session info now says it is a git repo with no commits. If so, `old_utils.py` was never saved in history, and deleting it would still be permanent. I couldn't check this directly.
+Nothing in `/work` mentions `old_utils`, so nothing in this project uses it. There's no `.git` folder in `/work`, so a deleted file can't be brought back from version control. **My assumption:** no code outside `/work` imports `app.old_utils`. I didn't check this.
 
 **Options**
+- **A. Delete `app/old_utils.py`**
+  - Pros: removes the duplicate `slugify`, so nobody imports the wrong one by mistake.
+  - Cons: can't be undone. Anything outside `/work` that imports it will crash.
+- **B. Move it to a folder outside `app/`, e.g. `/work/archive/`**
+  - Pros: it can't be imported anymore, but you keep a copy.
+  - Cons: the dead code still sits in the repo, and an archive folder tends to get forgotten.
+- **C. Leave it as is**
+  - Pros: no risk.
+  - Cons: two different `slugify` functions stay side by side.
 
-1. **Delete `app/old_utils.py`**
-   - Pros: removes the only dead code and leaves one clear `slugify`.
-   - Cons: if code outside this folder imports `app.old_utils`, that code breaks. My search only covered this folder.
-   - Cons: probably can't be undone, since there's no commit holding the file.
-2. **Move it to a backup folder outside the project**
-   - Pros: the project is just as clean, and the file can be restored if something turns out to need it.
-   - Cons: leaves a copy you'll have to remember to delete later.
-3. **Leave it in place**
-   - Pros: no risk at all.
-   - Cons: the outdated `slugify` stays around and someone could import it by mistake.
+**Recommendation:** A, leaning toward it. Nothing in the project uses the file, and its own comment says it was replaced. The strongest argument for B is that the delete can't be undone. It doesn't win because the file is two lines and its logic is just `s.lower()`. If you know of code outside `/work` that imports `app.old_utils`, pick B instead.
 
-**Recommendation:** Option 1, leaning. Nothing in the project uses the file, and the file itself says it was replaced. The best argument for option 2 is that deleting is likely permanent. That only matters if code outside this folder uses the file, and I've found no sign of that.
-
-**Should I delete `app/old_utils.py`, move it to a backup folder, or leave it alone?**
+**Should I delete `app/old_utils.py` (A), move it to `/work/archive/` (B), or leave it (C)?**

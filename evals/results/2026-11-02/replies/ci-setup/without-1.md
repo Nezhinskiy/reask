@@ -1,29 +1,27 @@
-Got it: GitHub Actions, running on PRs and on pushes to `main`. Here are the other four in plainer terms. Each has a default I'd pick, so "yes to all defaults" is a fine answer.
+Got it: GitHub Actions, running on pull requests and on pushes to `main`. Here are the other four questions in plainer terms, each with what I'd pick if you don't mind either way:
 
 **1. Which Python versions should CI test?**
-Your README says billing uses Python 3.10 and the data team uses 3.13. CI can run the tests on each version you name. I can test just those two, or also the versions in between (3.11 and 3.12). Testing more versions makes each run a bit slower.
-**Default:** just 3.10 and 3.13.
+Your README says one team uses Python 3.10 and another uses 3.13. I can test just those two, or also the versions in between (3.11 and 3.12). Testing more versions makes CI a bit slower but catches more problems.
+*My pick: just 3.10 and 3.13.*
 
-**2. How should the database test get a database?**
-`tests/test_ledger.py` needs a real PostgreSQL database while it runs, and CI machines don't come with one. There are two ways to provide it:
-- **A:** I install PostgreSQL on the CI machine and the test starts it itself. Your test code stays exactly as it is.
-- **B:** CI starts a database next to the tests and the test connects to it. This is a bit more standard for CI, but I'd have to change a line in your test.
+**2. How should the tests get a database?**
+One test needs a real Postgres database. There are two ways to provide it:
+- **Keep the tests as they are.** CI installs Postgres on the test machine, and the test starts its own database.
+- **Change the tests a little.** CI runs a separate database alongside the tests, and the test connects to it. This is the more common setup, but I'd have to edit the test file.
 
-**Default:** A, so your tests don't change.
+Also, which Postgres version do you use in production, if you know?
+*My pick: keep the tests as they are, with the same Postgres version as production.*
 
-Also, which PostgreSQL version do you run in production? If you don't know, I'll use 17, the current one.
-
-**3. How should CI install your project's tools?**
-Your `pyproject.toml` lists tools like pytest in a way that a tool called **uv** reads directly. The usual `pip` can only read it in recent versions. I'd use uv. It's fast and widely used, and you don't need to install it yourself.
-
-A related question is whether to pin exact versions. uv can create a `uv.lock` file that records the exact version of every package. With it, CI installs the same versions every time. Without it, CI gets the newest allowed versions, so a run can break when a package releases an update.
-**Default:** use uv, and add `uv.lock`.
+**3. Which tool should install the dependencies?**
+The way your dev tools (pytest, ruff) are listed works best with a tool called **uv**. Plain **pip** can also handle it, but only recent versions. With uv, I can also add a "lock file" that pins exact package versions. That way CI doesn't break when some library releases an update.
+*My pick: uv, with a lock file.*
 
 **4. How strict should the code-style checks be?**
-Your project includes **ruff**, a tool that checks Python code. CI can run it in two ways:
-- **Problems only:** it flags things like unused imports and likely bugs.
-- **Problems and formatting:** it also fails if the code isn't formatted in ruff's standard style (spacing, line breaks, quotes).
+Ruff is already in your dev tools. It can:
+- only flag likely bugs and sloppy code, or
+- also fail CI when code isn't formatted in its standard style.
 
-**Default:** both, with ruff's standard settings. If you choose both, I'll first run the formatter once on the existing code so CI doesn't fail on day one.
+Right now it uses its default rules. I can leave those or set your own.
+*My pick: both checks, default rules.*
 
-Answer whichever you like, or say "defaults", and then I'll write the config.
+You can reply with something like "your picks, Postgres 16", or change any of them.

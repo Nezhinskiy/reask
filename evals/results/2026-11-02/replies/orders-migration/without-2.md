@@ -1,20 +1,14 @@
-No problem. Here's where things stand: I read the repo and haven't written anything. I need three answers before I write the migration.
+Sure, here's the short version.
 
-**Background:** `orders` has about 40M rows. Your deploy job times out after 10 minutes, and a long table rewrite caused an outage last month (INC-212). So filling the new column for every existing order in one migration isn't safe.
+**The problem:** `orders` is big (about 40M rows) and busy. If one migration fills in `region` for every old order at once, it will take longer than the 10-minute deploy limit, and it could freeze writes like the `payments` incident did (INC-212).
 
-**1. How should a country turn into a region?**
-`app/orders.py` says the region comes from the customer's billing country "mapped through `REGIONS`", but `REGIONS` doesn't exist anywhere in the repo.
-- Where is that mapping, or what should it be? For example, is `DE` → `EU`, or is the region just the country code itself?
-- If a country isn't in the mapping, should the order fail or get something like `'UNKNOWN'`?
+**My plan:** do it in small safe steps instead of one big one.
+1. Add an empty `region` column. This is instant.
+2. Have new orders fill in `region` when they're created.
+3. Fill in old orders a little at a time with a separate script, not during deploy.
+4. Once every row has a value, make the column required (NOT NULL).
 
-**2. Is the current country good enough for old orders?**
-For existing orders, the only data available is the customer's billing country *today*. If a customer has moved, their old orders would get the new region. Is that acceptable for the tax report (TAX-19), or does it need the country at the time of each order?
-
-**3. Are you OK with doing this in stages?**
-My plan:
-- First, add the column as nullable. This is instant.
-- Then new orders start filling it in.
-- A separate script fills in old orders in small batches, outside the deploy job.
-- Once every row has a value, make the column NOT NULL.
-
-The tax report can treat a missing region as "unknown" until Dec 1, so this fits the deadline. Is that fine, or would you rather do it another way (e.g. in a maintenance window)?
+**Three questions for you:**
+1. **What are the region values?** The code mentions a `REGIONS` mapping from country to region, but it doesn't exist in the repo. Where is it, and what should happen if a country isn't in it?
+2. **Is the current country OK for old orders?** If a customer moved, their old orders would get their *new* country's region. Is that fine for the tax report?
+3. **Is the step-by-step plan OK?** That includes running a separate script outside the deploy to fill in old orders.

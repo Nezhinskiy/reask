@@ -9,4 +9,4 @@ context:
 execution:
   max_turns: 10
   allowed_tools: [Read, Glob, Grep, Skill]
-  prompt: "Sorry, I stepped away and lost the thread. I don't understand what you're asking me. Ask it again."
+  prompt: "I didn't quite get that. Can you ask again in plain words?"

@@ -1,10 +1,12 @@
-No problem. The plan is to cache `get_price` results in Redis for 10 minutes. Before I write it, I need you to decide one thing: **what each cache entry is keyed by.** NOTES.md and ticket PRICING-77 list this as undecided.
+Sure, here it is in plain terms.
 
-**Why it matters:** Most products have a single EUR price. But a few products have different prices in countries that share a currency. For example, `B-2210` costs €49 in Germany and €45 in Austria (`pricing/pricing_api.py:8-12`). If the key only covered product + currency, a German visitor could fill the cache and Austrian visitors would then see €49 for up to 10 minutes.
+**The question:** When we save a price in the cache, what should we label it with so we can find it again?
 
-**The question:** Which key should I use?
+**Why it matters:** Some products cost different amounts in countries that use the same currency. For example, product `B-2210` costs €49 in Germany and €45 in Austria. If the label were just "product + currency", Germany and Austria would share one saved price. An Austrian shopper could then see the German price, or the other way around, for up to 10 minutes.
 
-- **A. Product + full locale (e.g. `B-2210` + `de-AT`)**: This is my recommendation. It's always correct because the key matches exactly what `get_price` is called with. The downside is a lower cache hit rate, since each of the 40 locales gets its own entry.
-- **B. Product + country (e.g. `B-2210` + `AT`)**: This gives a slightly better hit rate. But it's only correct if prices never depend on the language part of the locale, and I can't confirm that from the code.
+**Two safe choices:**
 
-If you have no strong preference, reply "A" and I'll implement it.
+1. **Label by product + locale** (for example, `B-2210` + `de-AT`). This is always correct. The downside is that each of the 40 locales keeps its own saved copy, so the cache helps a bit less. **This is my recommendation.**
+2. **Label by product + country** (for example, `B-2210` + `AT`). This saves fewer copies, but it's only correct if the price never depends on the language part of the locale. I can't tell that from the code, so someone like Dana would need to confirm it.
+
+**So: should I go with option 1, product + locale?** A simple "yes" is enough, and I'll start writing the code.

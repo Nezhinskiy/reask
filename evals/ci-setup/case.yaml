@@ -9,4 +9,4 @@ context:
 execution:
   max_turns: 10
   allowed_tools: [Read, Glob, Grep, Skill]
-  prompt: "1: GitHub Actions. 6: yes, PRs and pushes to main. The rest I don't follow, ask those again."
+  prompt: "1: GitHub Actions. 6: yes, PRs and pushes to main. The rest I didn't get, ask those again in plain words."
