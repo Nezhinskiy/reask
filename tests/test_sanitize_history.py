@@ -90,7 +90,9 @@ def test_placeholders_are_not_leaks() -> None:
 def test_every_committed_history_is_clean() -> None:
     histories = sorted((ROOT / "evals").rglob("history.jsonl"))
     assert histories
-    dirty = {str(p): found for p in histories if (found := sanitize_history.leaks(p.read_text()))}
+    dirty = {
+        str(p): found for p in histories if (found := sanitize_history.leaks(p.read_text("utf-8")))
+    }
     assert dirty == {}
 
 
