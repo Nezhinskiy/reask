@@ -9,8 +9,8 @@ renders the cases `claude plugin eval` runs:
 - <name>-trigger-decided, -proceed, -confused: does the skill load when it should, and only then.
 
     python -m scripts.build_evals check            # every scenario has its stage-1 truth (CI)
-    python -m scripts.build_evals build OUT_DIR    # render cases for recorded, frozen scenarios
-    claude plugin eval . --eval-dir OUT_DIR --tag main ...
+    python -m scripts.build_evals build evals-build  # render cases for recorded, frozen scenarios
+    claude plugin eval . --eval-dir evals-build --tag main ...
 
 The cases are rendered, not committed, so the scenario stays the only copy of each fact.
 """

@@ -65,7 +65,10 @@ def _scrub(value: Any, paths: list[tuple[str, str]]) -> Any:
 def sanitize(lines: list[str], cwd: str, home: str) -> list[dict[str, Any]]:
     # Longest first, so the working directory wins over the home directory that contains it.
     resolved = str(Path(cwd).resolve())
-    pairs = {(cwd, "/work"), (resolved, "/work"), (home, "~")}
+    # The scratch directory's parent too: an agent that mistypes the path (a dash for a slash)
+    # still names the temporary folder the recording ran in.
+    parents = {str(Path(cwd).parent), str(Path(resolved).parent)}
+    pairs = {(cwd, "/work"), (resolved, "/work"), (home, "~")} | {(p, "/work") for p in parents}
     pairs |= {(_slug(cwd), "-work"), (_slug(resolved), "-work"), (_slug(home), "-home")}
     paths = sorted(pairs, key=lambda p: len(p[0]), reverse=True)
     rows = []

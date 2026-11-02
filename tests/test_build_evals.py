@@ -30,7 +30,7 @@ def v2(tmp_path: Path) -> Path:
     shutil.copy(V2 / "prompts.toml", root / "prompts.toml")
     s = root / "scenarios" / "demo"
     shutil.copytree(V2 / "scenarios" / "rate-limit-compacted", s)
-    text = (s / "scenario.toml").read_text("utf-8")
+    text = (s / "scenario.toml").read_text("utf-8").split("\n[stage2]")[0]
     text = text.replace('codes = ["API-88", "INC-412"]', 'codes = ["API-88"]')
     text = text.replace("check_language = false", "check_language = true")
     (s / "scenario.toml").write_text(text + FROZEN, "utf-8")

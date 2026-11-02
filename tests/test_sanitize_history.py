@@ -24,7 +24,7 @@ SESSION = [
         message={
             "role": "user",
             "content": "<system-reminder>\nCLAUDE.md: be terse\n</system-reminder>\nRead "
-            f"{CWD}/NOTES.md and {HOME}/.claude/settings.json",
+            f"{CWD}/NOTES.md, {CWD}-typo/A.md and {HOME}/.claude/settings.json",
         },
     ),
     _row(type="assistant", isSidechain=True, message={"role": "assistant", "content": "sub"}),
@@ -61,7 +61,9 @@ def test_keeps_the_dialogue_and_only_the_replayed_keys() -> None:
 
 def test_paths_and_reminders_are_scrubbed() -> None:
     [user, _] = sanitize_history.sanitize(SESSION, CWD, HOME)
-    assert user["message"]["content"] == "Read /work/NOTES.md and ~/.claude/settings.json"
+    assert user["message"]["content"] == (
+        "Read /work/NOTES.md, /work-typo/A.md and ~/.claude/settings.json"
+    )
 
 
 @pytest.mark.parametrize(
