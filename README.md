@@ -35,127 +35,181 @@ reading the format can load.
 
 ## Does it help?
 
-Measured with Claude Code's plugin eval harness on six real stalls: an agent without reask has
-asked a question, and the user replies "Sorry, I stepped away and lost the thread. I don't
-understand what you're asking me. Ask it again." Every case runs with reask loaded and without
-it, and the user's reply is the same in both. Nobody types `/reask`; the skill loaded on its own
-in 18 of 18 runs. Claude Opus 5.5 answers, Claude Sonnet 5.5 judges, and there are 3 runs per arm.
+When you cannot answer your agent's question, you can answer anyway, ask by hand ("I didn't
+quite get that, ask again in plain words"), or use reask. The
+[benchmark](https://github.com/Nezhinskiy/reask/tree/main/evals) compares the three on six real
+pending questions, with Claude Code's plugin eval harness. Claude Opus 5.5 answers, Claude Sonnet
+5.5 judges, and there are 3 runs per arm. With reask installed, the hand-written re-ask loaded the
+skill on its own in 18 of 18 runs.
 
-| The re-ask… | Without reask | With reask |
-|---|---|---|
-| can be followed by someone who never saw the session | 10/18 | **18/18** |
-| gives every option's downside, the recommended one's too | 6/18 | **13/18** |
-| grounds its recommendation in a project fact | 16/18 | **18/18** |
-| ends with the decisions to answer, each a one-word reply | 7/18 | **10/18** |
-| keeps an easy yes/no under 200 words | **3/3** | 0/3 |
+| The message you have to decide from… | Answer anyway (the question as asked) | "Ask again in plain words" | reask |
+|---|---|---|---|
+| can be followed by someone who never saw the session | 0/6 | 7/18 | **17/18** |
+| gives every option's downside, the recommended one's too | 0/6 | 5/18 | **16/18** |
+| grounds its recommendation in a project fact | 4/6 | 15/18 | **18/18** |
+| ends with the decisions to answer, each a one-word reply | 1/6 | 7/18 | **10/18** |
 
-Overall the score goes from 0.60 to 0.81. The price is length: a median of 238 words becomes 548,
-and each reply costs about 11 cents more with Opus 5.5. Two weak spots are still open. An easy
-yes/no comes back at about 330 words, where SKILL.md promises about 150. And when several
-questions are bounced, their asks are spread through one long reply. Every reply, the method and
-the command to run it yourself are in
-[`evals/`](https://github.com/Nezhinskiy/reask/tree/main/evals).
+A plain re-ask makes the question shorter by dropping facts. reask makes it longer by putting
+them back: a median of 207 words becomes 567, at about 9 cents more per reply with Opus 5.5.
 
-## Example: the same moment, with and without reask
+**It also looks at the problem again.** Before recommending, reask argues against its own first
+lean and re-checks the fact that lean rests on. In the author's own sessions, 86 re-asks across
+7 projects from Sep 29 to Nov 2, 2026:
 
-From the benchmark's `reliability-plan` case. The agent is asked to plan a sprint from a folder of
-tickets, an ADR and an RFC, and stops to ask two questions. The user replies that they lost the
-thread. Both replies below are real, unedited output, from the median-scoring run of each arm.
+- **63%** offered an option the original question did not have.
+- **31%** changed the agent's recommendation.
+- **88%** were followed by a decision in the very next message.
+- In at least 10 of them, the author chose the option that first appeared in the re-ask.
 
-Without reask, the agent's own re-ask is good: it gets the numbers and the conflict right. What
-reask adds is what a reader coming in cold needs to decide:
+The counting scripts are in
+[`evals/field/`](https://github.com/Nezhinskiy/reask/tree/main/evals/field), so you can run them
+on your own sessions. Two weak spots are still open: an easy yes/no comes back at about 290 words,
+where SKILL.md promises about 150, and when several questions are bounced, their asks are spread
+through one long reply.
 
-- **The recommended option's downside.** Without reask, option A comes with its upside only. With
-  reask, it comes with its cons, including one the agent found by looking again: if Postgres also runs on a single
-  primary, checkout just moves to a different single point of failure.
-- **What would change its mind,** and the strongest argument against its own pick.
-- **What is decided and what is assumed** ("ADR-7's 6 days come out of these same 10 days. The
-  docs don't say who does that work").
-- **Every term explained:** p99 and SLO, not just the ticket codes.
+## Example: the same question, three ways
+
+From the benchmark's `orders-migration` case. An agent was asked to add a required `region`
+column to a 40-million-row `orders` table, and stopped to ask three questions. All three texts
+below are real, unedited output.
 
 <details>
-<summary>Without reask (score 0.60, 286 words)</summary>
+<summary>The original question (364 words)</summary>
 
-> No problem, here's the question again.
+> I looked through the repo and need your decisions before writing anything. The repo is just `db/schema.sql`, `app/orders.py` and `OPS.md`.
 >
-> **The situation:** You asked me to plan this sprint's reliability work. You have 10 dev-days, but the work in docs/ adds up to 16:
+> **What the repo shows**
+> - `orders` has about 40M rows and takes about 25k inserts/hour at peak. `customers.billing_country` is `char(2) NOT NULL`.
+> - `app/orders.py:2` says region will be "`customer.billing_country` mapped through `REGIONS`". `REGIONS` isn't defined anywhere in the repo.
+> - Migrations run inside the deploy job, which times out after 10 minutes (DEPLOY-3). The replica lag alarm fires at 30 s, and a 6-minute table rewrite on `payments` caused INC-212.
+> - TAX-19 needs `region` by Dec 1, and reports can treat a missing region as "unknown" until then.
 >
-> - **PLAT-412** (8 days): move the session store from Redis Sentinel to Redis Cluster. This is meant to prevent another INC-301, the 47-minute checkout outage on Oct 3.
-> - **PLAT-415** (2 days): add p99 latency alerts per endpoint.
-> - **ADR-7** (6 days left, due Dec 15): move checkout to v2, which stores sessions in Postgres instead of Redis.
+> That rules out one migration that adds the column, backfills and sets NOT NULL. A single `UPDATE` on 40M rows would run past the 10-minute timeout and hit the replica lag alarm, much like INC-212.
 >
-> **The catch:** Once ADR-7 is done, checkout no longer uses Redis at all. Only the admin panel does. So PLAT-412 would spend 8 days hardening Redis for something checkout is about to stop using.
+> **What I'd propose** (Postgres 15), in this order:
+> 1. **Migration:** add `region` as a nullable column with no default. This only changes metadata, so it's instant.
+> 2. **App:** `create_order` starts writing `region` on every new order.
+> 3. **Backfill:** a separate script, run outside the deploy job, that fills old orders in small batches by id range. It pauses between batches and watches replica lag.
+> 4. **Migration:** add `CHECK (region IS NOT NULL) NOT VALID`, then `VALIDATE CONSTRAINT`. Validating doesn't block writes.
+> 5. **Migration:** `SET NOT NULL`, which uses the validated check to skip a full table scan. Then drop the check.
 >
-> **Question 1: Which work goes into this sprint?**
+> **What I need from you**
+> 1. **The `REGIONS` mapping:** where does it live, and what are the region values (e.g. `EU`/`NA`/`APAC`, tax jurisdictions)? Should a country with no mapping fail the order, get a fallback like `'UNKNOWN'`, or something else?
+> 2. **Old orders:** filling them from the customer's *current* billing country gives the wrong region if a customer has moved. Is that acceptable for TAX-19, or does tax need the country as it was at order time? If so, is there another source for it?
+> 3. **Rollout:** are you OK with the multi-step plan above, including a backfill script that runs outside the deploy job? Or does something like a maintenance window change things?
 >
-> - **A (my recommendation):** ADR-7 + PLAT-415 = 8 days, with 2 to spare. Drop PLAT-412 or shrink it to just the admin panel. This prevents another INC-301 by moving checkout off Redis instead of hardening Redis.
-> - **B:** PLAT-412 + PLAT-415 = 10 days. ADR-7 gets no time this sprint, which puts the Dec 15 deadline at risk.
-> - **C:** ADR-7 comes out of a different team's or budget's time, not these 10 days. If so, let me know, and I'll reconsider whether PLAT-412 is worth doing at all.
->
-> **Question 2: Which uptime target should I plan for?**
->
-> A draft proposal (RFC-3) would raise checkout's target from 99.5% to 99.9%. That cuts the allowed downtime from about 3.6 hours a month to about 43 minutes. The head of product hasn't approved it yet. Should I plan for 99.9% anyway, or stick with the current 99.5%?
->
-> A short answer like "A, 99.5%" is all I need.
+> I'll stop here until you answer.
 
 </details>
 
 <details>
-<summary>With reask (score 0.80, 585 words)</summary>
+<summary>After "Not sure I follow. Can you rephrase it simply?" without reask (254 words)</summary>
 
-> I'm asking two things before I plan the sprint's reliability work. The plan depends on the answers.
+> Sure, here's the plain version.
 >
-> ## Question 1: Which work goes into this sprint?
+> **The problem:** `orders` has about 40 million rows. Filling in `region` for all of them at once is slow, and on a big table that kind of change can block new orders while it runs. Your notes say the deploy job gives up after 10 minutes, and something similar already caused an outage (INC-212). So I can't do this as one migration.
 >
-> **Context.** You have 10 dev-days across two engineers. Three items compete for them:
+> **What I suggest:** split it into small, safe steps:
+> 1. Add the `region` column as optional (empty allowed). This takes a second.
+> 2. Change the app so every new order gets a region.
+> 3. Fill in the old orders a little at a time with a separate script, outside the deploy.
+> 4. Once every row has a value, make the column required (NOT NULL).
 >
-> - **PLAT-412** (8 days): move the session store from Redis Sentinel to Redis Cluster. Sentinel has a single primary server, and that primary caused **INC-301**, a 47-minute checkout outage on Oct 3. Cluster has no single primary.
-> - **PLAT-415** (2 days): add alerts when an endpoint's p99 latency gets too high. p99 is the speed of the slowest 1% of requests.
-> - **ADR-7** (6 days left): an accepted decision to retire checkout v1 by Dec 15. Checkout v2 keeps sessions in Postgres instead of Redis. Once it's done, only the admin panel uses Redis for sessions.
+> Reports can treat an empty region as "unknown" in the meantime, which your notes allow until Dec 1.
 >
-> All three add up to 16 days, which is 6 more than you have. ADR-7 also makes PLAT-412 much less useful, because once checkout is off Redis, hardening Redis mainly protects the admin panel.
->
-> **Decided:** ADR-7 is accepted and due Dec 15.
-> **My assumption:** ADR-7's 6 days come out of these same 10 days. The docs don't say who does that work.
->
-> **Options**
->
-> - **A. ADR-7 + PLAT-415 (8 days, 2 spare)**
->   - Pros: takes checkout off Redis, which removes INC-301's cause for checkout. It's also faster than PLAT-412 (6 days vs 8).
->   - Pros: keeps the Dec 15 date on track.
->   - Cons: the admin panel stays on Redis Sentinel with its single primary.
->   - Cons: the docs don't say how Postgres is set up. If it also runs on one primary, checkout moves to a different single point of failure.
-> - **B. PLAT-412 + PLAT-415 (10 days)**
->   - Pros: attacks the exact component that failed in INC-301.
->   - Cons: 8 days spent on infrastructure that checkout stops using once ADR-7 ships.
->   - Cons: no ADR-7 work this sprint, so Dec 15 is at risk.
-> - **C. ADR-7 is staffed separately**
->   - If someone else does ADR-7, you have all 10 days. The real question then becomes whether PLAT-412 is worth 8 days just to protect the admin panel.
->
-> **Recommendation:** A, leaning. It removes the cause of INC-301 from checkout sooner and doesn't waste 8 days. The strongest argument against it is that B fixes the failure directly. But that fix stops mattering for checkout once ADR-7 lands. Two things would change my mind: ADR-7 being staffed separately (option C), or Postgres having the same single-primary weakness.
->
-> **Which do you want: A, B, or C?**
->
-> ## Question 2: Which availability target should I plan against?
->
-> **Context.** Checkout's availability target, or SLO, is 99.5% today. That allows about 3.6 hours of downtime a month. **RFC-3** proposes raising it to 99.9%, which allows about 43 minutes. That's less than INC-301's 47 minutes, so one outage like it would use up the whole month. RFC-3 is still a draft waiting for sign-off from the head of product.
->
-> The target affects how hard I push on reliability items and what I put in A's 2 spare days. It doesn't change the answer to Question 1.
->
-> **Options**
->
-> - **99.5% (current)**
->   - Pros: it's the target in force today.
->   - Cons: the plan may fall short if RFC-3 is approved mid-sprint.
-> - **99.9% (proposed)**
->   - Pros: prepares for where things are likely headed.
->   - Cons: commits capacity to a target nobody has approved.
->
-> **Recommendation:** 99.5%, firm, because RFC-3 isn't signed off. I'd note 99.9% as a stretch goal.
->
-> **Should I plan against 99.5% or 99.9%?**
+> **Three questions for you:**
+> 1. **What are the regions?** The code says to map the country "through `REGIONS`", but that list doesn't exist in the repo. Which country goes to which region? And what should happen with a country that isn't on the list?
+> 2. **Old orders:** I'd take the region from the customer's billing country as it is *now*. If a customer has moved since an old order, that order gets their new region. Is that OK for the tax report?
+> 3. **Is the step-by-step plan OK?** If you'd prefer something else, like doing it all at once during a maintenance window, tell me.
 
 </details>
+
+<details>
+<summary>The same words with reask installed (824 words)</summary>
+
+> Here are the same three questions in simpler terms.
+>
+> **The setup.** You want a new `region` column on `orders` that is always filled in (NOT NULL). The tax report needs it by Dec 1, four weeks from today. Until then, reports can show a missing region as "unknown".
+>
+> `orders` is big and busy: about 40 million rows, and up to about 25,000 new orders an hour. Database changes run inside the deploy job, which gets cut off after 10 minutes. Last month a 6-minute rewrite of the `payments` table stopped writes and caused an outage. So filling 40 million rows in one step during a deploy is risky.
+>
+> Nothing has been written yet.
+>
+> ---
+>
+> ### Question 1: What exactly goes in `region`?
+>
+> **Context.** The only hint is a comment in `app/orders.py`: region is "billing_country mapped through REGIONS". `REGIONS` doesn't exist in the repo. It's in no file I could see, and the repo has only three files. Billing country is a 2-letter code like `DE` or `US`.
+>
+> **Options**
+> - **A. Store the country code itself** (`DE` stays `DE`). *New.*
+>   - Pros: nothing to maintain, and every order gets a valid value.
+>   - Cons: if the tax report needs groups like "EU", every report has to do the grouping itself.
+> - **B. Map countries to groups** (`DE` becomes `EU`), using a list you give me. A country that isn't on the list gets `UNKNOWN`.
+>   - Pros: matches the code comment, and the report gets the groups directly.
+>   - Cons: someone has to keep the list up to date, and a country missing from it gets labelled `UNKNOWN`, which shows up as unknown in the tax report.
+> - **C. Map as in B, but refuse to create an order whose country isn't on the list.**
+>   - Pros: no bad data, ever.
+>   - Cons: a missing list entry blocks real customers from ordering.
+>
+> **Recommendation:** B, leaning. Grouping by region seems to be the intent, and the report already accepts "unknown". This depends on what tax actually needs: if TAX-19 wants plain countries, A is better.
+>
+> ---
+>
+> ### Question 2: Which country do old orders get?
+>
+> **Context.** Old orders have to be filled in using the customer's billing country *as it is today*. The database keeps no history of past countries.
+>
+> **Example:** a customer ordered in 2024 while living in Germany, then moved to the US in 2025. Their 2024 order would be labelled US.
+>
+> **Options**
+> - **A. Use today's country.**
+>   - Pros: possible right now with the data we have.
+>   - Cons: orders from customers who have moved get the wrong region, and that error ends up in a tax report.
+> - **B. Use a historical source of the country at order time** (invoices, another system), if one exists.
+>   - Pros: correct.
+>   - Cons: I don't know if such a source exists. It isn't in this repo.
+>
+> **Recommendation:** A, leaning, because B has no data source I can see. I can't check how many customers have moved. If tax needs the country at the time of the order, you'd need B.
+>
+> ---
+>
+> ### Question 3: How should the change roll out?
+>
+> **Context.** The new column has to exist without locking the table for minutes. One useful fact: Postgres can add a column with a fixed default value instantly, without rewriting the table.
+>
+> **Options**
+> - **A. Add it filled with `UNKNOWN`, then fill it in gradually.** *New.* Add the column as NOT NULL with default `UNKNOWN`, which is instant. The app then writes the real region on new orders. A separate script outside the deploy job fills old orders in small batches. Afterwards, remove the default.
+>   - Pros: three steps, and the column is never empty.
+>   - Cons: until the script finishes, `UNKNOWN` can mean either "not filled yet" or "country not on the list".
+> - **B. My earlier plan.** Add the column empty, fill it in gradually, then make it NOT NULL with a safe two-step check.
+>   - Pros: an empty value clearly means "not filled yet".
+>   - Cons: five steps and more chances to slip.
+> - **C. One step during a maintenance window.**
+>   - Pros: simplest.
+>   - Cons: orders stop for the length of the window, and it may not finish within the 10-minute deploy limit.
+>
+> **Recommendation:** A, leaning. It replaces my earlier pick (B) because adding a column with a fixed default is instant, so the column can be NOT NULL from the start. B's advantage only matters while the fill-in script is running.
+>
+> ---
+>
+> **Your answers:**
+> 1. Should `region` hold the country code (A), a group from a list you'll give me (B), or a group with orders blocked for unlisted countries (C)?
+> 2. Should old orders use today's country (A), or is there a source for the country at the time of the order (B)?
+> 3. Should the rollout be: add filled with `UNKNOWN` and fill in gradually (A), add empty and enforce later (B), or one step in a maintenance window (C)?
+
+</details>
+
+The plain re-ask is easier to read, but it drops what you need to choose. Its first question is
+open-ended, with no options to pick from, and no choice comes with a downside. With reask, each
+question comes with its context, options, pros and cons and a recommendation, and the reply
+closes with all three asks in one list.
+
+It also brings a new option. reask re-checked how Postgres adds a column and proposed adding
+`region` as NOT NULL with the default `UNKNOWN`, which is instant, then filling old rows in
+batches. That replaced its own earlier five-step plan, and it said so. This is the best of three
+runs and the only one that found the new option. The other two scored 0.6, against 0.2 for every
+plain re-ask.
 
 In the interactive Claude Code UI the question arrives with its answers as options to pick, the
 recommended one first.

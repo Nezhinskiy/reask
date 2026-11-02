@@ -3,15 +3,18 @@
 Newest first. Every entry is written for users: a release's section becomes its GitHub Release
 notes.
 
-## 0.3.1 (2026-10-29)
+## 0.3.1 (2026-11-02)
 
 - The Claude Code plugin has an icon, for its listing in plugin directories.
-- A benchmark in `evals/`, run with `claude plugin eval`: six real moments where an agent waits on
-  a question, each run with reask and without it. With reask, the re-ask could be followed by
-  someone who never saw the session in 18 of 18 runs, against 10 of 18 without; replies are about
-  2.3 times longer. Results, every reply and the command to rerun it are in `evals/README.md`.
-- The README shows real output in place of the hand-written example: the same moment with and
-  without reask. It opens with a one-line install for Claude Code, Codex, Cursor and Gemini CLI.
+- A benchmark in `evals/`, run with `claude plugin eval`. It compares reask with a hand-written
+  "ask again in plain words" and with the question as first asked, on six real moments where an
+  agent waits on a question. With reask, someone who never saw the session could follow the
+  re-ask in 17 of 18 runs, against 7 of 18 for the plain re-ask. Replies are about 2.7 times
+  longer. `evals/field/` counts reask in the author's own sessions: 63% of 86 re-asks offered an
+  option the original question did not have. Its scripts run on your own transcripts too.
+- The README shows real output in place of the hand-written example: the same question as first
+  asked, re-asked by hand, and re-asked with reask. It opens with a one-line install for Claude
+  Code, Codex, Cursor and Gemini CLI.
 - The skill itself is unchanged.
 
 ## 0.3.0 (2026-09-29)
