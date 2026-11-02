@@ -1,10 +1,10 @@
 # reask benchmark
 
-> **v2 is preregistered in [`v2/`](v2/PREREGISTRATION.md) and replaces this suite once it has
-> run.** v1 below compares reask with the question as first asked, on short fresh sessions; v2
+> **v2 has run: [results](v2/RESULTS.md), [preregistration](v2/PREREGISTRATION.md).** It
+> replaces this suite. v1 below compares reask with the question as first asked, on short fresh sessions; v2
 > measures what reask is for: whether one re-ask lets someone who lost the context decide
-> everything, correctly, without asking again, and in how many words. Until then the v1 cases
-> stay as they are and serve v2 as grader controls.
+> everything, correctly, without asking again, and in how many words. The v1 cases stay as they
+> are, as material for v2's grader controls.
 
 reask is for the moment you cannot answer your agent's question. You have three ways out:
 

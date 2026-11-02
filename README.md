@@ -35,22 +35,28 @@ reading the format can load.
 
 ## Does it help?
 
-When you cannot answer your agent's question, you can answer anyway, ask by hand ("I didn't
-quite get that, ask again in plain words"), or use reask. The
-[benchmark](https://github.com/Nezhinskiy/reask/tree/main/evals) compares the three on six real
-pending questions, with Claude Code's plugin eval harness. Claude Opus 5.5 answers, Claude Sonnet
-5.5 judges, and there are 3 runs per arm. With reask installed, the hand-written re-ask loaded the
-skill on its own in 18 of 18 runs.
+reask is for the moment you come back to a session (after a compaction, from a dozen other
+sessions, hours later) and cannot answer the question waiting for you. The
+[v2 benchmark](https://github.com/Nezhinskiy/reask/blob/main/evals/v2/RESULTS.md) replays nine such
+moments, recorded from real agent sessions in projects built for it, and has a judge play you
+coming back: someone who sees only the re-ask and knows one thing about their situation the agent
+was never told. It compares the same five words ("I didn't quite get that, ask again in plain
+words") with and without reask, and a 90-word re-ask written by hand. Claude Opus 5.5 answers,
+Claude Sonnet 5.5 judges, 3 runs per cell.
 
-| The message you have to decide from… | Answer anyway (the question as asked) | "Ask again in plain words" | reask |
+| | Plain re-ask | **reask** | Hand-written 90-word re-ask |
 |---|---|---|---|
-| can be followed by someone who never saw the session | 0/6 | 7/18 | **17/18** |
-| gives every option's downside, the recommended one's too | 0/6 | 5/18 | **16/18** |
-| grounds its recommendation in a project fact | 4/6 | 15/18 | **18/18** |
-| ends with the decisions to answer, each a one-word reply | 1/6 | 7/18 | **10/18** |
+| Outcome checks passed (facts, decisions, trap avoided) | 35% | **48%** | 35% |
+| The returning reader can make the decision their situation needs | 10/45 | **18/45** | 8/45 |
+| Never recommends the option a fact in the project rules out | 22/27 | **27/27** | 24/27 |
+| Median length | 188 words | **524 words** | 1,167 words |
 
-A plain re-ask makes the question shorter by dropping facts. reask makes it longer by putting
-them back: a median of 207 words becomes 567, at about 9 cents more per reply with Opus 5.5.
+reask came out ahead of the plain re-ask in six of nine scenarios and on both held-out ones, and
+matched the hand-written prompt in less than half its length. These are exploratory numbers from
+a small sample: the benchmark's preregistered all-or-nothing measure was too strict for every
+cell, so read [the results page](https://github.com/Nezhinskiy/reask/blob/main/evals/v2/RESULTS.md),
+limits and deviations included, before you trust them. The skill loaded on "what do you need from
+me here?" in 18 of 18 runs, and in none of 36 after "agreed" or "carry on".
 
 **It also looks at the problem again.** Before recommending, reask argues against its own first
 lean and re-checks the fact that lean rests on. In the author's own sessions, 86 re-asks across

@@ -144,3 +144,6 @@ Committed as the **stage-2 freeze**; its hash also goes into the results.
 The "about 90 words against 5" difference between C and B is a condition of the experiment, not a
 result: anyone can save C as a command of their own. What B against C tests is whether the skill
 does at least what a strong hand-written prompt does.
+
+Run on 2026-11-02; what was done differently from this plan is listed under "Deviations" in
+[`RESULTS.md`](RESULTS.md).

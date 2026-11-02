@@ -1,0 +1,10 @@
+{
+ "claudeVersion": "2.1.312",
+ "agentModel": "claude-opus-5-5",
+ "judgeModel": "claude-sonnet-5-5",
+ "runsPerArm": 3,
+ "costUsd": {
+  "main": 65.93,
+  "triggers": 17.03
+ }
+}

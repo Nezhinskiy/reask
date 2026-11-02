@@ -19,6 +19,11 @@ notes.
   answers instead of guessing.
 - The skill no longer loads when the agent is about to ask a new question of its own, or when you
   have already answered.
+- Benchmark v2, preregistered and run: nine moments where you come back to a session without its
+  context, judged by a reader who sees only the re-ask. reask passed 48% of the outcome checks
+  against 35% for a plain "ask again", never recommended an option the project rules out (27 of
+  27), and matched a 90-word hand-written re-ask in under half its length. Its all-or-nothing
+  headline measure was too strict for every cell; the results page says so, with every deviation.
 
 ## 0.3.1 (2026-11-02)
 

@@ -1,0 +1,2328 @@
+{
+ "summary": {
+  "cells": {
+   "A": {
+    "runs": 27,
+    "closed": 0,
+    "share": 0.0,
+    "wilson95": [
+     6.938893903907228e-18,
+     0.12455903714463581
+    ],
+    "median_words": 188,
+    "median_words_closed": null,
+    "reading_minutes_closed": null,
+    "graders": {
+     "all-decisions": 0.4074074074074074,
+     "decision": 0.2222222222222222,
+     "facts": 0.0,
+     "language": 1.0,
+     "no-trap-pick": 0.8148148148148148,
+     "references": 0.2962962962962963
+    },
+    "cost": 9.514992000000005
+   },
+   "B": {
+    "runs": 27,
+    "closed": 2,
+    "share": 0.07407407407407407,
+    "wilson95": [
+     0.020554221697383523,
+     0.2336997729073062
+    ],
+    "median_words": 524,
+    "median_words_closed": 516.0,
+    "reading_minutes_closed": 2.168067226890756,
+    "graders": {
+     "all-decisions": 0.4074074074074074,
+     "decision": 0.4,
+     "facts": 0.14814814814814814,
+     "language": 1.0,
+     "no-trap-pick": 1.0,
+     "references": 0.6666666666666666
+    },
+    "cost": 16.389269799999994
+   },
+   "C": {
+    "runs": 27,
+    "closed": 0,
+    "share": 0.0,
+    "wilson95": [
+     6.938893903907228e-18,
+     0.12455903714463581
+    ],
+    "median_words": 1167,
+    "median_words_closed": null,
+    "reading_minutes_closed": null,
+    "graders": {
+     "all-decisions": 0.0,
+     "decision": 0.17777777777777778,
+     "facts": 0.4074074074074074,
+     "language": 1.0,
+     "no-trap-pick": 0.8888888888888888,
+     "references": 0.8148148148148148
+    },
+    "cost": 20.874593200000003
+   },
+   "D": {
+    "runs": 27,
+    "closed": 0,
+    "share": 0.0,
+    "wilson95": [
+     6.938893903907228e-18,
+     0.12455903714463581
+    ],
+    "median_words": 921,
+    "median_words_closed": null,
+    "reading_minutes_closed": null,
+    "graders": {
+     "all-decisions": 0.2222222222222222,
+     "decision": 0.4,
+     "facts": 0.4444444444444444,
+     "language": 1.0,
+     "no-trap-pick": 0.9629629629629629,
+     "references": 0.8148148148148148
+    },
+    "cost": 19.146147600000027
+   }
+  },
+  "scenarios": {
+   "buried-status": {
+    "A": {
+     "runs": 3,
+     "closed": 0,
+     "share": 0.0,
+     "median_words": 178,
+     "pass_k": false
+    },
+    "B": {
+     "runs": 3,
+     "closed": 0,
+     "share": 0.0,
+     "median_words": 517,
+     "pass_k": false
+    },
+    "C": {
+     "runs": 3,
+     "closed": 0,
+     "share": 0.0,
+     "median_words": 1167,
+     "pass_k": false
+    },
+    "D": {
+     "runs": 3,
+     "closed": 0,
+     "share": 0.0,
+     "median_words": 917,
+     "pass_k": false
+    }
+   },
+   "heldout-a": {
+    "A": {
+     "runs": 3,
+     "closed": 0,
+     "share": 0.0,
+     "median_words": 201,
+     "pass_k": false
+    },
+    "B": {
+     "runs": 3,
+     "closed": 0,
+     "share": 0.0,
+     "median_words": 776,
+     "pass_k": false
+    },
+    "C": {
+     "runs": 3,
+     "closed": 0,
+     "share": 0.0,
+     "median_words": 1166,
+     "pass_k": false
+    },
+    "D": {
+     "runs": 3,
+     "closed": 0,
+     "share": 0.0,
+     "median_words": 1159,
+     "pass_k": false
+    }
+   },
+   "heldout-b": {
+    "A": {
+     "runs": 3,
+     "closed": 0,
+     "share": 0.0,
+     "median_words": 244,
+     "pass_k": false
+    },
+    "B": {
+     "runs": 3,
+     "closed": 0,
+     "share": 0.0,
+     "median_words": 582,
+     "pass_k": false
+    },
+    "C": {
+     "runs": 3,
+     "closed": 0,
+     "share": 0.0,
+     "median_words": 1282,
+     "pass_k": false
+    },
+    "D": {
+     "runs": 3,
+     "closed": 0,
+     "share": 0.0,
+     "median_words": 842,
+     "pass_k": false
+    }
+   },
+   "import-ux-ru": {
+    "A": {
+     "runs": 3,
+     "closed": 0,
+     "share": 0.0,
+     "median_words": 156,
+     "pass_k": false
+    },
+    "B": {
+     "runs": 3,
+     "closed": 0,
+     "share": 0.0,
+     "median_words": 470,
+     "pass_k": false
+    },
+    "C": {
+     "runs": 3,
+     "closed": 0,
+     "share": 0.0,
+     "median_words": 1163,
+     "pass_k": false
+    },
+    "D": {
+     "runs": 3,
+     "closed": 0,
+     "share": 0.0,
+     "median_words": 827,
+     "pass_k": false
+    }
+   },
+   "invoice-rounding": {
+    "A": {
+     "runs": 3,
+     "closed": 0,
+     "share": 0.0,
+     "median_words": 179,
+     "pass_k": false
+    },
+    "B": {
+     "runs": 3,
+     "closed": 0,
+     "share": 0.0,
+     "median_words": 550,
+     "pass_k": false
+    },
+    "C": {
+     "runs": 3,
+     "closed": 0,
+     "share": 0.0,
+     "median_words": 807,
+     "pass_k": false
+    },
+    "D": {
+     "runs": 3,
+     "closed": 0,
+     "share": 0.0,
+     "median_words": 791,
+     "pass_k": false
+    }
+   },
+   "mixed-language-ru": {
+    "A": {
+     "runs": 3,
+     "closed": 0,
+     "share": 0.0,
+     "median_words": 188,
+     "pass_k": false
+    },
+    "B": {
+     "runs": 3,
+     "closed": 0,
+     "share": 0.0,
+     "median_words": 508,
+     "pass_k": false
+    },
+    "C": {
+     "runs": 3,
+     "closed": 0,
+     "share": 0.0,
+     "median_words": 1124,
+     "pass_k": false
+    },
+    "D": {
+     "runs": 3,
+     "closed": 0,
+     "share": 0.0,
+     "median_words": 940,
+     "pass_k": false
+    }
+   },
+   "orchestrator-stack": {
+    "A": {
+     "runs": 3,
+     "closed": 0,
+     "share": 0.0,
+     "median_words": 248,
+     "pass_k": false
+    },
+    "B": {
+     "runs": 3,
+     "closed": 0,
+     "share": 0.0,
+     "median_words": 496,
+     "pass_k": false
+    },
+    "C": {
+     "runs": 3,
+     "closed": 0,
+     "share": 0.0,
+     "median_words": 1368,
+     "pass_k": false
+    },
+    "D": {
+     "runs": 3,
+     "closed": 0,
+     "share": 0.0,
+     "median_words": 1201,
+     "pass_k": false
+    }
+   },
+   "rate-limit-compacted": {
+    "A": {
+     "runs": 3,
+     "closed": 0,
+     "share": 0.0,
+     "median_words": 253,
+     "pass_k": false
+    },
+    "B": {
+     "runs": 3,
+     "closed": 2,
+     "share": 0.6666666666666666,
+     "median_words": 500,
+     "pass_k": false
+    },
+    "C": {
+     "runs": 3,
+     "closed": 0,
+     "share": 0.0,
+     "median_words": 1280,
+     "pass_k": false
+    },
+    "D": {
+     "runs": 3,
+     "closed": 0,
+     "share": 0.0,
+     "median_words": 907,
+     "pass_k": false
+    }
+   },
+   "vector-index-unsure": {
+    "A": {
+     "runs": 3,
+     "closed": 0,
+     "share": 0.0,
+     "median_words": 171,
+     "pass_k": false
+    },
+    "B": {
+     "runs": 3,
+     "closed": 0,
+     "share": 0.0,
+     "median_words": 541,
+     "pass_k": false
+    },
+    "C": {
+     "runs": 3,
+     "closed": 0,
+     "share": 0.0,
+     "median_words": 1593,
+     "pass_k": false
+    },
+    "D": {
+     "runs": 3,
+     "closed": 0,
+     "share": 0.0,
+     "median_words": 909,
+     "pass_k": false
+    }
+   }
+  },
+  "B_vs_A": {
+   "scenarios": 9,
+   "better": 1,
+   "worse": 0,
+   "mean_diff": 0.07407407407407407,
+   "sign_test_p": 1.0
+  },
+  "B_vs_C": {
+   "scenarios": 9,
+   "better": 1,
+   "worse": 0,
+   "mean_diff": 0.07407407407407407,
+   "sign_test_p": 1.0
+  },
+  "H2": {
+   "closed_ok": true,
+   "words_ok": false
+  },
+  "triggers": {},
+  "cost": 65.92500260000003
+ },
+ "runs": [
+  {
+   "scenario": "buried-status",
+   "kind": "manual",
+   "cell": "D",
+   "run": 1,
+   "closed": false,
+   "graders": {
+    "all-decisions": true,
+    "decision-1": false,
+    "facts": true,
+    "no-trap-pick": true,
+    "references": true
+   },
+   "words": 1000,
+   "cost": 0.735425,
+   "error": null
+  },
+  {
+   "scenario": "buried-status",
+   "kind": "manual",
+   "cell": "D",
+   "run": 2,
+   "closed": false,
+   "graders": {
+    "all-decisions": false,
+    "decision-1": false,
+    "facts": true,
+    "no-trap-pick": true,
+    "references": true
+   },
+   "words": 849,
+   "cost": 0.7997793999999998,
+   "error": null
+  },
+  {
+   "scenario": "buried-status",
+   "kind": "manual",
+   "cell": "D",
+   "run": 3,
+   "closed": false,
+   "graders": {
+    "all-decisions": false,
+    "decision-1": false,
+    "facts": true,
+    "no-trap-pick": true,
+    "references": true
+   },
+   "words": 917,
+   "cost": 0.6599193999999999,
+   "error": null
+  },
+  {
+   "scenario": "buried-status",
+   "kind": "manual",
+   "cell": "C",
+   "run": 1,
+   "closed": false,
+   "graders": {
+    "all-decisions": false,
+    "decision-1": false,
+    "facts": false,
+    "no-trap-pick": true,
+    "references": true
+   },
+   "words": 1198,
+   "cost": 0.7364307999999995,
+   "error": null
+  },
+  {
+   "scenario": "buried-status",
+   "kind": "manual",
+   "cell": "C",
+   "run": 2,
+   "closed": false,
+   "graders": {
+    "all-decisions": false,
+    "decision-1": false,
+    "facts": true,
+    "no-trap-pick": true,
+    "references": true
+   },
+   "words": 967,
+   "cost": 0.5511884,
+   "error": null
+  },
+  {
+   "scenario": "buried-status",
+   "kind": "manual",
+   "cell": "C",
+   "run": 3,
+   "closed": false,
+   "graders": {
+    "all-decisions": false,
+    "decision-1": true,
+    "facts": true,
+    "no-trap-pick": true,
+    "references": false
+   },
+   "words": 1167,
+   "cost": 0.7113669999999999,
+   "error": null
+  },
+  {
+   "scenario": "buried-status",
+   "kind": "short",
+   "cell": "B",
+   "run": 1,
+   "closed": false,
+   "graders": {
+    "all-decisions": false,
+    "decision-1": false,
+    "facts": false,
+    "no-trap-pick": true,
+    "references": true
+   },
+   "words": 450,
+   "cost": 0.5950734,
+   "error": null
+  },
+  {
+   "scenario": "buried-status",
+   "kind": "short",
+   "cell": "B",
+   "run": 2,
+   "closed": false,
+   "graders": {
+    "all-decisions": true,
+    "decision-1": true,
+    "facts": false,
+    "no-trap-pick": true,
+    "references": true
+   },
+   "words": 517,
+   "cost": 0.5184214,
+   "error": null
+  },
+  {
+   "scenario": "buried-status",
+   "kind": "short",
+   "cell": "B",
+   "run": 3,
+   "closed": false,
+   "graders": {
+    "all-decisions": true,
+    "decision-1": false,
+    "facts": false,
+    "no-trap-pick": true,
+    "references": true
+   },
+   "words": 586,
+   "cost": 0.31995599999999974,
+   "error": null
+  },
+  {
+   "scenario": "buried-status",
+   "kind": "short",
+   "cell": "A",
+   "run": 1,
+   "closed": false,
+   "graders": {
+    "all-decisions": false,
+    "decision-1": false,
+    "facts": false,
+    "no-trap-pick": true,
+    "references": false
+   },
+   "words": 178,
+   "cost": 0.3333639999999998,
+   "error": null
+  },
+  {
+   "scenario": "buried-status",
+   "kind": "short",
+   "cell": "A",
+   "run": 2,
+   "closed": false,
+   "graders": {
+    "all-decisions": false,
+    "decision-1": false,
+    "facts": false,
+    "no-trap-pick": true,
+    "references": false
+   },
+   "words": 181,
+   "cost": 0.34480399999999967,
+   "error": null
+  },
+  {
+   "scenario": "buried-status",
+   "kind": "short",
+   "cell": "A",
+   "run": 3,
+   "closed": false,
+   "graders": {
+    "all-decisions": false,
+    "decision-1": false,
+    "facts": false,
+    "no-trap-pick": true,
+    "references": true
+   },
+   "words": 151,
+   "cost": 0.29098399999999963,
+   "error": null
+  },
+  {
+   "scenario": "heldout-a",
+   "kind": "manual",
+   "cell": "D",
+   "run": 1,
+   "closed": false,
+   "graders": {
+    "all-decisions": false,
+    "decision-1": false,
+    "decision-2": false,
+    "decision-3": false,
+    "facts": true,
+    "language": true,
+    "no-trap-pick": true,
+    "references": false
+   },
+   "words": 1159,
+   "cost": 1.6585668000000011,
+   "error": null
+  },
+  {
+   "scenario": "heldout-a",
+   "kind": "manual",
+   "cell": "D",
+   "run": 2,
+   "closed": false,
+   "graders": {
+    "all-decisions": false,
+    "decision-1": true,
+    "decision-2": true,
+    "decision-3": false,
+    "facts": false,
+    "language": true,
+    "no-trap-pick": true,
+    "references": false
+   },
+   "words": 1178,
+   "cost": 1.3750786000000021,
+   "error": null
+  },
+  {
+   "scenario": "heldout-a",
+   "kind": "manual",
+   "cell": "D",
+   "run": 3,
+   "closed": false,
+   "graders": {
+    "all-decisions": false,
+    "decision-1": false,
+    "decision-2": true,
+    "decision-3": true,
+    "facts": true,
+    "language": true,
+    "no-trap-pick": true,
+    "references": true
+   },
+   "words": 1135,
+   "cost": 1.399679200000002,
+   "error": null
+  },
+  {
+   "scenario": "heldout-a",
+   "kind": "manual",
+   "cell": "C",
+   "run": 1,
+   "closed": false,
+   "graders": {
+    "all-decisions": false,
+    "decision-1": false,
+    "decision-2": true,
+    "decision-3": false,
+    "facts": true,
+    "language": true,
+    "no-trap-pick": true,
+    "references": true
+   },
+   "words": 1204,
+   "cost": 1.3714804000000023,
+   "error": null
+  },
+  {
+   "scenario": "heldout-a",
+   "kind": "manual",
+   "cell": "C",
+   "run": 2,
+   "closed": false,
+   "graders": {
+    "all-decisions": false,
+    "decision-1": false,
+    "decision-2": true,
+    "decision-3": false,
+    "facts": false,
+    "language": true,
+    "no-trap-pick": true,
+    "references": true
+   },
+   "words": 993,
+   "cost": 1.1104206000000016,
+   "error": null
+  },
+  {
+   "scenario": "heldout-a",
+   "kind": "manual",
+   "cell": "C",
+   "run": 3,
+   "closed": false,
+   "graders": {
+    "all-decisions": false,
+    "decision-1": false,
+    "decision-2": false,
+    "decision-3": false,
+    "facts": false,
+    "language": true,
+    "no-trap-pick": true,
+    "references": true
+   },
+   "words": 1166,
+   "cost": 1.2884810000000022,
+   "error": null
+  },
+  {
+   "scenario": "heldout-a",
+   "kind": "short",
+   "cell": "B",
+   "run": 1,
+   "closed": false,
+   "graders": {
+    "all-decisions": true,
+    "decision-1": false,
+    "decision-2": true,
+    "decision-3": false,
+    "facts": false,
+    "language": true,
+    "no-trap-pick": true,
+    "references": true
+   },
+   "words": 711,
+   "cost": 1.3783042000000025,
+   "error": null
+  },
+  {
+   "scenario": "heldout-a",
+   "kind": "short",
+   "cell": "B",
+   "run": 2,
+   "closed": false,
+   "graders": {
+    "all-decisions": false,
+    "decision-1": true,
+    "decision-2": false,
+    "decision-3": true,
+    "facts": false,
+    "language": true,
+    "no-trap-pick": true,
+    "references": false
+   },
+   "words": 822,
+   "cost": 1.2164756000000017,
+   "error": null
+  },
+  {
+   "scenario": "heldout-a",
+   "kind": "short",
+   "cell": "B",
+   "run": 3,
+   "closed": false,
+   "graders": {
+    "all-decisions": true,
+    "decision-1": false,
+    "decision-2": true,
+    "decision-3": false,
+    "facts": false,
+    "language": true,
+    "no-trap-pick": true,
+    "references": true
+   },
+   "words": 776,
+   "cost": 0.5447035999999996,
+   "error": null
+  },
+  {
+   "scenario": "heldout-a",
+   "kind": "short",
+   "cell": "A",
+   "run": 1,
+   "closed": false,
+   "graders": {
+    "all-decisions": false,
+    "decision-1": false,
+    "decision-2": false,
+    "decision-3": false,
+    "facts": false,
+    "language": true,
+    "no-trap-pick": true,
+    "references": false
+   },
+   "words": 201,
+   "cost": 0.3935179999999964,
+   "error": null
+  },
+  {
+   "scenario": "heldout-a",
+   "kind": "short",
+   "cell": "A",
+   "run": 2,
+   "closed": false,
+   "graders": {
+    "all-decisions": false,
+    "decision-1": false,
+    "decision-2": true,
+    "decision-3": false,
+    "facts": false,
+    "language": true,
+    "no-trap-pick": true,
+    "references": false
+   },
+   "words": 190,
+   "cost": 0.451263999999999,
+   "error": null
+  },
+  {
+   "scenario": "heldout-a",
+   "kind": "short",
+   "cell": "A",
+   "run": 3,
+   "closed": false,
+   "graders": {
+    "all-decisions": false,
+    "decision-1": false,
+    "decision-2": true,
+    "decision-3": false,
+    "facts": false,
+    "language": true,
+    "no-trap-pick": true,
+    "references": false
+   },
+   "words": 224,
+   "cost": 0.5769759999999998,
+   "error": null
+  },
+  {
+   "scenario": "heldout-b",
+   "kind": "manual",
+   "cell": "D",
+   "run": 1,
+   "closed": false,
+   "graders": {
+    "all-decisions": false,
+    "decision-1": false,
+    "decision-2": false,
+    "facts": false,
+    "no-trap-pick": true,
+    "references": true
+   },
+   "words": 825,
+   "cost": 0.6577234000000035,
+   "error": null
+  },
+  {
+   "scenario": "heldout-b",
+   "kind": "manual",
+   "cell": "D",
+   "run": 2,
+   "closed": false,
+   "graders": {
+    "all-decisions": false,
+    "decision-1": false,
+    "decision-2": false,
+    "facts": true,
+    "no-trap-pick": true,
+    "references": true
+   },
+   "words": 940,
+   "cost": 0.6643524000000017,
+   "error": null
+  },
+  {
+   "scenario": "heldout-b",
+   "kind": "manual",
+   "cell": "D",
+   "run": 3,
+   "closed": false,
+   "graders": {
+    "all-decisions": false,
+    "decision-1": false,
+    "decision-2": true,
+    "facts": true,
+    "no-trap-pick": true,
+    "references": false
+   },
+   "words": 842,
+   "cost": 0.6192100000000028,
+   "error": null
+  },
+  {
+   "scenario": "heldout-b",
+   "kind": "manual",
+   "cell": "C",
+   "run": 1,
+   "closed": false,
+   "graders": {
+    "all-decisions": false,
+    "decision-1": false,
+    "decision-2": false,
+    "facts": true,
+    "no-trap-pick": true,
+    "references": true
+   },
+   "words": 1462,
+   "cost": 0.8867552000000003,
+   "error": null
+  },
+  {
+   "scenario": "heldout-b",
+   "kind": "manual",
+   "cell": "C",
+   "run": 2,
+   "closed": false,
+   "graders": {
+    "all-decisions": false,
+    "decision-1": false,
+    "decision-2": false,
+    "facts": false,
+    "no-trap-pick": true,
+    "references": true
+   },
+   "words": 1102,
+   "cost": 0.8909043999999997,
+   "error": null
+  },
+  {
+   "scenario": "heldout-b",
+   "kind": "manual",
+   "cell": "C",
+   "run": 3,
+   "closed": false,
+   "graders": {
+    "all-decisions": false,
+    "decision-1": false,
+    "decision-2": false,
+    "facts": true,
+    "no-trap-pick": true,
+    "references": true
+   },
+   "words": 1282,
+   "cost": 0.7038025999999996,
+   "error": null
+  },
+  {
+   "scenario": "heldout-b",
+   "kind": "short",
+   "cell": "B",
+   "run": 1,
+   "closed": false,
+   "graders": {
+    "all-decisions": false,
+    "decision-1": false,
+    "decision-2": true,
+    "facts": true,
+    "no-trap-pick": true,
+    "references": true
+   },
+   "words": 582,
+   "cost": 0.6130755999999993,
+   "error": null
+  },
+  {
+   "scenario": "heldout-b",
+   "kind": "short",
+   "cell": "B",
+   "run": 2,
+   "closed": false,
+   "graders": {
+    "all-decisions": false,
+    "decision-1": false,
+    "decision-2": false,
+    "facts": true,
+    "no-trap-pick": true,
+    "references": false
+   },
+   "words": 639,
+   "cost": 0.4978183999999995,
+   "error": null
+  },
+  {
+   "scenario": "heldout-b",
+   "kind": "short",
+   "cell": "B",
+   "run": 3,
+   "closed": false,
+   "graders": {
+    "all-decisions": true,
+    "decision-1": false,
+    "decision-2": false,
+    "facts": false,
+    "no-trap-pick": true,
+    "references": true
+   },
+   "words": 510,
+   "cost": 0.6579295999999991,
+   "error": null
+  },
+  {
+   "scenario": "heldout-b",
+   "kind": "short",
+   "cell": "A",
+   "run": 1,
+   "closed": false,
+   "graders": {
+    "all-decisions": true,
+    "decision-1": false,
+    "decision-2": false,
+    "facts": false,
+    "no-trap-pick": true,
+    "references": false
+   },
+   "words": 248,
+   "cost": 0.689691999999999,
+   "error": null
+  },
+  {
+   "scenario": "heldout-b",
+   "kind": "short",
+   "cell": "A",
+   "run": 2,
+   "closed": false,
+   "graders": {
+    "all-decisions": true,
+    "decision-1": false,
+    "decision-2": false,
+    "facts": false,
+    "no-trap-pick": true,
+    "references": false
+   },
+   "words": 243,
+   "cost": 0.5696379999999996,
+   "error": null
+  },
+  {
+   "scenario": "heldout-b",
+   "kind": "short",
+   "cell": "A",
+   "run": 3,
+   "closed": false,
+   "graders": {
+    "all-decisions": false,
+    "decision-1": false,
+    "decision-2": false,
+    "facts": false,
+    "no-trap-pick": true,
+    "references": false
+   },
+   "words": 244,
+   "cost": 0.39406999999999837,
+   "error": null
+  },
+  {
+   "scenario": "import-ux-ru",
+   "kind": "manual",
+   "cell": "D",
+   "run": 1,
+   "closed": false,
+   "graders": {
+    "all-decisions": false,
+    "decision-1": false,
+    "facts": false,
+    "no-trap-pick": true,
+    "references": true
+   },
+   "words": 779,
+   "cost": 0.5375629999999987,
+   "error": null
+  },
+  {
+   "scenario": "import-ux-ru",
+   "kind": "manual",
+   "cell": "D",
+   "run": 2,
+   "closed": false,
+   "graders": {
+    "all-decisions": true,
+    "decision-1": false,
+    "facts": false,
+    "no-trap-pick": true,
+    "references": true
+   },
+   "words": 982,
+   "cost": 0.4006447999999991,
+   "error": null
+  },
+  {
+   "scenario": "import-ux-ru",
+   "kind": "manual",
+   "cell": "D",
+   "run": 3,
+   "closed": false,
+   "graders": {
+    "all-decisions": false,
+    "decision-1": false,
+    "facts": false,
+    "no-trap-pick": true,
+    "references": true
+   },
+   "words": 827,
+   "cost": 0.5355635999999993,
+   "error": null
+  },
+  {
+   "scenario": "import-ux-ru",
+   "kind": "manual",
+   "cell": "C",
+   "run": 1,
+   "closed": false,
+   "graders": {
+    "all-decisions": false,
+    "decision-1": false,
+    "facts": true,
+    "no-trap-pick": true,
+    "references": true
+   },
+   "words": 1283,
+   "cost": 0.4826715999999986,
+   "error": null
+  },
+  {
+   "scenario": "import-ux-ru",
+   "kind": "manual",
+   "cell": "C",
+   "run": 2,
+   "closed": false,
+   "graders": {
+    "all-decisions": false,
+    "decision-1": false,
+    "facts": true,
+    "no-trap-pick": true,
+    "references": true
+   },
+   "words": 1163,
+   "cost": 0.5457269999999962,
+   "error": null
+  },
+  {
+   "scenario": "import-ux-ru",
+   "kind": "manual",
+   "cell": "C",
+   "run": 3,
+   "closed": false,
+   "graders": {
+    "all-decisions": false,
+    "decision-1": false,
+    "facts": true,
+    "no-trap-pick": true,
+    "references": true
+   },
+   "words": 1154,
+   "cost": 0.5288001999999964,
+   "error": null
+  },
+  {
+   "scenario": "import-ux-ru",
+   "kind": "short",
+   "cell": "B",
+   "run": 1,
+   "closed": false,
+   "graders": {
+    "all-decisions": true,
+    "decision-1": false,
+    "facts": false,
+    "no-trap-pick": true,
+    "references": false
+   },
+   "words": 470,
+   "cost": 0.519028599999996,
+   "error": null
+  },
+  {
+   "scenario": "import-ux-ru",
+   "kind": "short",
+   "cell": "B",
+   "run": 2,
+   "closed": false,
+   "graders": {
+    "all-decisions": false,
+    "decision-1": false,
+    "facts": false,
+    "no-trap-pick": true,
+    "references": false
+   },
+   "words": 469,
+   "cost": 0.3372746000000002,
+   "error": null
+  },
+  {
+   "scenario": "import-ux-ru",
+   "kind": "short",
+   "cell": "B",
+   "run": 3,
+   "closed": false,
+   "graders": {
+    "all-decisions": false,
+    "decision-1": false,
+    "facts": false,
+    "no-trap-pick": true,
+    "references": true
+   },
+   "words": 521,
+   "cost": 0.28796920000000237,
+   "error": null
+  },
+  {
+   "scenario": "import-ux-ru",
+   "kind": "short",
+   "cell": "A",
+   "run": 1,
+   "closed": false,
+   "graders": {
+    "all-decisions": true,
+    "decision-1": false,
+    "facts": false,
+    "no-trap-pick": true,
+    "references": true
+   },
+   "words": 143,
+   "cost": 0.1892760000000019,
+   "error": null
+  },
+  {
+   "scenario": "import-ux-ru",
+   "kind": "short",
+   "cell": "A",
+   "run": 2,
+   "closed": false,
+   "graders": {
+    "all-decisions": true,
+    "decision-1": false,
+    "facts": false,
+    "no-trap-pick": true,
+    "references": true
+   },
+   "words": 156,
+   "cost": 0.17306199999999683,
+   "error": null
+  },
+  {
+   "scenario": "import-ux-ru",
+   "kind": "short",
+   "cell": "A",
+   "run": 3,
+   "closed": false,
+   "graders": {
+    "all-decisions": true,
+    "decision-1": false,
+    "facts": false,
+    "no-trap-pick": true,
+    "references": true
+   },
+   "words": 170,
+   "cost": 0.1507499999999996,
+   "error": null
+  },
+  {
+   "scenario": "invoice-rounding",
+   "kind": "manual",
+   "cell": "D",
+   "run": 1,
+   "closed": false,
+   "graders": {
+    "all-decisions": true,
+    "decision-1": true,
+    "decision-2": true,
+    "facts": false,
+    "language": true,
+    "no-trap-pick": true,
+    "references": true
+   },
+   "words": 791,
+   "cost": 0.5060350000000022,
+   "error": null
+  },
+  {
+   "scenario": "invoice-rounding",
+   "kind": "manual",
+   "cell": "D",
+   "run": 2,
+   "closed": false,
+   "graders": {
+    "all-decisions": false,
+    "decision-1": false,
+    "decision-2": true,
+    "facts": false,
+    "language": true,
+    "no-trap-pick": true,
+    "references": true
+   },
+   "words": 775,
+   "cost": 0.8165878000000044,
+   "error": null
+  },
+  {
+   "scenario": "invoice-rounding",
+   "kind": "manual",
+   "cell": "D",
+   "run": 3,
+   "closed": false,
+   "graders": {
+    "all-decisions": false,
+    "decision-1": false,
+    "decision-2": true,
+    "facts": false,
+    "language": true,
+    "no-trap-pick": true,
+    "references": true
+   },
+   "words": 825,
+   "cost": 0.7483894000000011,
+   "error": null
+  },
+  {
+   "scenario": "invoice-rounding",
+   "kind": "manual",
+   "cell": "C",
+   "run": 1,
+   "closed": false,
+   "graders": {
+    "all-decisions": false,
+    "decision-1": false,
+    "decision-2": true,
+    "facts": false,
+    "language": true,
+    "no-trap-pick": false,
+    "references": true
+   },
+   "words": 799,
+   "cost": 0.9440244000000031,
+   "error": null
+  },
+  {
+   "scenario": "invoice-rounding",
+   "kind": "manual",
+   "cell": "C",
+   "run": 2,
+   "closed": false,
+   "graders": {
+    "all-decisions": false,
+    "decision-1": false,
+    "decision-2": false,
+    "facts": false,
+    "language": true,
+    "no-trap-pick": false,
+    "references": true
+   },
+   "words": 807,
+   "cost": 0.8108298000000039,
+   "error": null
+  },
+  {
+   "scenario": "invoice-rounding",
+   "kind": "manual",
+   "cell": "C",
+   "run": 3,
+   "closed": false,
+   "graders": {
+    "all-decisions": false,
+    "decision-1": false,
+    "decision-2": false,
+    "facts": false,
+    "language": true,
+    "no-trap-pick": false,
+    "references": true
+   },
+   "words": 838,
+   "cost": 0.9101842000000024,
+   "error": null
+  },
+  {
+   "scenario": "invoice-rounding",
+   "kind": "short",
+   "cell": "B",
+   "run": 1,
+   "closed": false,
+   "graders": {
+    "all-decisions": true,
+    "decision-1": false,
+    "decision-2": true,
+    "facts": false,
+    "language": true,
+    "no-trap-pick": true,
+    "references": true
+   },
+   "words": 598,
+   "cost": 0.9092224000000024,
+   "error": null
+  },
+  {
+   "scenario": "invoice-rounding",
+   "kind": "short",
+   "cell": "B",
+   "run": 2,
+   "closed": false,
+   "graders": {
+    "all-decisions": true,
+    "decision-1": true,
+    "decision-2": true,
+    "facts": false,
+    "language": true,
+    "no-trap-pick": true,
+    "references": false
+   },
+   "words": 524,
+   "cost": 0.9283284000000036,
+   "error": null
+  },
+  {
+   "scenario": "invoice-rounding",
+   "kind": "short",
+   "cell": "B",
+   "run": 3,
+   "closed": false,
+   "graders": {
+    "all-decisions": false,
+    "decision-1": false,
+    "decision-2": true,
+    "facts": false,
+    "language": true,
+    "no-trap-pick": true,
+    "references": true
+   },
+   "words": 550,
+   "cost": 0.37444040000000006,
+   "error": null
+  },
+  {
+   "scenario": "invoice-rounding",
+   "kind": "short",
+   "cell": "A",
+   "run": 1,
+   "closed": false,
+   "graders": {
+    "all-decisions": true,
+    "decision-1": false,
+    "decision-2": false,
+    "facts": false,
+    "language": true,
+    "no-trap-pick": true,
+    "references": false
+   },
+   "words": 196,
+   "cost": 0.36675600000000164,
+   "error": null
+  },
+  {
+   "scenario": "invoice-rounding",
+   "kind": "short",
+   "cell": "A",
+   "run": 2,
+   "closed": false,
+   "graders": {
+    "all-decisions": false,
+    "decision-1": false,
+    "decision-2": true,
+    "facts": false,
+    "language": true,
+    "no-trap-pick": false,
+    "references": false
+   },
+   "words": 173,
+   "cost": 0.20665800000000203,
+   "error": null
+  },
+  {
+   "scenario": "invoice-rounding",
+   "kind": "short",
+   "cell": "A",
+   "run": 3,
+   "closed": false,
+   "graders": {
+    "all-decisions": true,
+    "decision-1": false,
+    "decision-2": false,
+    "facts": false,
+    "language": true,
+    "no-trap-pick": false,
+    "references": false
+   },
+   "words": 179,
+   "cost": 0.28720400000000246,
+   "error": null
+  },
+  {
+   "scenario": "mixed-language-ru",
+   "kind": "manual",
+   "cell": "D",
+   "run": 1,
+   "closed": false,
+   "graders": {
+    "all-decisions": true,
+    "decision-1": false,
+    "decision-2": true,
+    "facts": true,
+    "language": true,
+    "no-trap-pick": true,
+    "references": true
+   },
+   "words": 940,
+   "cost": 0.6411829999999963,
+   "error": null
+  },
+  {
+   "scenario": "mixed-language-ru",
+   "kind": "manual",
+   "cell": "D",
+   "run": 2,
+   "closed": false,
+   "graders": {
+    "all-decisions": false,
+    "decision-1": true,
+    "decision-2": false,
+    "facts": false,
+    "language": true,
+    "no-trap-pick": true,
+    "references": false
+   },
+   "words": 930,
+   "cost": 0.708100199999997,
+   "error": null
+  },
+  {
+   "scenario": "mixed-language-ru",
+   "kind": "manual",
+   "cell": "D",
+   "run": 3,
+   "closed": false,
+   "graders": {
+    "all-decisions": false,
+    "decision-1": true,
+    "decision-2": true,
+    "facts": true,
+    "language": true,
+    "no-trap-pick": true,
+    "references": false
+   },
+   "words": 1012,
+   "cost": 0.7034231999999989,
+   "error": null
+  },
+  {
+   "scenario": "mixed-language-ru",
+   "kind": "manual",
+   "cell": "C",
+   "run": 1,
+   "closed": false,
+   "graders": {
+    "all-decisions": false,
+    "decision-1": false,
+    "decision-2": false,
+    "facts": false,
+    "language": true,
+    "no-trap-pick": true,
+    "references": false
+   },
+   "words": 947,
+   "cost": 0.7330983999999965,
+   "error": null
+  },
+  {
+   "scenario": "mixed-language-ru",
+   "kind": "manual",
+   "cell": "C",
+   "run": 2,
+   "closed": false,
+   "graders": {
+    "all-decisions": false,
+    "decision-1": false,
+    "decision-2": false,
+    "facts": false,
+    "language": true,
+    "no-trap-pick": true,
+    "references": true
+   },
+   "words": 1160,
+   "cost": 0.823507200000006,
+   "error": null
+  },
+  {
+   "scenario": "mixed-language-ru",
+   "kind": "manual",
+   "cell": "C",
+   "run": 3,
+   "closed": false,
+   "graders": {
+    "all-decisions": false,
+    "decision-1": false,
+    "decision-2": false,
+    "facts": true,
+    "language": true,
+    "no-trap-pick": true,
+    "references": true
+   },
+   "words": 1124,
+   "cost": 0.8324563999999959,
+   "error": null
+  },
+  {
+   "scenario": "mixed-language-ru",
+   "kind": "short",
+   "cell": "B",
+   "run": 1,
+   "closed": false,
+   "graders": {
+    "all-decisions": true,
+    "decision-1": true,
+    "decision-2": true,
+    "facts": false,
+    "language": true,
+    "no-trap-pick": true,
+    "references": true
+   },
+   "words": 525,
+   "cost": 0.5890220000000046,
+   "error": null
+  },
+  {
+   "scenario": "mixed-language-ru",
+   "kind": "short",
+   "cell": "B",
+   "run": 2,
+   "closed": false,
+   "graders": {
+    "all-decisions": false,
+    "decision-1": false,
+    "decision-2": false,
+    "facts": false,
+    "language": true,
+    "no-trap-pick": true,
+    "references": true
+   },
+   "words": 444,
+   "cost": 0.7967960000000045,
+   "error": null
+  },
+  {
+   "scenario": "mixed-language-ru",
+   "kind": "short",
+   "cell": "B",
+   "run": 3,
+   "closed": false,
+   "graders": {
+    "all-decisions": false,
+    "decision-1": true,
+    "decision-2": false,
+    "facts": false,
+    "language": true,
+    "no-trap-pick": true,
+    "references": true
+   },
+   "words": 508,
+   "cost": 0.5761759999999967,
+   "error": null
+  },
+  {
+   "scenario": "mixed-language-ru",
+   "kind": "short",
+   "cell": "A",
+   "run": 1,
+   "closed": false,
+   "graders": {
+    "all-decisions": true,
+    "decision-1": false,
+    "decision-2": false,
+    "facts": false,
+    "language": true,
+    "no-trap-pick": true,
+    "references": false
+   },
+   "words": 184,
+   "cost": 0.6188120000000059,
+   "error": null
+  },
+  {
+   "scenario": "mixed-language-ru",
+   "kind": "short",
+   "cell": "A",
+   "run": 2,
+   "closed": false,
+   "graders": {
+    "all-decisions": true,
+    "decision-1": true,
+    "decision-2": false,
+    "facts": false,
+    "language": true,
+    "no-trap-pick": true,
+    "references": false
+   },
+   "words": 188,
+   "cost": 0.5390960000000042,
+   "error": null
+  },
+  {
+   "scenario": "mixed-language-ru",
+   "kind": "short",
+   "cell": "A",
+   "run": 3,
+   "closed": false,
+   "graders": {
+    "all-decisions": true,
+    "decision-1": false,
+    "decision-2": false,
+    "facts": false,
+    "language": true,
+    "no-trap-pick": true,
+    "references": false
+   },
+   "words": 218,
+   "cost": 0.47265799999999414,
+   "error": null
+  },
+  {
+   "scenario": "orchestrator-stack",
+   "kind": "manual",
+   "cell": "D",
+   "run": 1,
+   "closed": false,
+   "graders": {
+    "all-decisions": true,
+    "decision-1": true,
+    "decision-2": false,
+    "facts": false,
+    "no-trap-pick": true,
+    "references": true
+   },
+   "words": 1201,
+   "cost": 0.38646719999999984,
+   "error": null
+  },
+  {
+   "scenario": "orchestrator-stack",
+   "kind": "manual",
+   "cell": "D",
+   "run": 2,
+   "closed": false,
+   "graders": {
+    "all-decisions": false,
+    "decision-1": false,
+    "decision-2": false,
+    "facts": false,
+    "no-trap-pick": true,
+    "references": true
+   },
+   "words": 1170,
+   "cost": 0.7564474000000032,
+   "error": null
+  },
+  {
+   "scenario": "orchestrator-stack",
+   "kind": "manual",
+   "cell": "D",
+   "run": 3,
+   "closed": false,
+   "graders": {
+    "all-decisions": false,
+    "decision-1": true,
+    "decision-2": false,
+    "facts": true,
+    "no-trap-pick": true,
+    "references": true
+   },
+   "words": 1228,
+   "cost": 0.8020792000000002,
+   "error": null
+  },
+  {
+   "scenario": "orchestrator-stack",
+   "kind": "manual",
+   "cell": "C",
+   "run": 1,
+   "closed": false,
+   "graders": {
+    "all-decisions": false,
+    "decision-1": true,
+    "decision-2": false,
+    "facts": false,
+    "no-trap-pick": true,
+    "references": false
+   },
+   "words": 1525,
+   "cost": 0.9400157999999998,
+   "error": null
+  },
+  {
+   "scenario": "orchestrator-stack",
+   "kind": "manual",
+   "cell": "C",
+   "run": 2,
+   "closed": false,
+   "graders": {
+    "all-decisions": false,
+    "decision-1": false,
+    "decision-2": false,
+    "facts": false,
+    "no-trap-pick": true,
+    "references": true
+   },
+   "words": 1368,
+   "cost": 0.8525505999999958,
+   "error": null
+  },
+  {
+   "scenario": "orchestrator-stack",
+   "kind": "manual",
+   "cell": "C",
+   "run": 3,
+   "closed": false,
+   "graders": {
+    "all-decisions": false,
+    "decision-1": true,
+    "decision-2": false,
+    "facts": false,
+    "no-trap-pick": true,
+    "references": true
+   },
+   "words": 1196,
+   "cost": 0.6693847999999987,
+   "error": null
+  },
+  {
+   "scenario": "orchestrator-stack",
+   "kind": "short",
+   "cell": "B",
+   "run": 1,
+   "closed": false,
+   "graders": {
+    "all-decisions": false,
+    "decision-1": false,
+    "decision-2": false,
+    "facts": false,
+    "no-trap-pick": true,
+    "references": false
+   },
+   "words": 543,
+   "cost": 0.47131519999999755,
+   "error": null
+  },
+  {
+   "scenario": "orchestrator-stack",
+   "kind": "short",
+   "cell": "B",
+   "run": 2,
+   "closed": false,
+   "graders": {
+    "all-decisions": false,
+    "decision-1": false,
+    "decision-2": false,
+    "facts": false,
+    "no-trap-pick": true,
+    "references": false
+   },
+   "words": 434,
+   "cost": 0.41139379999999814,
+   "error": null
+  },
+  {
+   "scenario": "orchestrator-stack",
+   "kind": "short",
+   "cell": "B",
+   "run": 3,
+   "closed": false,
+   "graders": {
+    "all-decisions": false,
+    "decision-1": false,
+    "decision-2": false,
+    "facts": false,
+    "no-trap-pick": true,
+    "references": false
+   },
+   "words": 496,
+   "cost": 0.7193383999999997,
+   "error": null
+  },
+  {
+   "scenario": "orchestrator-stack",
+   "kind": "short",
+   "cell": "A",
+   "run": 1,
+   "closed": false,
+   "graders": {
+    "all-decisions": false,
+    "decision-1": false,
+    "decision-2": false,
+    "facts": false,
+    "no-trap-pick": true,
+    "references": false
+   },
+   "words": 173,
+   "cost": 0.32348800000000905,
+   "error": null
+  },
+  {
+   "scenario": "orchestrator-stack",
+   "kind": "short",
+   "cell": "A",
+   "run": 2,
+   "closed": false,
+   "graders": {
+    "all-decisions": false,
+    "decision-1": false,
+    "decision-2": false,
+    "facts": false,
+    "no-trap-pick": true,
+    "references": true
+   },
+   "words": 264,
+   "cost": 0.214544000000001,
+   "error": null
+  },
+  {
+   "scenario": "orchestrator-stack",
+   "kind": "short",
+   "cell": "A",
+   "run": 3,
+   "closed": false,
+   "graders": {
+    "all-decisions": false,
+    "decision-1": false,
+    "decision-2": false,
+    "facts": false,
+    "no-trap-pick": true,
+    "references": false
+   },
+   "words": 248,
+   "cost": 0.4328360000000099,
+   "error": null
+  },
+  {
+   "scenario": "rate-limit-compacted",
+   "kind": "manual",
+   "cell": "D",
+   "run": 1,
+   "closed": false,
+   "graders": {
+    "all-decisions": false,
+    "decision-1": false,
+    "facts": false,
+    "no-trap-pick": true,
+    "references": true
+   },
+   "words": 907,
+   "cost": 0.4930828000000064,
+   "error": null
+  },
+  {
+   "scenario": "rate-limit-compacted",
+   "kind": "manual",
+   "cell": "D",
+   "run": 2,
+   "closed": false,
+   "graders": {
+    "all-decisions": true,
+    "decision-1": false,
+    "facts": true,
+    "no-trap-pick": true,
+    "references": true
+   },
+   "words": 921,
+   "cost": 0.5544446000000085,
+   "error": null
+  },
+  {
+   "scenario": "rate-limit-compacted",
+   "kind": "manual",
+   "cell": "D",
+   "run": 3,
+   "closed": false,
+   "graders": {
+    "all-decisions": false,
+    "decision-1": false,
+    "facts": true,
+    "no-trap-pick": true,
+    "references": true
+   },
+   "words": 720,
+   "cost": 0.5172694000000074,
+   "error": null
+  },
+  {
+   "scenario": "rate-limit-compacted",
+   "kind": "manual",
+   "cell": "C",
+   "run": 1,
+   "closed": false,
+   "graders": {
+    "all-decisions": false,
+    "decision-1": false,
+    "facts": true,
+    "no-trap-pick": true,
+    "references": true
+   },
+   "words": 1322,
+   "cost": 0.46923160000000463,
+   "error": null
+  },
+  {
+   "scenario": "rate-limit-compacted",
+   "kind": "manual",
+   "cell": "C",
+   "run": 2,
+   "closed": false,
+   "graders": {
+    "all-decisions": false,
+    "decision-1": false,
+    "facts": false,
+    "no-trap-pick": true,
+    "references": false
+   },
+   "words": 1039,
+   "cost": 0.4927406000000088,
+   "error": null
+  },
+  {
+   "scenario": "rate-limit-compacted",
+   "kind": "manual",
+   "cell": "C",
+   "run": 3,
+   "closed": false,
+   "graders": {
+    "all-decisions": false,
+    "decision-1": false,
+    "facts": true,
+    "no-trap-pick": true,
+    "references": false
+   },
+   "words": 1280,
+   "cost": 0.4271065999999973,
+   "error": null
+  },
+  {
+   "scenario": "rate-limit-compacted",
+   "kind": "short",
+   "cell": "B",
+   "run": 1,
+   "closed": false,
+   "graders": {
+    "all-decisions": false,
+    "decision-1": true,
+    "facts": false,
+    "no-trap-pick": true,
+    "references": true
+   },
+   "words": 500,
+   "cost": 0.3563247999999985,
+   "error": null
+  },
+  {
+   "scenario": "rate-limit-compacted",
+   "kind": "short",
+   "cell": "B",
+   "run": 2,
+   "closed": true,
+   "graders": {
+    "all-decisions": true,
+    "decision-1": true,
+    "facts": true,
+    "no-trap-pick": true,
+    "references": true
+   },
+   "words": 560,
+   "cost": 0.2970593999999991,
+   "error": null
+  },
+  {
+   "scenario": "rate-limit-compacted",
+   "kind": "short",
+   "cell": "B",
+   "run": 3,
+   "closed": true,
+   "graders": {
+    "all-decisions": true,
+    "decision-1": true,
+    "facts": true,
+    "no-trap-pick": true,
+    "references": false
+   },
+   "words": 472,
+   "cost": 0.3911393999999959,
+   "error": null
+  },
+  {
+   "scenario": "rate-limit-compacted",
+   "kind": "short",
+   "cell": "A",
+   "run": 1,
+   "closed": false,
+   "graders": {
+    "all-decisions": false,
+    "decision-1": true,
+    "facts": false,
+    "no-trap-pick": true,
+    "references": false
+   },
+   "words": 265,
+   "cost": 0.1915420000000001,
+   "error": null
+  },
+  {
+   "scenario": "rate-limit-compacted",
+   "kind": "short",
+   "cell": "A",
+   "run": 2,
+   "closed": false,
+   "graders": {
+    "all-decisions": false,
+    "decision-1": true,
+    "facts": false,
+    "no-trap-pick": true,
+    "references": false
+   },
+   "words": 253,
+   "cost": 0.3533799999999968,
+   "error": null
+  },
+  {
+   "scenario": "rate-limit-compacted",
+   "kind": "short",
+   "cell": "A",
+   "run": 3,
+   "closed": false,
+   "graders": {
+    "all-decisions": false,
+    "decision-1": true,
+    "facts": false,
+    "no-trap-pick": true,
+    "references": false
+   },
+   "words": 230,
+   "cost": 0.45980199999999594,
+   "error": null
+  },
+  {
+   "scenario": "vector-index-unsure",
+   "kind": "manual",
+   "cell": "D",
+   "run": 1,
+   "closed": false,
+   "graders": {
+    "all-decisions": false,
+    "decision-1": true,
+    "facts": false,
+    "no-trap-pick": false,
+    "references": true
+   },
+   "words": 902,
+   "cost": 0.4110225999999963,
+   "error": null
+  },
+  {
+   "scenario": "vector-index-unsure",
+   "kind": "manual",
+   "cell": "D",
+   "run": 2,
+   "closed": false,
+   "graders": {
+    "all-decisions": false,
+    "decision-1": true,
+    "facts": false,
+    "no-trap-pick": true,
+    "references": true
+   },
+   "words": 909,
+   "cost": 0.4394682000000003,
+   "error": null
+  },
+  {
+   "scenario": "vector-index-unsure",
+   "kind": "manual",
+   "cell": "D",
+   "run": 3,
+   "closed": false,
+   "graders": {
+    "all-decisions": false,
+    "decision-1": true,
+    "facts": false,
+    "no-trap-pick": true,
+    "references": true
+   },
+   "words": 1057,
+   "cost": 0.6186419999999958,
+   "error": null
+  },
+  {
+   "scenario": "vector-index-unsure",
+   "kind": "manual",
+   "cell": "C",
+   "run": 1,
+   "closed": false,
+   "graders": {
+    "all-decisions": false,
+    "decision-1": false,
+    "facts": false,
+    "no-trap-pick": true,
+    "references": true
+   },
+   "words": 1601,
+   "cost": 0.7612253999999947,
+   "error": null
+  },
+  {
+   "scenario": "vector-index-unsure",
+   "kind": "manual",
+   "cell": "C",
+   "run": 2,
+   "closed": false,
+   "graders": {
+    "all-decisions": false,
+    "decision-1": true,
+    "facts": false,
+    "no-trap-pick": true,
+    "references": true
+   },
+   "words": 1570,
+   "cost": 0.6650178000000005,
+   "error": null
+  },
+  {
+   "scenario": "vector-index-unsure",
+   "kind": "manual",
+   "cell": "C",
+   "run": 3,
+   "closed": false,
+   "graders": {
+    "all-decisions": false,
+    "decision-1": true,
+    "facts": false,
+    "no-trap-pick": true,
+    "references": true
+   },
+   "words": 1593,
+   "cost": 0.7351903999999985,
+   "error": null
+  },
+  {
+   "scenario": "vector-index-unsure",
+   "kind": "short",
+   "cell": "B",
+   "run": 1,
+   "closed": false,
+   "graders": {
+    "all-decisions": false,
+    "decision-1": true,
+    "facts": false,
+    "no-trap-pick": true,
+    "references": true
+   },
+   "words": 541,
+   "cost": 0.7731573999999977,
+   "error": null
+  },
+  {
+   "scenario": "vector-index-unsure",
+   "kind": "short",
+   "cell": "B",
+   "run": 2,
+   "closed": false,
+   "graders": {
+    "all-decisions": false,
+    "decision-1": true,
+    "facts": false,
+    "no-trap-pick": true,
+    "references": true
+   },
+   "words": 519,
+   "cost": 0.6173563999999983,
+   "error": null
+  },
+  {
+   "scenario": "vector-index-unsure",
+   "kind": "short",
+   "cell": "B",
+   "run": 3,
+   "closed": false,
+   "graders": {
+    "all-decisions": false,
+    "decision-1": false,
+    "facts": false,
+    "no-trap-pick": true,
+    "references": true
+   },
+   "words": 588,
+   "cost": 0.6921695999999959,
+   "error": null
+  },
+  {
+   "scenario": "vector-index-unsure",
+   "kind": "short",
+   "cell": "A",
+   "run": 1,
+   "closed": false,
+   "graders": {
+    "all-decisions": true,
+    "decision-1": true,
+    "facts": false,
+    "no-trap-pick": false,
+    "references": true
+   },
+   "words": 171,
+   "cost": 0.1825500000000006,
+   "error": null
+  },
+  {
+   "scenario": "vector-index-unsure",
+   "kind": "short",
+   "cell": "A",
+   "run": 2,
+   "closed": false,
+   "graders": {
+    "all-decisions": false,
+    "decision-1": true,
+    "facts": false,
+    "no-trap-pick": false,
+    "references": true
+   },
+   "words": 176,
+   "cost": 0.15496799999999547,
+   "error": null
+  },
+  {
+   "scenario": "vector-index-unsure",
+   "kind": "short",
+   "cell": "A",
+   "run": 3,
+   "closed": false,
+   "graders": {
+    "all-decisions": false,
+    "decision-1": true,
+    "facts": false,
+    "no-trap-pick": false,
+    "references": true
+   },
+   "words": 155,
+   "cost": 0.15329999999999547,
+   "error": null
+  }
+ ]
+}

@@ -1,0 +1,18 @@
+{
+ "confused/skill-loads": {
+  "passed": 18,
+  "runs": 18
+ },
+ "decided/short-reply": {
+  "passed": 0,
+  "runs": 18
+ },
+ "decided/skill-silent": {
+  "passed": 18,
+  "runs": 18
+ },
+ "proceed/skill-silent": {
+  "passed": 18,
+  "runs": 18
+ }
+}
