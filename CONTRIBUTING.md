@@ -20,6 +20,9 @@ A pull request that changes the skill's wording should show the behaviour it fix
 1. **Before**: a transcript (or the relevant part) where the current skill misbehaves.
 2. **After**: the same situation with your change, on the same agent and model.
 3. **Which agent and model** you ran it on.
+4. **The benchmark**, if you can afford it (about $8): `claude plugin eval . --model claude-opus-5-5
+   --judge-model claude-sonnet-5-5 --no-publish --threshold 0`, before and after, per
+   [`evals/README.md`](evals/README.md). A change that lowers a grader's pass count needs a reason.
 
 Keep to the file's own rules: say each thing once, plain words, fair to every option. The skill
 must stay language-neutral: examples and headings in English, with the instruction to answer in

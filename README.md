@@ -33,68 +33,132 @@ reask is an [Agent Skill](https://agentskills.io): one file,
 [`SKILL.md`](https://github.com/Nezhinskiy/reask/blob/main/skills/reask/SKILL.md), that any agent
 reading the format can load.
 
-## Example
+## Does it help?
 
-This is real output, trimmed only where marked `[…]`: Claude Code 2.1.312 with Opus 5.5, on a
-scratch copy of this repository. The task was to fix the Install section of this README; before
-editing, the agent asked:
+Measured with Claude Code's plugin eval harness on six real stalls: an agent without reask has
+asked a question, and the user replies "Sorry, I stepped away and lost the thread. I don't
+understand what you're asking me. Ask it again." Every case runs with reask loaded and without
+it, and the user's reply is the same in both. Nobody types `/reask`; the skill loaded on its own
+in 18 of 18 runs. Claude Opus 5.5 answers, Claude Sonnet 5.5 judges, and there are 3 runs per arm.
 
-> **The decision: which route leads for Claude Code?** A. A Skills CLI one-liner leads, and the
-> plugin moves down as an alternative. B. The plugin stays a first-class Claude Code route, and
-> the hook mentions both names. […] A or B?
+| The re-ask… | Without reask | With reask |
+|---|---|---|
+| can be followed by someone who never saw the session | 10/18 | **18/18** |
+| gives every option's downside, the recommended one's too | 6/18 | **13/18** |
+| grounds its recommendation in a project fact | 16/18 | **18/18** |
+| ends with the decisions to answer, each a one-word reply | 7/18 | **10/18** |
+| keeps an easy yes/no under 200 words | **3/3** | 0/3 |
 
-Typing `/reask` turned that into:
+Overall the score goes from 0.60 to 0.81. The price is length: a median of 238 words becomes 548,
+and each reply costs about 11 cents more with Opus 5.5. Two weak spots are still open. An easy
+yes/no comes back at about 330 words, where SKILL.md promises about 150. And when several
+questions are bounced, their asks are spread through one long reply. Every reply, the method and
+the command to run it yourself are in
+[`evals/`](https://github.com/Nezhinskiy/reask/tree/main/evals).
 
-> **Context.** I'm editing the Install section of the reask README, from the audit's
-> nice-to-haves in `AUDIT.md`. There are two fixes. The first adds one copy-paste install line
-> per agent, so readers can see at a glance that reask works in their tool. The second deals with
-> a naming mismatch. The README's opening line says "Type `/reask`." But one of the five install
-> routes, the Claude Code plugin (`/plugin install reask@reask`), adds a prefix to the skill's
-> name, so it answers only to `/reask:reask`. Every other route gives the plain `/reask`.
-> Nothing is edited yet; the section's order depends on your answer.
->
-> *Decided:* the per-agent lines will use the Skills CLI's `-a claude-code`, `-a codex`,
-> `-a cursor` and `-a gemini-cli`, each with `--global`. […] *My assumption:* you will still
-> submit the plugin to the Anthropic plugin directory, since the audit's first blocker, the
-> missing plugin icon, exists to prepare that submission.
->
-> A fact that softens either choice: the skill also starts on plain phrases like "ask again" or
-> "I don't get the question". So a plugin user who types the wrong command name can still reach
-> it.
->
-> **A live example.** What each kind of reader copies and types:
->
-> | Reader arrives from | Copies | Types `/reask` | Works? |
-> |---|---|---|---|
-> | GitHub or the megathread, under A | Skills CLI line for Claude Code | `/reask` | yes |
-> | The plugin directory, under A | `/plugin install` | `/reask` (from the opening line) | no, needs `/reask:reask` |
-> | The plugin directory, under B | `/plugin install` | the opening line names both | yes |
->
-> **Options.**
->
-> *A. The Skills CLI line for Claude Code goes first, and the plugin moves down as an
-> alternative.* A short note in the plugin part says it answers to `/reask:reask`.
-> - Pros: the first command most readers copy matches the opening line, and that line stays short.
-> - Cons: plugin-directory users read an opening line that is wrong for them. The plugin is also
->   the route you're about to promote.
->
-> *B. The plugin stays a first-class Claude Code route, and the opening line names both
-> commands*, e.g. "Type `/reask` (`/reask:reask` if you installed the plugin)."
-> - Pros: correct for every reader from the first line, and the plugin keeps its built-in updates.
-> - Cons: the opening line gets clunkier, and the mismatch is explained rather than avoided.
->
-> **Recommendation.** A, though I'm leaning rather than firm. reask isn't listed in the directory
-> yet, so for now every reader comes through GitHub, where A is right. The strongest case for B
-> is that the directory becomes your main channel after you submit. It doesn't win yet, because
-> the plain-phrase trigger and the note in the plugin part cover those users. What would change
-> my mind is directory installs overtaking GitHub ones, and nobody can measure that yet.
->
-> **The question.** For Claude Code, should the README lead with the Skills CLI line and keep
-> the opening line as `/reask` (A, recommended), or keep the plugin first-class and name both
-> commands in the opening line (B)?
+## Example: the same moment, with and without reask
 
-The answer was A, which is the layout of this page. In the interactive Claude Code UI the question
-arrives with both answers as options to pick, the recommended one first.
+From the benchmark's `reliability-plan` case. The agent is asked to plan a sprint from a folder of
+tickets, an ADR and an RFC, and stops to ask two questions. The user replies that they lost the
+thread. Both replies below are real, unedited output, from the median-scoring run of each arm.
+
+Without reask, the agent's own re-ask is good: it gets the numbers and the conflict right. What
+reask adds is what a reader coming in cold needs to decide:
+
+- **The recommended option's downside.** Without reask, option A comes with its upside only. With
+  reask, it comes with its cons, including one the agent found by looking again: if Postgres also runs on a single
+  primary, checkout just moves to a different single point of failure.
+- **What would change its mind,** and the strongest argument against its own pick.
+- **What is decided and what is assumed** ("ADR-7's 6 days come out of these same 10 days. The
+  docs don't say who does that work").
+- **Every term explained:** p99 and SLO, not just the ticket codes.
+
+<details>
+<summary>Without reask (score 0.60, 286 words)</summary>
+
+> No problem, here's the question again.
+>
+> **The situation:** You asked me to plan this sprint's reliability work. You have 10 dev-days, but the work in docs/ adds up to 16:
+>
+> - **PLAT-412** (8 days): move the session store from Redis Sentinel to Redis Cluster. This is meant to prevent another INC-301, the 47-minute checkout outage on Oct 3.
+> - **PLAT-415** (2 days): add p99 latency alerts per endpoint.
+> - **ADR-7** (6 days left, due Dec 15): move checkout to v2, which stores sessions in Postgres instead of Redis.
+>
+> **The catch:** Once ADR-7 is done, checkout no longer uses Redis at all. Only the admin panel does. So PLAT-412 would spend 8 days hardening Redis for something checkout is about to stop using.
+>
+> **Question 1: Which work goes into this sprint?**
+>
+> - **A (my recommendation):** ADR-7 + PLAT-415 = 8 days, with 2 to spare. Drop PLAT-412 or shrink it to just the admin panel. This prevents another INC-301 by moving checkout off Redis instead of hardening Redis.
+> - **B:** PLAT-412 + PLAT-415 = 10 days. ADR-7 gets no time this sprint, which puts the Dec 15 deadline at risk.
+> - **C:** ADR-7 comes out of a different team's or budget's time, not these 10 days. If so, let me know, and I'll reconsider whether PLAT-412 is worth doing at all.
+>
+> **Question 2: Which uptime target should I plan for?**
+>
+> A draft proposal (RFC-3) would raise checkout's target from 99.5% to 99.9%. That cuts the allowed downtime from about 3.6 hours a month to about 43 minutes. The head of product hasn't approved it yet. Should I plan for 99.9% anyway, or stick with the current 99.5%?
+>
+> A short answer like "A, 99.5%" is all I need.
+
+</details>
+
+<details>
+<summary>With reask (score 0.80, 585 words)</summary>
+
+> I'm asking two things before I plan the sprint's reliability work. The plan depends on the answers.
+>
+> ## Question 1: Which work goes into this sprint?
+>
+> **Context.** You have 10 dev-days across two engineers. Three items compete for them:
+>
+> - **PLAT-412** (8 days): move the session store from Redis Sentinel to Redis Cluster. Sentinel has a single primary server, and that primary caused **INC-301**, a 47-minute checkout outage on Oct 3. Cluster has no single primary.
+> - **PLAT-415** (2 days): add alerts when an endpoint's p99 latency gets too high. p99 is the speed of the slowest 1% of requests.
+> - **ADR-7** (6 days left): an accepted decision to retire checkout v1 by Dec 15. Checkout v2 keeps sessions in Postgres instead of Redis. Once it's done, only the admin panel uses Redis for sessions.
+>
+> All three add up to 16 days, which is 6 more than you have. ADR-7 also makes PLAT-412 much less useful, because once checkout is off Redis, hardening Redis mainly protects the admin panel.
+>
+> **Decided:** ADR-7 is accepted and due Dec 15.
+> **My assumption:** ADR-7's 6 days come out of these same 10 days. The docs don't say who does that work.
+>
+> **Options**
+>
+> - **A. ADR-7 + PLAT-415 (8 days, 2 spare)**
+>   - Pros: takes checkout off Redis, which removes INC-301's cause for checkout. It's also faster than PLAT-412 (6 days vs 8).
+>   - Pros: keeps the Dec 15 date on track.
+>   - Cons: the admin panel stays on Redis Sentinel with its single primary.
+>   - Cons: the docs don't say how Postgres is set up. If it also runs on one primary, checkout moves to a different single point of failure.
+> - **B. PLAT-412 + PLAT-415 (10 days)**
+>   - Pros: attacks the exact component that failed in INC-301.
+>   - Cons: 8 days spent on infrastructure that checkout stops using once ADR-7 ships.
+>   - Cons: no ADR-7 work this sprint, so Dec 15 is at risk.
+> - **C. ADR-7 is staffed separately**
+>   - If someone else does ADR-7, you have all 10 days. The real question then becomes whether PLAT-412 is worth 8 days just to protect the admin panel.
+>
+> **Recommendation:** A, leaning. It removes the cause of INC-301 from checkout sooner and doesn't waste 8 days. The strongest argument against it is that B fixes the failure directly. But that fix stops mattering for checkout once ADR-7 lands. Two things would change my mind: ADR-7 being staffed separately (option C), or Postgres having the same single-primary weakness.
+>
+> **Which do you want: A, B, or C?**
+>
+> ## Question 2: Which availability target should I plan against?
+>
+> **Context.** Checkout's availability target, or SLO, is 99.5% today. That allows about 3.6 hours of downtime a month. **RFC-3** proposes raising it to 99.9%, which allows about 43 minutes. That's less than INC-301's 47 minutes, so one outage like it would use up the whole month. RFC-3 is still a draft waiting for sign-off from the head of product.
+>
+> The target affects how hard I push on reliability items and what I put in A's 2 spare days. It doesn't change the answer to Question 1.
+>
+> **Options**
+>
+> - **99.5% (current)**
+>   - Pros: it's the target in force today.
+>   - Cons: the plan may fall short if RFC-3 is approved mid-sprint.
+> - **99.9% (proposed)**
+>   - Pros: prepares for where things are likely headed.
+>   - Cons: commits capacity to a target nobody has approved.
+>
+> **Recommendation:** 99.5%, firm, because RFC-3 isn't signed off. I'd note 99.9% as a stretch goal.
+>
+> **Should I plan against 99.5% or 99.9%?**
+
+</details>
+
+In the interactive Claude Code UI the question arrives with its answers as options to pick, the
+recommended one first.
 
 ## More ways to install
 

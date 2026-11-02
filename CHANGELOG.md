@@ -6,9 +6,12 @@ notes.
 ## 0.3.1 (2026-10-29)
 
 - The Claude Code plugin has an icon, for its listing in plugin directories.
-- The README shows a real `/reask` briefing, captured from a Claude Code session, in place of the
-  hand-written example, and opens with a one-line install for Claude Code, Codex, Cursor and
-  Gemini CLI.
+- A benchmark in `evals/`, run with `claude plugin eval`: six real moments where an agent waits on
+  a question, each run with reask and without it. With reask, the re-ask could be followed by
+  someone who never saw the session in 18 of 18 runs, against 10 of 18 without; replies are about
+  2.3 times longer. Results, every reply and the command to rerun it are in `evals/README.md`.
+- The README shows real output in place of the hand-written example: the same moment with and
+  without reask. It opens with a one-line install for Claude Code, Codex, Cursor and Gemini CLI.
 - The skill itself is unchanged.
 
 ## 0.3.0 (2026-09-29)
