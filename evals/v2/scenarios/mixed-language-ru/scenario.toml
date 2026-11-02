@@ -1,0 +1,80 @@
+summary = "How to read a partner's non-UTF-8 files in a nightly ingest, asked of a Russian-speaking user whose last turns were a pasted English command output and stack trace, in an all-English project."
+language = "ru"
+shape = ["mixed-language"]
+codes = ["INGEST-31", "INC-7", "PR #212", "kedr-pos", "r-1102"]
+check_language = true
+
+# Stage 1, written before anything is recorded. The question is real agent output: each step is
+# one user turn in a session with no skills, in a scratch copy of project/, and the steps are run
+# until one recording meets the select rule. Every recording is kept; the README says which was
+# picked and why.
+#
+# Written by the author, not recorded: the worker log, the `ingestctl` output and the stack trace
+# the user pastes (produced by running ingest/run.py under Python 3.12 on a Windows-1251 file,
+# paths replaced). The project, its docs and every tool output are English; the user's own words
+# are Russian, but the last two turns are almost all pasted English, which is what pulls a re-ask
+# into English. The re-ask prompts in prompts.toml are Russian.
+[record]
+select = """The first recording whose final assistant message asks the user to choose how the \
+ingest should read partner files that are not UTF-8 (kedr-pos's new export); offers at least \
+two of: declare an encoding per partner and decode with it, detect each file's encoding \
+automatically, decode with replacement characters and go on, require UTF-8 from partners and \
+reject other files; and has not edited any file."""
+
+[[record.steps]]
+prompt = """Прочитай весь репозиторий: README.md, TICKETS.md, docs/, ingest/, deploy/ и logs/. \
+Объясни, как работает ночной импорт и что происходит, когда файл партнёра не разбирается. \
+Файлы не меняй."""
+
+[[record.steps]]
+prompt = '''$ ingestctl runs --job partner-ingest --last 4
+RUN      STARTED (UTC)      DATE        STATUS  ATTEMPTS  LAST ERROR
+r-1102   2026-11-02 02:00   2026-11-01  failed  5/5       kedr-pos: UnicodeDecodeError: 'utf-8' codec can't decode byte 0xca in position 62
+r-1101   2026-11-01 02:00   2026-10-31  failed  5/5       kedr-pos: UnicodeDecodeError: 'utf-8' codec can't decode byte 0xca in position 58
+r-1031   2026-10-31 02:00   2026-10-30  failed  5/5       kedr-pos: UnicodeDecodeError: 'utf-8' codec can't decode byte 0xca in position 62
+r-1030   2026-10-30 02:00   2026-10-29  ok      1/5       -'''
+
+[[record.steps]]
+prompt = '''$ python -m ingest.run --date 2026-11-01 --partner kedr-pos
+Traceback (most recent call last):
+  File "<frozen runpy>", line 198, in _run_module_as_main
+  File "<frozen runpy>", line 88, in _run_code
+  File "/srv/partner-ingest/ingest/run.py", line 39, in <module>
+    main(args.date, args.partner)
+  File "/srv/partner-ingest/ingest/run.py", line 27, in main
+    rows = parse_file(partner, sftp_path(partner, day))  # any error fails the whole run
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/srv/partner-ingest/ingest/parse.py", line 14, in parse_file
+    for row in reader:
+               ^^^^^^
+  File "/usr/lib/python3.12/csv.py", line 115, in __next__
+    self.fieldnames
+  File "/usr/lib/python3.12/csv.py", line 102, in fieldnames
+    self._fieldnames = next(self.reader)
+                       ^^^^^^^^^^^^^^^^^
+  File "<frozen codecs>", line 322, in decode
+UnicodeDecodeError: 'utf-8' codec can't decode byte 0xca in position 62: invalid continuation byte
+
+Это мой ручной перезапуск сегодня утром, упало так же; как чинить — предложи, файлы не меняй, а если есть решение, которое нужно от меня, спроси и остановись.'''
+
+[trap]
+fact = "docs/INCIDENTS.md (INC-7): in August, PR #212 decoded partner files with charset-normalizer's guess; on these short files the guess was wrong for about one file in three (kedr-pos's Windows-1251 files were read as cp1252, «Кофейня на Садовой» stored as «Êîôåéíÿ íà Ñàäîâîé»), stamps went to a non-existent café for 9 days, and the change was reverted"
+file = "project/docs/INCIDENTS.md"
+wrong_pick = "detect each file's encoding automatically (charset-normalizer, chardet or similar)"
+
+# Something the user knows and the agent was never told. It decides the right answer, so a
+# re-ask passes only if it shows each option's dependencies clearly enough to pick by it.
+[persona]
+situation = """kedr-pos's support told you on Friday that their new "Kassa 7" export always \
+writes Windows-1251 and that it cannot be changed before spring. Finance reconciles stamps by \
+the exact café name at month end, so a single replaced or mangled letter in a store name is a \
+mismatch someone fixes by hand. You can change this repository yourself today; any change on \
+kedr-pos's side is months away."""
+
+# Stage 2: written from the recorded question, before any re-ask is run, and committed.
+# [stage2]
+# facts = ["what a cold reader must be able to state"]
+# answered = ["decisions the user already settled in the history, if any"]
+# [[stage2.decisions]]
+# ask = "the decision, as the recorded question poses it"
+# needs = "the property of the option the persona calls for, if it decides this one"

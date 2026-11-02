@@ -1,0 +1,46 @@
+summary = "Where per-client rate-limit counters live, asked after a long read-only session was compacted."
+language = "en"
+shape = ["compaction", "long-session"]
+codes = ["API-88", "INC-412"]
+check_language = false
+
+# Stage 1, written before anything is recorded. The question is real agent output: each step is
+# one user turn in a session with no skills, in a scratch copy of project/, and the steps are run
+# until one recording meets the select rule. Every recording is kept; the README says which was
+# picked and why.
+[record]
+select = """The first recording whose final assistant message asks the user to choose where the \
+per-API-key counters are kept, offers at least two of: each API process's memory, the shared \
+Redis, the gateway's rate-limit plugin; and has not edited any file."""
+
+[[record.steps]]
+prompt = """Read this repository end to end: every file under api/, deploy/ and docs/, and \
+TICKETS.md. Then give me a summary of how a request flows from the internet to a handler, \
+which endpoints exist and what limits apply to them today. Do not change any files."""
+
+[[record.steps]]
+command = "/compact"
+
+[[record.steps]]
+prompt = """Next is API-88. Plan the per-client limit; do not write code yet. If there is a \
+design decision you need from me, ask me and stop."""
+
+[trap]
+fact = "deploy/k8s.yaml runs the API as 6 replicas behind a load balancer, so counters kept in each process's memory let every key through about 6 times its limit"
+file = "project/deploy/k8s.yaml"
+wrong_pick = "keep the counters in each API process's memory"
+
+# Something the user knows and the agent was never told. It decides the right answer, so a
+# re-ask passes only if it shows each option's dependencies clearly enough to pick by it.
+[persona]
+situation = """Your team is two people. After INC-412 you promised the on-call lead that \
+nothing new of yours would depend on the shared Redis. The platform team runs the gateway and \
+turns its plugins on within a day of a ticket."""
+
+# Stage 2: written from the recorded question, before any re-ask is run, and committed.
+# [stage2]
+# facts = ["what a cold reader must be able to state"]
+# answered = ["decisions the user already settled in the history, if any"]
+# [[stage2.decisions]]
+# ask = "the decision, as the recorded question poses it"
+# needs = "the property of the option the persona calls for, if it decides this one"

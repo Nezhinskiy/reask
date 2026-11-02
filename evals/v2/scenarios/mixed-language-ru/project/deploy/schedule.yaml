@@ -1,0 +1,9 @@
+jobs:
+  - name: partner-ingest
+    schedule: "0 2 * * *"        # 02:00 UTC, loads the previous day
+    command: ["python", "-m", "ingest.run"]
+    timeout: 30m
+    retry:
+      attempts: 5
+      backoff: 20m               # on any non-zero exit
+    log: /var/log/partner-ingest/ingest-worker-{date}.log

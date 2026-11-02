@@ -1,0 +1,18 @@
+# Semantic search settings (MOSS-311).
+
+embedding:
+  model: embed-m2
+  dimensions: 768            # float32
+
+corpus:
+  # Counted 2026-10-31 from chunk_vectors.
+  tenants: 1340
+  articles: 18400
+  chunks: 212000
+  raw_vectors_mib: 621       # chunks x 768 x 4 bytes, before any index overhead
+
+budget:
+  # Agreed with the platform team in October: the most search may add to EACH mossline-api pod
+  # on top of what the pod uses today. More needs a capacity request (next review: February).
+  api_pod_extra_memory_mib: 256
+  search_p95_ms: 150

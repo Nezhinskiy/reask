@@ -1,0 +1,10 @@
+PR #14 cfg/drop-legacy-paths  checks  2026-10-31 15:41
+unit (py3.12) ............ passed (43)
+lint ..................... passed
+deploy-smoke ............. FAILED
+
+deploy-smoke: tests/test_crontab.py::test_every_scheduled_command_parses
+  deploy/crontab line 3:
+    15 6 * * *  nightjar send-digest --legacy-paths --since 24h
+  nightjar: error: unrecognized arguments: --legacy-paths
+1 failed, 3 passed in 0.84s

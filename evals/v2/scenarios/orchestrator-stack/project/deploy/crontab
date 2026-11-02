@@ -1,0 +1,4 @@
+# m  h  dom mon dow  command
+0    6  *   *   *    nightjar collect --since 24h
+15   6  *   *   *    nightjar send-digest --legacy-paths --since 24h
+0    3  *   *   0    nightjar prune --older-than 90d

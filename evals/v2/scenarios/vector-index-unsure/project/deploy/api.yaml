@@ -1,0 +1,19 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: mossline-api
+spec:
+  replicas: 4
+  template:
+    spec:
+      containers:
+        - name: api
+          image: mossline/api:2026.10.28
+          resources:
+            requests: { cpu: "500m", memory: 1280Mi }
+            limits: { memory: 1280Mi }
+          env:
+            - name: DATABASE_URL
+              valueFrom: { secretKeyRef: { name: api-db, key: url } }
+            - name: EMBED_M2_KEY
+              valueFrom: { secretKeyRef: { name: embed-m2, key: api-key } }

@@ -16,3 +16,6 @@ evals/*/*.jsonl
 evals/results/*/aggregate-result.json
 evals/results/*/report.html
 evals/results/*/mock-recordings/
+
+# Cases rendered from evals/v2/scenarios by scripts/build_evals.py; the scenarios are the source.
+.eval-build/

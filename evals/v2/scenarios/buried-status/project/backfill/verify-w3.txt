@@ -1,0 +1,5 @@
+verify_totals --wave W3 (orders 2023), run 2026-10-31 08:12
+checked   903,552
+match     903,515
+mismatch        0
+null           37   all 37 have total_text = 'N/A' and status = 'cancelled_test'

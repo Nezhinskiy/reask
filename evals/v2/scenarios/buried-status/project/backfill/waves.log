@@ -1,0 +1,6 @@
+# backfill_totals.py, batch 5000, night window 22:00-04:00
+wave  orders     rows       start             end    result  skipped  verify
+W1    2019-2020    412,380  2026-10-28 22:00  00:47  ok       0       ok, 0 mismatches
+W2    2021-2022    826,114  2026-10-29 22:00  03:31  ok       0       ok, 0 mismatches
+W3    2023         903,552  2026-10-30 22:00  04:04  ok      37       see verify-w3.txt
+W4    2024-2026  3,288,907  queued: next night window, single run

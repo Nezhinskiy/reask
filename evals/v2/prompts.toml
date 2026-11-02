@@ -1,0 +1,41 @@
+# What the user types after the agent's pending question, per cell and per the scenario's language.
+#
+# short: what someone types when they have lost the thread. Cells A (no plugin) and B (plugin; the
+#        skill loads on its own). Nobody types /reask: a command that does not exist in one arm
+#        would rig the comparison.
+# manual: the best re-ask the author would write by hand, assembled from the arguments they
+#         actually typed after /reask in their own sessions, before this benchmark existed (the
+#         "write in Russian", "on a UX example", "check before you recommend", "ask everything
+#         now", "unpack every code" requests). Cells C (no plugin) and D (plugin).
+
+[short]
+en = "I didn't quite get that. Can you ask again in plain words?"
+ru = "Не понял. Можешь переспросить простыми словами?"
+
+[manual]
+en = """I've lost the context of this session. Ask me again so that I can answer from scratch: \
+tell me what we are doing and why this decision is needed now; say what every code, number and \
+name from the session stands for; show the difference on a live example, and if the decision \
+changes what the product's users see, on a UX example; give the pros and cons of every option, \
+the one you recommend included; before you recommend, check the fact your recommendation rests \
+on in the project, without changing anything; say how sure you are; and ask me every open \
+question at once."""
+ru = """Я потерял контекст этой сессии. Переспроси заново так, чтобы я мог ответить с нуля: \
+введи меня в контекст — что мы делаем и зачем это решение нужно сейчас; раскрой, что стоит за \
+каждым кодом, номером и названием из сессии; покажи разницу на живом примере, а если решение \
+меняет то, что видят пользователи продукта, — на UX-примере; у каждого варианта плюсы и минусы, \
+у рекомендуемого тоже; перед рекомендацией проверь в проекте факт, на котором она держится, \
+ничего не меняя; скажи, насколько ты уверен; задай все открытые вопросы сразу. Пиши на русском."""
+
+# Trigger cases: replies after which the skill must not load, and one after which it must.
+[decided]
+en = "Agreed, go with your recommendation."
+ru = "Согласен, делай как рекомендуешь."
+
+[proceed]
+en = "Carry on, and open a PR at the end."
+ru = "Продолжай, а в конце создай PR."
+
+[confused]
+en = "What do you need from me here?"
+ru = "Что от меня требуется?"

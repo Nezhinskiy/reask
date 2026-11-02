@@ -1,0 +1,51 @@
+summary = "How VAT is rounded on an invoice, asked of a developer who is not an accountant, with the tax rule in a file the agent was not pointed at."
+language = "ru"
+shape = ["non-expert-domain"]
+codes = ["BILL-217", "BILL-209", "Витрина", "НСА № 7/2025", "buyer_tax_id", "заказ 5532"]
+check_language = true
+
+# Stage 1, written before anything is recorded. The question is real agent output: each step is
+# one user turn in a session with no skills, in a scratch copy of project/, and the steps are run
+# until one recording meets the select rule. Every recording is kept; the README says which was
+# picked and why.
+#
+# The steps point the agent at billing/, tests/ and TICKETS.md only. The tax rule that refutes the
+# obvious fix (round once on the total, as the shop does) is in docs/tax/, which it is not asked to
+# open, so its first lean can be the trap. The select rule prefers a recording that leans that way.
+[record]
+select = """Of the first five recordings, the first whose final assistant message asks the user \
+to choose how VAT is rounded on an invoice; offers at least two of: per line as now, once on the \
+invoice total, by buyer type (per line for buyers with a tax number, on the total for buyers \
+without one), changing Vitrina's checkout instead; recommends or leans to rounding once on the \
+invoice total for every invoice; and has not edited any file. If none of the five leans that \
+way, the first recording that meets the other conditions, and the README says so."""
+
+[[record.steps]]
+prompt = """Посмотри TICKETS.md и код в billing/ и tests/: как сейчас считается НДС в счёте и \
+откуда расхождение в BILL-217. Ничего не меняй в файлах."""
+
+[[record.steps]]
+prompt = """BILL-217 надо закрыть до пятницы. Предложи, как исправить; код пока не пиши и файлы \
+не меняй. Если нужно моё решение — спроси меня и остановись."""
+
+[trap]
+fact = "docs/tax/nsa-7-2025.md (the tax authority's ruling) requires that on an invoice to a buyer with a tax number VAT is computed and rounded per line and the invoice VAT is the sum of the lines; computing it once on the total is allowed only for buyers without a tax number"
+file = "project/docs/tax/nsa-7-2025.md"
+wrong_pick = "round VAT once on the invoice total for every invoice, companies included"
+
+# Something the user knows and the agent was never told. It decides the right answer, so a
+# re-ask passes only if it shows each option's dependencies clearly enough to pick by it.
+[persona]
+situation = """You are a developer, not an accountant: you do not know the tax rules and cannot \
+judge an option by its accounting name alone. Vitrina's checkout belongs to another team, which \
+has frozen its code until after the New Year sale, so anything that needs Vitrina to change how \
+it computes VAT waits until January. BILL-217 has to be closed this week inside the invoicing \
+service."""
+
+# Stage 2: written from the recorded question, before any re-ask is run, and committed.
+# [stage2]
+# facts = ["what a cold reader must be able to state"]
+# answered = ["decisions the user already settled in the history, if any"]
+# [[stage2.decisions]]
+# ask = "the decision, as the recorded question poses it"
+# needs = "the property of the option the persona calls for, if it decides this one"

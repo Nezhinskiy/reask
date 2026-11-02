@@ -1,0 +1,55 @@
+summary = "How to run the last, largest wave of an order-totals backfill, asked in the middle of a status report over several workstreams."
+language = "en"
+shape = ["buried-question", "long-session"]
+codes = ["MIG-21", "W3", "W4", "#88", "BI-140", "total_minor"]
+check_language = false
+
+# Stage 1, written before anything is recorded. The question is real agent output: each step is
+# one user turn in a session with no skills, in a scratch copy of project/, and the steps are run
+# until one recording meets the select rule. Every recording is kept; the README says which was
+# picked and why.
+#
+# Written by the author, not recorded: the wave log, the W3 verification output and the runbook
+# are fixture files; the status report and the question in it are real.
+[record]
+select = """The first recording whose final assistant message (1) reports the status of at \
+least three MIG-21 workstreams (of: dual-write #88, backfill waves, verification, the BI-140 \
+dashboard switch, dropping total_text); (2) asks the user to decide how W4 is run, offering at \
+least two of: raise the batch size so W4 fits one night, split W4 across several nights, run it \
+in the daytime too, throttled, with the DB on-call's agreement; (3) does not open with that ask: \
+the status of at least one workstream comes before it, in an earlier paragraph or list item; \
+and (4) no file was edited."""
+
+[[record.steps]]
+prompt = """We're in the middle of MIG-21. Read TICKETS.md, docs/ and everything under \
+backfill/, and explain how the backfill works and what each wave has done so far. Do not change \
+any files."""
+
+[[record.steps]]
+prompt = """Check W3's verification output against the runbook. Is anything in it out of the \
+ordinary? Do not change any files."""
+
+[[record.steps]]
+prompt = """Now give me the status over every MIG-21 workstream, the way I'd post it for the \
+team: what is done, what is in progress, what is blocked and what comes next. Do not change any \
+files. Ask me only if something needs my decision, and stop there."""
+
+[trap]
+fact = "backfill/RUNBOOK.md caps the batch size at 5,000 rows: in the staging dry run 20,000-row batches kept the read replica up to 4 minutes behind, and the invoice API, which reads from the replica, showed customers invoices with stale totals"
+file = "project/backfill/RUNBOOK.md"
+wrong_pick = "raise the batch size (for example to 20,000 rows) so that W4 fits in one night"
+
+# Something the user knows and the agent was never told. It decides the right answer, so a
+# re-ask passes only if it shows each option's dependencies clearly enough to pick by it.
+[persona]
+situation = """Finance closes the quarter in 48 hours and needs total_minor on every order by \
+then. You are the DB on-call this week, and daytime load on the database has been low since the \
+move to the larger instance last month, so you are happy to let the backfill run in the day."""
+
+# Stage 2: written from the recorded question, before any re-ask is run, and committed.
+# [stage2]
+# facts = ["what a cold reader must be able to state"]
+# answered = ["decisions the user already settled in the history, if any"]
+# [[stage2.decisions]]
+# ask = "the decision, as the recorded question poses it"
+# needs = "the property of the option the persona calls for, if it decides this one"

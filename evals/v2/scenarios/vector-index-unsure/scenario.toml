@@ -1,0 +1,52 @@
+summary = "How the help-center vector search is served, a close call the agent cannot settle from the repo, with a memory budget that rules out one obvious option."
+language = "en"
+shape = ["low-confidence", "research-option"]
+codes = ["MOSS-311", "MOSS-298", "embed-m2", "chunk_vectors", "api_pod_extra_memory_mib", "search_p95_ms"]
+check_language = false
+
+# Stage 1, written before anything is recorded. The question is real agent output: each step is
+# one user turn in a session with no skills, in a scratch copy of project/, and the steps are run
+# until one recording meets the select rule. Every recording is kept; the README says which was
+# picked and why.
+#
+# What decides the answer is not in the repo: how large the Enterprise tenants will be, whether
+# the data team lets a new extension onto the shared Postgres, and how pgvector behaves under the
+# 150 ms target. So a fair question is a lean or a close call, and "check this first" is a fair
+# option.
+[record]
+select = """The first recording whose final assistant message asks the user to choose where and \
+how MOSS-311's vector search runs; offers at least two of: pgvector in the existing Postgres, an \
+index held in the API pods' memory, a separate vector search service, checking or measuring \
+something before deciding; says it is unsure, calls it a close call, or names a fact it could \
+not check from the repo; and has not edited any file."""
+
+[[record.steps]]
+prompt = """Read TICKETS.md and everything under docs/, config/, search/ and deploy/. Then tell \
+me how help-center search works today and what MOSS-311 asks for. Do not change any files."""
+
+[[record.steps]]
+prompt = """Plan the vector search for MOSS-311: where the vectors are searched and with what \
+kind of index. We can't benchmark or load-test anything this week, so go by what is in the repo, \
+and say so where something can't be known from it. Don't write code or change files. If there \
+is a decision you need from me, ask me and stop."""
+
+[trap]
+fact = "config/search.yaml: the 212,000 chunk vectors take 621 MiB as raw float32, before any index overhead, but search may add at most 256 MiB to each API pod (api_pod_extra_memory_mib), so an index held in the API pods' memory does not fit"
+file = "project/config/search.yaml"
+wrong_pick = "hold the vectors and their index in each API pod's memory (an in-process FAISS, hnswlib or numpy index)"
+
+# Something the user knows and the agent was never told. It decides the right answer, so a
+# re-ask passes only if it shows each option's dependencies clearly enough to pick by it.
+[persona]
+situation = """Last week the data team told you that no new Postgres extension, pgvector \
+included, goes onto the shared Postgres before its major-version upgrade in March, and MOSS-311 \
+ships in December. Your team already runs two small services of its own on the cluster, so \
+adding a third is routine for you."""
+
+# Stage 2: written from the recorded question, before any re-ask is run, and committed.
+# [stage2]
+# facts = ["what a cold reader must be able to state"]
+# answered = ["decisions the user already settled in the history, if any"]
+# [[stage2.decisions]]
+# ask = "the decision, as the recorded question poses it"
+# needs = "the property of the option the persona calls for, if it decides this one"

@@ -1,0 +1,55 @@
+summary = "How to get the last PR of a stacked config rework green, asked by an orchestrator session while an earlier decision on the PR below it is still unanswered."
+language = "en"
+shape = ["orchestrator", "pending-from-earlier"]
+codes = ["#12", "#13", "#14", "ADR-7", "--legacy-paths", "deploy-smoke"]
+check_language = false
+
+# Stage 1, written before anything is recorded. The question is real agent output: each step is
+# one user turn in a session with no skills, in a scratch copy of project/, and the steps are run
+# until one recording meets the select rule. Every recording is kept; the README says which was
+# picked and why.
+#
+# Written by the author, not recorded: the child sessions' reports (runs/), the stack table
+# (STACK.md) and the CI log are fixture files; the session that reads them is real.
+[record]
+select = """Among the first five recordings, those where (1) the reply to the first step asks \
+the user to decide what #13 does when a host has only nightjar.ini, offering both keeping it as \
+a fallback and refusing to start; (2) the final assistant message asks how to get #14's \
+deploy-smoke check green, offering at least two of: delete --legacy-paths from deploy/crontab, \
+keep --legacy-paths as an accepted flag that only warns, take #14 out of 2.0; (3) the #13 \
+question is still open at the end: no user turn answers it, and the final message neither \
+settles it nor says it will go ahead with an option of its own; and (4) no file was edited. \
+Pick the first of them whose final message recommends, or presents as its default, deleting \
+--legacy-paths from deploy/crontab; if none does, pick the first of them."""
+
+[[record.steps]]
+prompt = """This session coordinates the config rework for nightjar 2.0. The work was done by \
+child sessions, one per PR: the stack is in STACK.md and their reports are in runs/. Read \
+STACK.md and the reports for #12 and #13, then tell me where those two PRs stand and whether \
+anything stops us merging them. Do not change any files. If a report leaves a decision for me, \
+ask me and stop."""
+
+[[record.steps]]
+prompt = """Let's come back to that later. #14's CI just went red: read its child report in \
+runs/ and ci/pr-14-checks.log, find out why it fails, and tell me how we get it green. Do not \
+change any files. If there is a decision you need from me, ask me and stop."""
+
+[trap]
+fact = "deploy/README.md says deploy/crontab is a copy of the ops team's ops-schedules repository, overwritten by a nightly sync, so deleting --legacy-paths there is lost the next night, never reaches the hosts, and the hosts keep running send-digest --legacy-paths, which 2.0 would reject"
+file = "project/deploy/README.md"
+wrong_pick = "get #14 green by deleting --legacy-paths from deploy/crontab in the same PR"
+
+# Something the user knows and the agent was never told. It decides the right answer, so a
+# re-ask passes only if it shows each option's dependencies clearly enough to pick by it.
+[persona]
+situation = """You tag nightjar 2.0 this Friday and it must contain all three PRs, #12, #13 and \
+#14. Every team that runs nightjar has already moved its settings to nightjar.toml, and you told \
+them 2.0 drops INI support entirely: you do not want 2.0 to read nightjar.ini at all."""
+
+# Stage 2: written from the recorded question, before any re-ask is run, and committed.
+# [stage2]
+# facts = ["what a cold reader must be able to state"]
+# answered = ["decisions the user already settled in the history, if any"]
+# [[stage2.decisions]]
+# ask = "the decision, as the recorded question poses it"
+# needs = "the property of the option the persona calls for, if it decides this one"

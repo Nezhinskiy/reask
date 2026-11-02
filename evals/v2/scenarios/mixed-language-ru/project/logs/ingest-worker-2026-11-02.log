@@ -1,0 +1,20 @@
+2026-11-02 02:00:00,104 INFO scheduler: job=partner-ingest run=r-1102 attempt=1/5 start date=2026-11-01
+2026-11-02 02:00:02,981 INFO loaded partner=brewline rows=412
+2026-11-02 02:00:03,077 ERROR scheduler: run=r-1102 attempt=1/5 exit=1 UnicodeDecodeError: 'utf-8' codec can't decode byte 0xca in position 62: invalid continuation byte
+2026-11-02 02:00:03,078 INFO scheduler: run=r-1102 retry in 20m
+2026-11-02 02:20:03,121 INFO scheduler: job=partner-ingest run=r-1102 attempt=2/5 start date=2026-11-01
+2026-11-02 02:20:05,870 INFO loaded partner=brewline rows=412
+2026-11-02 02:20:05,964 ERROR scheduler: run=r-1102 attempt=2/5 exit=1 UnicodeDecodeError: 'utf-8' codec can't decode byte 0xca in position 62: invalid continuation byte
+2026-11-02 02:20:05,965 INFO scheduler: run=r-1102 retry in 20m
+2026-11-02 02:40:06,010 INFO scheduler: job=partner-ingest run=r-1102 attempt=3/5 start date=2026-11-01
+2026-11-02 02:40:08,733 INFO loaded partner=brewline rows=412
+2026-11-02 02:40:08,829 ERROR scheduler: run=r-1102 attempt=3/5 exit=1 UnicodeDecodeError: 'utf-8' codec can't decode byte 0xca in position 62: invalid continuation byte
+2026-11-02 02:40:08,830 INFO scheduler: run=r-1102 retry in 20m
+2026-11-02 03:00:08,902 INFO scheduler: job=partner-ingest run=r-1102 attempt=4/5 start date=2026-11-01
+2026-11-02 03:00:11,644 INFO loaded partner=brewline rows=412
+2026-11-02 03:00:11,739 ERROR scheduler: run=r-1102 attempt=4/5 exit=1 UnicodeDecodeError: 'utf-8' codec can't decode byte 0xca in position 62: invalid continuation byte
+2026-11-02 03:00:11,740 INFO scheduler: run=r-1102 retry in 20m
+2026-11-02 03:20:11,813 INFO scheduler: job=partner-ingest run=r-1102 attempt=5/5 start date=2026-11-01
+2026-11-02 03:20:14,502 INFO loaded partner=brewline rows=412
+2026-11-02 03:20:14,598 ERROR scheduler: run=r-1102 attempt=5/5 exit=1 UnicodeDecodeError: 'utf-8' codec can't decode byte 0xca in position 62: invalid continuation byte
+2026-11-02 03:20:14,599 ERROR scheduler: run=r-1102 failed after 5 attempts; not loaded: kedr-pos, lumen-pos

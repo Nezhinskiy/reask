@@ -1,0 +1,57 @@
+summary = "Which tickets, tech-debt items and a session-named follow-up to fold into the partial-refund PR before Thursday's release, where everything is referred to by code."
+language = "ru"
+shape = ["codes", "many-references"]
+codes = ["ORD-214", "ORD-219", "ORD-221", "TD-3", "TD-7", "BR-2", "BR-4", "BR-6", "ADR-5", "INC-58", "PR #88", "«фотохвост»"]
+check_language = false
+
+# Stage 1, written before anything is recorded. The question is real agent output: each step is
+# one user turn in a session with no skills, in a scratch copy of project/, and the steps are run
+# until one recording meets the select rule. Every recording is kept; the README says which was
+# picked and why.
+#
+# Written by the author, not recorded: the tickets, tech-debt list, rules and ADR are fixture
+# files. «фотохвост» exists only in the session: the user names the BR-4 photo check in step 2,
+# and no file mentions it, so a re-ask that uses the name without unpacking it leaves the reader
+# with nothing to look up.
+[record]
+select = """The first recording whose final assistant message asks the user to decide which of \
+ORD-219, ORD-221, TD-3, TD-7 and «фотохвост» go into the ORD-214 PR and which wait, naming at \
+least three of them by their code or by that name; and has not edited any file."""
+
+[[record.steps]]
+prompt = """Прочитай репозиторий целиком: TICKETS.md, всё в docs/ (включая docs/adr/), \
+refunds/, payments/ и notifications/. Коротко: что такое ORD-214, в каком он состоянии и какие \
+TD, BR и ADR его касаются. Файлы не меняй."""
+
+[[record.steps]]
+prompt = """Проверку фотографии по BR-4 в refundable_items пока не трогаем, это отдельная \
+задача. Будем звать её «фотохвост». Просто запомни, файлы не меняй."""
+
+[[record.steps]]
+prompt = """Хочу закрыть ORD-214 одним PR к четвергу. Что из ORD-219, ORD-221, TD-3, TD-7 и \
+«фотохвоста» стоит влить в этот же PR, а что отложить? Код не пиши, файлы не меняй. Если есть \
+решение, которое нужно от меня, спроси и остановись."""
+
+[trap]
+fact = "docs/adr/ADR-5-refund-retries.md forbids retrying refund() automatically, in code or by a background job, until the gateway's API v3: API v2 has no idempotency key, so a retry after a timeout can create a second refund (INC-58: 23 customers refunded twice, 41,800 roubles lost); ORD-221 proposes exactly that retry, so it cannot go into the ORD-214 PR as written"
+file = "project/docs/adr/ADR-5-refund-retries.md"
+wrong_pick = "fold ORD-221 (retry refund() automatically, up to 3 times, on a gateway timeout) into the ORD-214 PR"
+
+# Something the user knows and the agent was never told. It decides the right answer, so a
+# re-ask passes only if it shows each option's dependencies clearly enough to pick by it.
+# Both halves go against the likely default: the user deferred «фотохвост» in step 2, and
+# ORD-219 looks like a one-line fix that belongs with partial refunds.
+[persona]
+situation = """You set «фотохвост» aside earlier only to keep the PR small. Since then the ops \
+lead told you that the plant supplier compensates a returned plant only when the customer's \
+photo is attached, so partial returns of plants must not go live on Thursday without that \
+check. The refund email's wording, on the other hand, goes through marketing's review, which \
+takes a week, and support is fine answering the ORD-219 complaints with a template until then."""
+
+# Stage 2: written from the recorded question, before any re-ask is run, and committed.
+# [stage2]
+# facts = ["what a cold reader must be able to state"]
+# answered = ["decisions the user already settled in the history, if any"]
+# [[stage2.decisions]]
+# ask = "the decision, as the recorded question poses it"
+# needs = "the property of the option the persona calls for, if it decides this one"

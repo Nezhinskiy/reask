@@ -1,0 +1,57 @@
+summary = "What a new school sees when some rows of its first bank-statement import fail, a product decision that only a UX-level example makes clear."
+language = "ru"
+shape = ["ux-decision"]
+codes = ["ONB-12", "ONB-9", "ledger-api", "Камертон"]
+check_language = false
+
+# Stage 1, written before anything is recorded. The question is real agent output: each step is
+# one user turn in a session with no skills, in a scratch copy of project/, and the steps are run
+# until one recording meets the select rule. Every recording is kept; the README says which was
+# picked and why.
+#
+# Written by the author, not recorded: the October failure numbers (analytics/) and the comment in
+# importer/run_import.py that blames ledger-api timeouts are fixture files; the question is real.
+# The comment points one way and the numbers the other, so a re-ask that drops the numbers can
+# lean to the silent retry.
+[record]
+select = """The first recording whose final assistant message asks the user to choose what a \
+school sees when some rows of its first bank-statement import fail; offers at least two of: \
+reject the whole file and show which rows failed and why, import the valid rows and flag the \
+rest (a banner, a list of rows to fix), retry the failed rows in the background without telling \
+the school; and has not edited any file."""
+
+[[record.steps]]
+prompt = """Прочитай репозиторий целиком: README.md, TICKETS.md, docs/, importer/ и analytics/. \
+Расскажи, как сейчас устроен первый импорт выписки и что видит школа, если что-то пошло не так. \
+Файлы не меняй."""
+
+[[record.steps]]
+prompt = """Теперь ONB-12. Продумай, что должна видеть школа, если при первом импорте часть строк \
+не прошла. Код не пиши и файлы не меняй. Если есть решение, которое нужно от меня, спроси и \
+остановись."""
+
+[trap]
+fact = "analytics/import_failures_2026-10.md shows that only 71 of the 1,212 rows that failed in October's first imports (5.9%) failed on a ledger-api timeout; the other 1,141 (94%) failed validation (payer not matched to a family, date or amount format), which no retry fixes until the school corrects the data, so a silent retry leaves those payments missing without the school knowing"
+file = "project/analytics/import_failures_2026-10.md"
+wrong_pick = "retry the failed rows silently in the background and show the school nothing about them"
+
+# Something the user knows and the agent was never told. It decides the right answer, so a
+# re-ask passes only if it shows each option's dependencies clearly enough to pick by it.
+# The agent's likely default is the friendlier partial import; this user's schools want the
+# opposite, so a re-ask that only argues for its own recommendation fails here.
+[persona]
+situation = """Your users are the bookkeepers of small music schools. Right after the import \
+they check the year's total in Камертон against the total on the bank statement, to the \
+kopeck, and the school's director sees the balances the same day. In interviews they told you \
+that a total that does not match the bank is the worst thing that can happen to them: they then \
+hunt for the missing payments row by row and the director loses trust in the numbers. Fixing a \
+few rows in the CSV in Excel and uploading it again is routine for them, as long as they are \
+told exactly which rows and why."""
+
+# Stage 2: written from the recorded question, before any re-ask is run, and committed.
+# [stage2]
+# facts = ["what a cold reader must be able to state"]
+# answered = ["decisions the user already settled in the history, if any"]
+# [[stage2.decisions]]
+# ask = "the decision, as the recorded question poses it"
+# needs = "the property of the option the persona calls for, if it decides this one"
