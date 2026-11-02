@@ -9,6 +9,16 @@ notes.
   documentation, support and privacy sections, and the icon named explicitly. The README has a
   Privacy section: reask collects and sends nothing.
 - CI checks the plugin with the plugin directory's own validation profile.
+- The re-ask is written in the language of your own words, not of text you pasted or a command
+  you ran.
+- It covers every decision still waiting on you, including ones asked before the agent's last
+  message, and with several questions it ends on all of them together.
+- When the decision changes what your product's users see, the live example shows it from their
+  side.
+- When a longer check would settle a close call, the agent offers that check as one of the
+  answers instead of guessing.
+- The skill no longer loads when the agent is about to ask a new question of its own, or when you
+  have already answered.
 
 ## 0.3.1 (2026-11-02)
 
