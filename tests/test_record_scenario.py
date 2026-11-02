@@ -19,7 +19,7 @@ def _assistant(text: str, sidechain: bool = False) -> str:
 
 def test_isolation_prefers_bare_with_an_api_key() -> None:
     assert record_scenario.isolation({"ANTHROPIC_API_KEY": "k"}) == ["--bare"]
-    assert "--disable-slash-commands" in record_scenario.isolation({})
+    assert "--strict-mcp-config" in record_scenario.isolation({})
 
 
 def test_the_first_turn_names_the_session_and_later_turns_resume_it() -> None:

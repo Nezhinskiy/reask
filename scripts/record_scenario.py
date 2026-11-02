@@ -6,7 +6,8 @@ Each attempt copies the scenario's project/ into a fresh scratch directory outsi
 repository and sends the [record] steps to `claude -p`, one user turn each, resuming the same
 session; a `command` step (such as /compact) is sent as that turn. Tools are read-only. With
 ANTHROPIC_API_KEY set the session runs under --bare (no CLAUDE.md, hooks, plugins, memory);
-without it, user settings, MCP servers and skills are switched off instead.
+without it, user settings and MCP servers are switched off instead. Either way the only tools
+are Read, Glob and Grep, so no skill can load.
 
 Every attempt is kept under OUT/NAME/<n>/: the raw session, the final assistant message
 (final.md) to judge against the scenario's select rule, and the scratch path to pass to
@@ -36,7 +37,8 @@ Runner = Callable[[list[str], Path], subprocess.CompletedProcess[str]]
 def isolation(env: dict[str, str]) -> list[str]:
     if env.get("ANTHROPIC_API_KEY"):
         return ["--bare"]
-    return ["--setting-sources", "project", "--strict-mcp-config", "--disable-slash-commands"]
+    # No Skill tool is offered (TOOLS), so no skill can load; slash commands stay on for /compact.
+    return ["--setting-sources", "project", "--strict-mcp-config"]
 
 
 def command(step: dict[str, Any], session: str, first: bool, env: dict[str, str]) -> list[str]:

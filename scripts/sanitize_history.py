@@ -38,7 +38,15 @@ LEAKS = {
     "e-mail": re.compile(r"\b[A-Za-z0-9._%+-]+@(?!example\.)[A-Za-z0-9-]+\.[A-Za-z.]{2,}\b"),
     "token": re.compile(r"\b(?:sk-ant-|ghp_|gho_|github_pat_|xox[bp]-|AKIA)[A-Za-z0-9_-]{8,}"),
     "system reminder": re.compile(r"<system-reminder>"),
+    # Claude Code names a session's folder after its directory, separators turned into dashes.
+    "path as a folder name": re.compile(
+        r"-(?:Users|home)-[A-Za-z0-9._]+-|-(?:private-)?var-folders-"
+    ),
 }
+
+
+def _slug(path: str) -> str:
+    return re.sub(r"[^A-Za-z0-9-]", "-", path)
 
 
 def _scrub(value: Any, paths: list[tuple[str, str]]) -> Any:
@@ -57,9 +65,9 @@ def _scrub(value: Any, paths: list[tuple[str, str]]) -> Any:
 def sanitize(lines: list[str], cwd: str, home: str) -> list[dict[str, Any]]:
     # Longest first, so the working directory wins over the home directory that contains it.
     resolved = str(Path(cwd).resolve())
-    paths = sorted(
-        {(cwd, "/work"), (resolved, "/work"), (home, "~")}, key=lambda p: len(p[0]), reverse=True
-    )
+    pairs = {(cwd, "/work"), (resolved, "/work"), (home, "~")}
+    pairs |= {(_slug(cwd), "-work"), (_slug(resolved), "-work"), (_slug(home), "-home")}
+    paths = sorted(pairs, key=lambda p: len(p[0]), reverse=True)
     rows = []
     for line in lines:
         if not line.strip():

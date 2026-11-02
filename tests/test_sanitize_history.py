@@ -37,7 +37,10 @@ SESSION = [
             "role": "assistant",
             "model": "claude-opus-5-5",
             "usage": {"input_tokens": 3},
-            "content": [{"type": "text", "text": f"Done in {CWD}."}],
+            "content": [
+                {"type": "text", "text": f"Done in {CWD}."},
+                {"type": "text", "text": "Log: ~/.claude/projects/-Users-alice-scratch-run-1/x"},
+            ],
         },
     ),
 ]
@@ -50,7 +53,10 @@ def test_keeps_the_dialogue_and_only_the_replayed_keys() -> None:
     assert rows[0]["cwd"] == "/work"
     assert rows[1]["isCompactSummary"] is True
     assert "usage" not in rows[1]["message"]
-    assert rows[1]["message"]["content"] == [{"type": "text", "text": "Done in /work."}]
+    assert rows[1]["message"]["content"] == [
+        {"type": "text", "text": "Done in /work."},
+        {"type": "text", "text": "Log: ~/.claude/projects/-work/x"},
+    ]
 
 
 def test_paths_and_reminders_are_scrubbed() -> None:
@@ -67,6 +73,8 @@ def test_paths_and_reminders_are_scrubbed() -> None:
         ("mail bob.smith@corp.io", "e-mail"),
         ("key sk-ant-abcdefgh12345", "token"),
         ("<system-reminder>", "system reminder"),
+        ("projects/-Users-bob-dev-x/1.jsonl", "path as a folder name"),
+        ("projects/-private-var-folders-gr-T-x/1.jsonl", "path as a folder name"),
     ],
 )
 def test_each_leak_is_named(text: str, leak: str) -> None:
