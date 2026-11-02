@@ -99,13 +99,15 @@ jobs:
           npx --yes skills@1.7.0 add . --global --agent claude-code --yes
           test "$(cd "$HOME/.claude/skills/reask" && find . -type f)" = "./SKILL.md"
           cmp "$HOME/.claude/skills/reask/SKILL.md" skills/reask/SKILL.md
-      - name: The plugin and marketplace validate, and the plugin installs
+      - name: The plugin and marketplace validate, pass the plugin directory's checks, and install
         env:
           CLAUDE_CONFIG_DIR: ${{ runner.temp }}/claude
         run: |
-          claude() { npx --yes @anthropic-ai/claude-code@2.1.284 "$@"; }
+          # 2.1.305 is the first release whose validate knows --profile directory.
+          claude() { npx --yes @anthropic-ai/claude-code@2.1.305 "$@"; }
           claude plugin validate .claude-plugin/plugin.json --strict
           claude plugin validate .claude-plugin/marketplace.json --strict
+          claude plugin validate . --profile directory --strict
           claude plugin marketplace add ./
           claude plugin install reask@reask
           cmp "$CLAUDE_CONFIG_DIR"/plugins/cache/reask/reask/*/skills/reask/SKILL.md skills/reask/SKILL.md

@@ -266,6 +266,18 @@ vulnerabilities privately, as described in
 in CI and carries a
 [build provenance attestation](https://github.com/Nezhinskiy/reask/blob/main/SECURITY.md#verifying-what-you-installed).
 
+## Privacy
+
+reask collects nothing and sends nothing anywhere. The plugin is a set of instructions: following
+them, your agent may read files in your project to check a fact before it recommends an option,
+and may write one HTML file to a temporary directory to show you a layout. It has no hooks, no MCP
+servers and makes no network calls. The `reask` Python package writes, and on `uninstall`
+removes, only `SKILL.md` in the skills directory you point it at.
+
+The repository also holds developer scripts in `evals/field/` that count reask uses in your own
+Claude Code transcripts. The plugin never loads or runs them; they run only when you start them,
+and keep their output on your machine.
+
 ## License
 
 [MIT](https://github.com/Nezhinskiy/reask/blob/main/LICENSE)

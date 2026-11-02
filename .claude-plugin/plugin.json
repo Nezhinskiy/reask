@@ -1,6 +1,7 @@
 {
   "$schema": "https://json.schemastore.org/claude-code-plugin-manifest.json",
   "name": "reask",
+  "displayName": "reask",
   "description": "Re-ask a pending question as a self-contained briefing: context, a live example, options with pros and cons, a recommendation, one question.",
   "version": "0.3.1",
   "author": {
@@ -9,6 +10,10 @@
   },
   "homepage": "https://github.com/Nezhinskiy/reask",
   "repository": "https://github.com/Nezhinskiy/reask",
+  "documentationUrl": "https://github.com/Nezhinskiy/reask#readme",
+  "supportUrl": "https://github.com/Nezhinskiy/reask/issues",
+  "privacyPolicyUrl": "https://github.com/Nezhinskiy/reask#privacy",
   "license": "MIT",
-  "keywords": ["questions", "decisions", "clarification", "briefing"]
+  "keywords": ["questions", "decisions", "clarification", "briefing"],
+  "icon": "./.claude-plugin/icon.png"
 }

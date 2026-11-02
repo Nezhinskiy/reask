@@ -3,6 +3,13 @@
 Newest first. Every entry is written for users: a release's section becomes its GitHub Release
 notes.
 
+## Unreleased
+
+- The plugin's listing details for the Anthropic plugin directory: a display name, links to the
+  documentation, support and privacy sections, and the icon named explicitly. The README has a
+  Privacy section: reask collects and sends nothing.
+- CI checks the plugin with the plugin directory's own validation profile.
+
 ## 0.3.1 (2026-11-02)
 
 - The Claude Code plugin has an icon, for its listing in plugin directories.
