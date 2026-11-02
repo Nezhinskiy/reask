@@ -38,7 +38,7 @@ def sign_test(diffs: list[float]) -> float:
     n, k = len(nonzero), sum(d > 0 for d in nonzero)
     if n == 0:
         return 1.0
-    tail = sum(math.comb(n, i) for i in range(min(k, n - k) + 1)) / 2**n
+    tail: float = sum(math.comb(n, i) for i in range(min(k, n - k) + 1)) / 2**n
     return min(1.0, 2 * tail)
 
 
