@@ -1,0 +1,12 @@
+schema_version: "1.1"
+name: token-storage-ru
+description: "Where a SPA stores its JWT; the user writes in Russian."
+tags: [reask]
+runs: 3
+context:
+  history_file: history.jsonl
+  add_dirs: [project]
+execution:
+  max_turns: 10
+  allowed_tools: [Read, Glob, Grep, Skill]
+  prompt: "Извини, я отвлёкся и потерял нить. Не понимаю, о чём ты меня спрашиваешь. Спроси ещё раз."

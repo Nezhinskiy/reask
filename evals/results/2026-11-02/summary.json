@@ -1,0 +1,637 @@
+{
+  "date": "2026-11-02",
+  "claudeVersion": "2.1.312",
+  "agentModel": "claude-opus-5-5",
+  "judgeModel": "claude-sonnet-5-5",
+  "runsPerArm": 3,
+  "costUsd": 7.79,
+  "overall": {
+    "with": 0.81,
+    "without": 0.6
+  },
+  "cases": [
+    {
+      "name": "ci-setup",
+      "score": {
+        "with": 0.67,
+        "without": 0.67
+      },
+      "runs": {
+        "with": [
+          {
+            "score": 0.6,
+            "graders": {
+              "answerable-ending": false,
+              "cold-reader": true,
+              "grounded-recommendation": true,
+              "keeps-answers": true,
+              "pros-and-cons": false,
+              "skill-fired": true
+            },
+            "turns": 3,
+            "costUsd": 0.426,
+            "words": 1106,
+            "reply": "replies/ci-setup/with-1.md"
+          },
+          {
+            "score": 0.8,
+            "graders": {
+              "answerable-ending": false,
+              "cold-reader": true,
+              "grounded-recommendation": true,
+              "keeps-answers": true,
+              "pros-and-cons": true,
+              "skill-fired": true
+            },
+            "turns": 3,
+            "costUsd": 0.411,
+            "words": 1116,
+            "reply": "replies/ci-setup/with-2.md"
+          },
+          {
+            "score": 0.6,
+            "graders": {
+              "answerable-ending": false,
+              "cold-reader": true,
+              "grounded-recommendation": true,
+              "keeps-answers": true,
+              "pros-and-cons": false,
+              "skill-fired": true
+            },
+            "turns": 3,
+            "costUsd": 0.423,
+            "words": 1047,
+            "reply": "replies/ci-setup/with-3.md"
+          }
+        ],
+        "without": [
+          {
+            "score": 0.6,
+            "graders": {
+              "answerable-ending": false,
+              "cold-reader": true,
+              "grounded-recommendation": true,
+              "keeps-answers": true,
+              "pros-and-cons": false
+            },
+            "turns": 1,
+            "costUsd": 0.106,
+            "words": 413,
+            "reply": "replies/ci-setup/without-1.md"
+          },
+          {
+            "score": 0.6,
+            "graders": {
+              "answerable-ending": true,
+              "cold-reader": false,
+              "grounded-recommendation": true,
+              "keeps-answers": true,
+              "pros-and-cons": false
+            },
+            "turns": 1,
+            "costUsd": 0.31,
+            "words": 391,
+            "reply": "replies/ci-setup/without-2.md"
+          },
+          {
+            "score": 0.8,
+            "graders": {
+              "answerable-ending": true,
+              "cold-reader": true,
+              "grounded-recommendation": true,
+              "keeps-answers": true,
+              "pros-and-cons": false
+            },
+            "turns": 1,
+            "costUsd": 0.133,
+            "words": 347,
+            "reply": "replies/ci-setup/without-3.md"
+          }
+        ]
+      }
+    },
+    {
+      "name": "dead-code",
+      "score": {
+        "with": 0.8,
+        "without": 0.47
+      },
+      "runs": {
+        "with": [
+          {
+            "score": 0.8,
+            "graders": {
+              "answerable-ending": true,
+              "cold-reader": true,
+              "grounded-recommendation": true,
+              "pros-and-cons": true,
+              "skill-fired": true,
+              "stays-short": false
+            },
+            "turns": 4,
+            "costUsd": 0.187,
+            "words": 336,
+            "reply": "replies/dead-code/with-1.md"
+          },
+          {
+            "score": 0.8,
+            "graders": {
+              "answerable-ending": true,
+              "cold-reader": true,
+              "grounded-recommendation": true,
+              "pros-and-cons": true,
+              "skill-fired": true,
+              "stays-short": false
+            },
+            "turns": 5,
+            "costUsd": 0.19,
+            "words": 342,
+            "reply": "replies/dead-code/with-2.md"
+          },
+          {
+            "score": 0.8,
+            "graders": {
+              "answerable-ending": true,
+              "cold-reader": true,
+              "grounded-recommendation": true,
+              "pros-and-cons": true,
+              "skill-fired": true,
+              "stays-short": false
+            },
+            "turns": 4,
+            "costUsd": 0.189,
+            "words": 307,
+            "reply": "replies/dead-code/with-3.md"
+          }
+        ],
+        "without": [
+          {
+            "score": 0.4,
+            "graders": {
+              "answerable-ending": false,
+              "cold-reader": true,
+              "grounded-recommendation": false,
+              "pros-and-cons": false,
+              "stays-short": true
+            },
+            "turns": 1,
+            "costUsd": 0.093,
+            "words": 73,
+            "reply": "replies/dead-code/without-1.md"
+          },
+          {
+            "score": 0.4,
+            "graders": {
+              "answerable-ending": false,
+              "cold-reader": true,
+              "grounded-recommendation": false,
+              "pros-and-cons": false,
+              "stays-short": true
+            },
+            "turns": 1,
+            "costUsd": 0.085,
+            "words": 96,
+            "reply": "replies/dead-code/without-2.md"
+          },
+          {
+            "score": 0.6,
+            "graders": {
+              "answerable-ending": false,
+              "cold-reader": true,
+              "grounded-recommendation": true,
+              "pros-and-cons": false,
+              "stays-short": true
+            },
+            "turns": 1,
+            "costUsd": 0.081,
+            "words": 76,
+            "reply": "replies/dead-code/without-3.md"
+          }
+        ]
+      }
+    },
+    {
+      "name": "orders-migration",
+      "score": {
+        "with": 0.75,
+        "without": 0.25
+      },
+      "runs": {
+        "with": [
+          {
+            "score": 0.75,
+            "graders": {
+              "answerable-ending": false,
+              "cold-reader": true,
+              "grounded-recommendation": true,
+              "pros-and-cons": true,
+              "skill-fired": true
+            },
+            "turns": 4,
+            "costUsd": 0.31,
+            "words": 1103,
+            "reply": "replies/orders-migration/with-1.md"
+          },
+          {
+            "score": 0.75,
+            "graders": {
+              "answerable-ending": false,
+              "cold-reader": true,
+              "grounded-recommendation": true,
+              "pros-and-cons": true,
+              "skill-fired": true
+            },
+            "turns": 4,
+            "costUsd": 0.286,
+            "words": 956,
+            "reply": "replies/orders-migration/with-2.md"
+          },
+          {
+            "score": 0.75,
+            "graders": {
+              "answerable-ending": false,
+              "cold-reader": true,
+              "grounded-recommendation": true,
+              "pros-and-cons": true,
+              "skill-fired": true
+            },
+            "turns": 4,
+            "costUsd": 0.246,
+            "words": 926,
+            "reply": "replies/orders-migration/with-3.md"
+          }
+        ],
+        "without": [
+          {
+            "score": 0.25,
+            "graders": {
+              "answerable-ending": false,
+              "cold-reader": false,
+              "grounded-recommendation": true,
+              "pros-and-cons": false
+            },
+            "turns": 1,
+            "costUsd": 0.231,
+            "words": 260,
+            "reply": "replies/orders-migration/without-1.md"
+          },
+          {
+            "score": 0.25,
+            "graders": {
+              "answerable-ending": false,
+              "cold-reader": false,
+              "grounded-recommendation": true,
+              "pros-and-cons": false
+            },
+            "turns": 1,
+            "costUsd": 0.168,
+            "words": 280,
+            "reply": "replies/orders-migration/without-2.md"
+          },
+          {
+            "score": 0.25,
+            "graders": {
+              "answerable-ending": false,
+              "cold-reader": false,
+              "grounded-recommendation": true,
+              "pros-and-cons": false
+            },
+            "turns": 1,
+            "costUsd": 0.147,
+            "words": 271,
+            "reply": "replies/orders-migration/without-3.md"
+          }
+        ]
+      }
+    },
+    {
+      "name": "pricing-cache",
+      "score": {
+        "with": 0.92,
+        "without": 0.83
+      },
+      "runs": {
+        "with": [
+          {
+            "score": 1,
+            "graders": {
+              "answerable-ending": true,
+              "cold-reader": true,
+              "grounded-recommendation": true,
+              "pros-and-cons": true,
+              "skill-fired": true
+            },
+            "turns": 3,
+            "costUsd": 0.17,
+            "words": 456,
+            "reply": "replies/pricing-cache/with-1.md"
+          },
+          {
+            "score": 0.75,
+            "graders": {
+              "answerable-ending": true,
+              "cold-reader": true,
+              "grounded-recommendation": true,
+              "pros-and-cons": false,
+              "skill-fired": true
+            },
+            "turns": 4,
+            "costUsd": 0.182,
+            "words": 490,
+            "reply": "replies/pricing-cache/with-2.md"
+          },
+          {
+            "score": 1,
+            "graders": {
+              "answerable-ending": true,
+              "cold-reader": true,
+              "grounded-recommendation": true,
+              "pros-and-cons": true,
+              "skill-fired": true
+            },
+            "turns": 3,
+            "costUsd": 0.187,
+            "words": 487,
+            "reply": "replies/pricing-cache/with-3.md"
+          }
+        ],
+        "without": [
+          {
+            "score": 0.5,
+            "graders": {
+              "answerable-ending": false,
+              "cold-reader": false,
+              "grounded-recommendation": true,
+              "pros-and-cons": true
+            },
+            "turns": 1,
+            "costUsd": 0.142,
+            "words": 205,
+            "reply": "replies/pricing-cache/without-1.md"
+          },
+          {
+            "score": 1,
+            "graders": {
+              "answerable-ending": true,
+              "cold-reader": true,
+              "grounded-recommendation": true,
+              "pros-and-cons": true
+            },
+            "turns": 1,
+            "costUsd": 0.151,
+            "words": 210,
+            "reply": "replies/pricing-cache/without-2.md"
+          },
+          {
+            "score": 1,
+            "graders": {
+              "answerable-ending": true,
+              "cold-reader": true,
+              "grounded-recommendation": true,
+              "pros-and-cons": true
+            },
+            "turns": 1,
+            "costUsd": 0.13,
+            "words": 216,
+            "reply": "replies/pricing-cache/without-3.md"
+          }
+        ]
+      }
+    },
+    {
+      "name": "reliability-plan",
+      "score": {
+        "with": 0.87,
+        "without": 0.6
+      },
+      "runs": {
+        "with": [
+          {
+            "score": 0.8,
+            "graders": {
+              "answerable-ending": true,
+              "codes-explained": true,
+              "cold-reader": true,
+              "grounded-recommendation": true,
+              "pros-and-cons": false,
+              "skill-fired": true
+            },
+            "turns": 3,
+            "costUsd": 0.334,
+            "words": 651,
+            "reply": "replies/reliability-plan/with-1.md"
+          },
+          {
+            "score": 0.8,
+            "graders": {
+              "answerable-ending": true,
+              "codes-explained": true,
+              "cold-reader": true,
+              "grounded-recommendation": true,
+              "pros-and-cons": false,
+              "skill-fired": true
+            },
+            "turns": 3,
+            "costUsd": 0.329,
+            "words": 585,
+            "reply": "replies/reliability-plan/with-2.md"
+          },
+          {
+            "score": 1,
+            "graders": {
+              "answerable-ending": true,
+              "codes-explained": true,
+              "cold-reader": true,
+              "grounded-recommendation": true,
+              "pros-and-cons": true,
+              "skill-fired": true
+            },
+            "turns": 3,
+            "costUsd": 0.295,
+            "words": 602,
+            "reply": "replies/reliability-plan/with-3.md"
+          }
+        ],
+        "without": [
+          {
+            "score": 0.4,
+            "graders": {
+              "answerable-ending": false,
+              "codes-explained": true,
+              "cold-reader": false,
+              "grounded-recommendation": true,
+              "pros-and-cons": false
+            },
+            "turns": 1,
+            "costUsd": 0.254,
+            "words": 275,
+            "reply": "replies/reliability-plan/without-1.md"
+          },
+          {
+            "score": 0.6,
+            "graders": {
+              "answerable-ending": true,
+              "codes-explained": true,
+              "cold-reader": false,
+              "grounded-recommendation": true,
+              "pros-and-cons": false
+            },
+            "turns": 1,
+            "costUsd": 0.175,
+            "words": 286,
+            "reply": "replies/reliability-plan/without-2.md"
+          },
+          {
+            "score": 0.8,
+            "graders": {
+              "answerable-ending": true,
+              "codes-explained": true,
+              "cold-reader": true,
+              "grounded-recommendation": true,
+              "pros-and-cons": false
+            },
+            "turns": 1,
+            "costUsd": 0.159,
+            "words": 269,
+            "reply": "replies/reliability-plan/without-3.md"
+          }
+        ]
+      }
+    },
+    {
+      "name": "token-storage-ru",
+      "score": {
+        "with": 0.87,
+        "without": 0.8
+      },
+      "runs": {
+        "with": [
+          {
+            "score": 0.8,
+            "graders": {
+              "answerable-ending": false,
+              "cold-reader": true,
+              "grounded-recommendation": true,
+              "pros-and-cons": true,
+              "skill-fired": true,
+              "user-language": true
+            },
+            "turns": 3,
+            "costUsd": 0.251,
+            "words": 499,
+            "reply": "replies/token-storage-ru/with-1.md"
+          },
+          {
+            "score": 1,
+            "graders": {
+              "answerable-ending": true,
+              "cold-reader": true,
+              "grounded-recommendation": true,
+              "pros-and-cons": true,
+              "skill-fired": true,
+              "user-language": true
+            },
+            "turns": 3,
+            "costUsd": 0.235,
+            "words": 490,
+            "reply": "replies/token-storage-ru/with-2.md"
+          },
+          {
+            "score": 0.8,
+            "graders": {
+              "answerable-ending": false,
+              "cold-reader": true,
+              "grounded-recommendation": true,
+              "pros-and-cons": true,
+              "skill-fired": true,
+              "user-language": true
+            },
+            "turns": 3,
+            "costUsd": 0.223,
+            "words": 510,
+            "reply": "replies/token-storage-ru/with-3.md"
+          }
+        ],
+        "without": [
+          {
+            "score": 1,
+            "graders": {
+              "answerable-ending": true,
+              "cold-reader": true,
+              "grounded-recommendation": true,
+              "pros-and-cons": true,
+              "user-language": true
+            },
+            "turns": 1,
+            "costUsd": 0.186,
+            "words": 154,
+            "reply": "replies/token-storage-ru/without-1.md"
+          },
+          {
+            "score": 0.6,
+            "graders": {
+              "answerable-ending": false,
+              "cold-reader": false,
+              "grounded-recommendation": true,
+              "pros-and-cons": true,
+              "user-language": true
+            },
+            "turns": 1,
+            "costUsd": 0.191,
+            "words": 142,
+            "reply": "replies/token-storage-ru/without-2.md"
+          },
+          {
+            "score": 0.8,
+            "graders": {
+              "answerable-ending": false,
+              "cold-reader": true,
+              "grounded-recommendation": true,
+              "pros-and-cons": true,
+              "user-language": true
+            },
+            "turns": 1,
+            "costUsd": 0.177,
+            "words": 150,
+            "reply": "replies/token-storage-ru/without-3.md"
+          }
+        ]
+      }
+    }
+  ],
+  "criteria": {
+    "answerable-ending": {
+      "with": "10/18",
+      "without": "7/18"
+    },
+    "cold-reader": {
+      "with": "18/18",
+      "without": "10/18"
+    },
+    "grounded-recommendation": {
+      "with": "18/18",
+      "without": "16/18"
+    },
+    "keeps-answers": {
+      "with": "3/3",
+      "without": "3/3"
+    },
+    "pros-and-cons": {
+      "with": "13/18",
+      "without": "6/18"
+    },
+    "stays-short": {
+      "with": "0/3",
+      "without": "3/3"
+    },
+    "codes-explained": {
+      "with": "3/3",
+      "without": "3/3"
+    },
+    "user-language": {
+      "with": "3/3",
+      "without": "3/3"
+    }
+  },
+  "skillFired": "18/18"
+}

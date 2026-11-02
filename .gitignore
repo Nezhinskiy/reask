@@ -9,3 +9,10 @@ coverage.xml
 .mypy_cache/
 .ruff_cache/
 build/
+
+# claude plugin eval writes each resumed session next to its history file; only the history ships.
+evals/*/*.jsonl
+!evals/*/history.jsonl
+evals/results/*/aggregate-result.json
+evals/results/*/report.html
+evals/results/*/mock-recordings/

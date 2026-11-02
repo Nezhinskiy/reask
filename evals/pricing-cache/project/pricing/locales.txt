@@ -1,0 +1,9 @@
+de-DE
+de-AT
+fr-FR
+fr-BE
+it-IT
+es-ES
+nl-NL
+pl-PL
+# ... 40 in total

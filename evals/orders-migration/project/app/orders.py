@@ -1,0 +1,3 @@
+def create_order(customer, total_cents):
+    # region will be customer.billing_country mapped through REGIONS
+    ...

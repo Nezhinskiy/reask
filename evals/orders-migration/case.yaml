@@ -1,0 +1,12 @@
+schema_version: "1.1"
+name: orders-migration
+description: "Adding a NOT NULL column to a 40M-row table; three open questions."
+tags: [reask]
+runs: 3
+context:
+  history_file: history.jsonl
+  add_dirs: [project]
+execution:
+  max_turns: 10
+  allowed_tools: [Read, Glob, Grep, Skill]
+  prompt: "Sorry, I stepped away and lost the thread. I don't understand what you're asking me. Ask it again."
