@@ -32,7 +32,8 @@ MAX_TURNS = 20
 RUNS = 5
 SKILL_CALL = r'"skill"\s*:\s*"(?:[\w-]+:)?reask"'
 # A reply to "go with your recommendation" should confirm in a line or two, not brief again.
-SHORT_REPLY = r"\A\s*(?:\S+\s+){0,60}\S*\s*\Z"
+# The harness matches in JavaScript: no \A or \Z; without the m flag ^ and $ bound the message.
+SHORT_REPLY = r"^\s*(?:\S+\s+){0,60}\S*\s*$"
 STAGE1 = {
     "summary": str,
     "language": str,
@@ -168,7 +169,8 @@ def _case_yaml(name: str, description: str, tags: list[str], prompt: str, runs: 
 
 
 def _skill_grader(min_: int | None = None, max_: int | None = None) -> str:
-    bound = f"min: {min_}\n" if min_ is not None else f"max: {max_}\n"
+    # min defaults to 1 in the harness, so "never" needs min: 0 as well as max: 0.
+    bound = f"min: {min_}\n" if min_ is not None else f"min: 0\nmax: {max_}\n"
     return f"---\ntype: tool_used\ntool: Skill\ninput_match: '{SKILL_CALL}'\n{bound}---\n"
 
 

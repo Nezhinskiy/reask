@@ -139,7 +139,7 @@ def test_cases_pair_each_cell_with_the_same_graders(v2: Path) -> None:
         "demo-trigger-proceed",
     ]
     _, decided = cases["demo-trigger-decided"]
-    assert "max: 0" in decided["skill-silent"]
+    assert "min: 0\nmax: 0" in decided["skill-silent"]
     assert "type: regex" in decided["short-reply"]
     _, confused = cases["demo-trigger-confused"]
     assert "min: 1" in confused["skill-loads"]
