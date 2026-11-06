@@ -11,6 +11,10 @@ merging is the release: whatever `skills/reask/SKILL.md` `main` carries is what 
 Claude Code offers a plugin update only when `.claude-plugin/plugin.json`'s `version` changes,
 which is why every release bumps it.
 
+The Anthropic plugin directory reads neither: it follows the `directory` branch, because it takes
+only Markdown, text, JSON, YAML and images from an organization that is not Verified. That branch
+holds the plugin's own files and nothing else, so it has to be synced at every release (step 5).
+
 ## Repository settings
 
 The release depends on settings that live outside the tree. This is their expected state:
@@ -68,6 +72,20 @@ gh api repos/Nezhinskiy/reask/rulesets --jq '[.[] | .name]'                     
    ```bash
    uvx --refresh reask@X.Y.Z --version
    ```
+
+5. **Sync the plugin directory's branch.** Copy the plugin's files from the tag:
+
+   ```bash
+   git switch directory
+   git checkout vX.Y.Z -- .claude-plugin skills README.md LICENSE
+   git commit -m "chore: plugin files for the Anthropic directory, from vX.Y.Z"
+   git push origin directory
+   git switch main
+   ```
+
+   The directory scans the new commit within about 6 hours, or at once with **Check for new
+   commits** on the plugin's page. If a passing version does not go live by itself, select
+   **Publish** there.
 
 ## When something fails
 
