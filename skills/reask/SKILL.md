@@ -1,9 +1,9 @@
 ---
 name: reask
-description: "Use when the user asks for a pending question to be asked again or explained — /reask, \"ask again\", \"I don't get the question\", \"explain the options\", \"what are you asking me\" (in any language) — or when they answer a question of yours with confusion rather than with a choice."
+description: "Use when the user asks for a pending question to be asked again or explained — /reask, \"ask again\", \"I don't get the question\", \"explain the options\", \"what do you need from me\" (in any language) — or when they answer a question of yours with confusion rather than with a choice. Not for phrasing a new question of your own, and not when the user has answered or told you to go on."
 license: MIT
 metadata:
-  version: "0.3.0"
+  version: "0.4.0"
 ---
 
 # /reask
@@ -13,10 +13,13 @@ nothing but this message, can decide. `/reask` on its own means: I have lost the
 everything I need to choose. Make the decision answerable: do not decide it for the user, and do
 not swap it for a different question.
 
-Write in the language the user writes in; the English labels below are a template.
+Write in the language of the user's own words: what they typed or said, not pasted text, tool
+output or command names. The English labels below are a template.
 
 ## Which questions
 
+- **What is pending:** every decision you asked for that the user has not answered, including
+  ones asked before your last message. If the user named or bounced some, re-ask only those.
 - **Several questions were asked together** (a multi-question form, a numbered list): re-ask only
   the ones the user bounced with `/reask` or with confusion, and keep the answers they already
   gave. Give the shared context once, then each question as its own block. The last block gets
@@ -35,7 +38,8 @@ write anything:
    command's output), not at a comment or a name that describes it. Change nothing and do not
    start the work. Before deciding it cannot be checked, search the project once for where that
    fact would live. If it still cannot be checked, say which fact is unchecked and make it what
-   would change your mind.
+   would change your mind. If a longer check (research, a measurement) would settle it, offer
+   that check as one of the answers, with what it would show and what it costs; do not start it.
 3. Decide again. The answer may be your first lean, another option, or a better option that
    surfaced while you argued. A new option joins the options, marked as new, with its pros and
    cons, and becomes one of the answers in the question.
@@ -55,7 +59,8 @@ For each question, in this order, with the part labels in bold:
    State facts, not how you found them.
 2. **A live example**, when the options' pros and cons alone do not show the difference, and
    always for a close call: one concrete case with real values from this work (an actual record,
-   query or number) carried through every option, usually as a small table.
+   query or number) carried through every option, usually as a small table. When the decision
+   changes what the product's users see or do, the example shows it from their side.
 3. **Options.** Every option, the one you recommend included, with **Pros** and **Cons**: one
    line per item, the strongest first, and only as many as change the decision. Each con at full
    strength, as the option's strongest critic would put it. At most three options in full; name
@@ -69,7 +74,8 @@ For each question, in this order, with the part labels in bold:
 5. **The question.** The decision as one answerable question, asked fresh, with no preamble or
    lean carried over from the original wording. Ask it with your harness's structured-question
    tool if it has one (`AskUserQuestion` in Claude Code), all re-asked questions in one call:
-   short labels, recommended first. Otherwise ask it as plain text.
+   short labels, recommended first. Otherwise ask it as plain text, and with several questions,
+   end on all of them together, each answerable in a word.
 
 ## How deep
 
