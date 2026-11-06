@@ -138,6 +138,26 @@ recommendation to facts from your work, so you can overrule it with one reply.
 It does not ask questions of its own. Tools that interview you before a task starts decide *what*
 to ask; reask works on a question the agent has already asked and you cannot yet answer.
 
+## Troubleshooting
+
+**`/reask` is not recognised.** The command depends on how you installed it: `/reask` with the
+Skills CLI or Python, `/reask:reask` as a Claude Code plugin, `$reask` in Codex. Plain words work
+in all of them: "ask again", "I don't get the question".
+
+**It installed, but nothing happens.** Start a new session, so the agent picks up the new skill.
+Then check that the file is there: `~/.claude/skills/reask/SKILL.md` for a global Claude Code
+install. For the plugin, run `/plugin` and look for `reask`.
+
+**It says nothing is pending.** The agent found no open question in this session, for example
+because it has already moved on. Name the decision: `/reask the question about the cache key`.
+
+**The re-ask misses what you need.** Say what is missing, and it re-asks with that in mind:
+`/reask shorter, only what differs` or `/reask I still don't see the risk in option B`.
+
+**Something else.** Open a
+[skill behaviour issue](https://github.com/Nezhinskiy/reask/issues/new?template=skill_behaviour.yml)
+with the transcript.
+
 ## Contributing and security
 
 Behaviour reports with a transcript are the most useful contribution; see
