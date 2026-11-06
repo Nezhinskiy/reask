@@ -3,6 +3,10 @@
 Newest first. Every entry is written for users: a release's section becomes its GitHub Release
 notes.
 
+## Unreleased
+
+- The README has a Troubleshooting section.
+
 ## 0.4.0 (2026-11-06)
 
 - The re-ask is written in the language of your own words, not of text you pasted or a command
