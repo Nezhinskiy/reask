@@ -28,10 +28,9 @@ load the skill; change it only with an example of the trigger it fixes.
 
 ## Development
 
-Requires [uv](https://docs.astral.sh/uv/).
+Requires [uv](https://docs.astral.sh/uv/). Clone the repository, then:
 
 ```bash
-git clone https://github.com/Nezhinskiy/reask && cd reask
 uv sync
 ```
 
