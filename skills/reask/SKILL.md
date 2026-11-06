@@ -19,7 +19,7 @@ output or command names. The English labels below are a template.
 ## Which questions
 
 - **What is pending:** every decision you asked for that the user has not answered, including
-  ones asked before your last message. If the user named some, re-ask those.
+  ones asked before your last message. If the user named or bounced some, re-ask only those.
 - **Several questions were asked together** (a multi-question form, a numbered list): re-ask only
   the ones the user bounced with `/reask` or with confusion, and keep the answers they already
   gave. Give the shared context once, then each question as its own block. The last block gets

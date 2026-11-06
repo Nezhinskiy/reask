@@ -32,7 +32,8 @@ and claude.ai routes are
 /reask
 ```
 
-Installed as a Claude Code plugin, the command is `/reask:reask`.
+Installed as a Claude Code plugin, the command is `/reask:reask`. In Codex, type `$reask`. Plain
+words work too: "ask again", "I don't get the question".
 
 **2. Only the questions worth thinking about.** When Claude Code asks several questions in a form,
 answer the easy ones as usual and write `/reask` in the Other field of the ones you want to think
@@ -86,10 +87,10 @@ With reask installed, the same words bring back:
 >
 > **Recommendation:** A, leaning. It replaces my earlier pick (B) because adding a column with a fixed default is instant, so the column can be NOT NULL from the start. B's advantage only matters while the fill-in script is running.
 
-Both replies are real output from Claude Opus 5.5 with reask 0.3.1 on a small test project, trimmed
-to this one question. The first option here is new: the agent had not offered it before, and it replaced its
-own earlier plan. That does not happen on every question, and the option is yours to take or
-leave.
+Both replies are real output from Claude Opus 5.5 with reask 0.3.0 on a small test project, trimmed
+to this one question. The first option here is new: the agent had not offered it before, and it
+replaced its own earlier plan. That does not happen on every question, and the option is yours to
+take or leave.
 
 In Claude Code the question arrives with its answers as options to pick, the recommended one
 first.
