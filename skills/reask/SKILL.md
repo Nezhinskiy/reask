@@ -3,7 +3,7 @@ name: reask
 description: "Use when the user asks for a pending question to be asked again or explained — /reask, \"ask again\", \"I don't get the question\", \"explain the options\", \"what do you need from me\" (in any language) — or when they answer a question of yours with confusion rather than with a choice. Not for phrasing a new question of your own, and not when the user has answered or told you to go on."
 license: MIT
 metadata:
-  version: "0.3.1"
+  version: "0.4.0"
 ---
 
 # /reask
