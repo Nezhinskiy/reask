@@ -3,6 +3,25 @@
 Newest first. Every entry is written for users: a release's section becomes its GitHub Release
 notes.
 
+## 0.4.0 (2026-11-06)
+
+- The re-ask is written in the language of your own words, not of text you pasted or a command
+  you ran.
+- It covers every decision still waiting on you, including ones asked before the agent's last
+  message, and with several questions it ends on all of them together.
+- When the decision changes what your product's users see, the live example shows it from their
+  side.
+- When a longer check would settle a close call, the agent offers that check as one of the
+  answers instead of guessing.
+- The skill no longer loads when the agent is about to ask a new question of its own, or when you
+  have already answered.
+- The plugin has an icon and listing details for the Anthropic plugin directory: a display name
+  and links to the documentation, support and privacy sections.
+- The README opens with a one-line install for Claude Code, Codex, Cursor and Gemini CLI, shows
+  how to use reask on a single question in a form, and replaces the hand-written example with real
+  output. It has a Privacy section: reask collects and sends nothing.
+- CI checks the plugin with the plugin directory's own validation profile.
+
 ## 0.3.0 (2026-09-29)
 
 - Every re-ask now starts from the context, whatever the question: what is being built, why the
