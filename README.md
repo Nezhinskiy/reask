@@ -18,8 +18,8 @@ npx skills add Nezhinskiy/reask --global --agent cursor        # Cursor
 npx skills add Nezhinskiy/reask --global --agent gemini-cli    # Gemini CLI
 ```
 
-These use the [Skills CLI](https://github.com/vercel-labs/skills). The Claude Code plugin, Python
-and claude.ai routes are
+These use the [Skills CLI](https://github.com/vercel-labs/skills), which needs Node.js 22.20 or
+later. The Claude Code plugin, Python and claude.ai routes are
 [further down](https://github.com/Nezhinskiy/reask#more-ways-to-install). reask is an
 [Agent Skill](https://agentskills.io): one file,
 [`SKILL.md`](https://github.com/Nezhinskiy/reask/blob/main/skills/reask/SKILL.md).
@@ -110,7 +110,7 @@ installs it for every agent the Skills CLI knows.
 A plugin's skills are namespaced, so installed this way it answers to `/reask:reask`, and to plain
 requests such as "ask again". Updates arrive with `/plugin marketplace update reask`.
 
-**Python**, for Claude Code:
+**Python** 3.11 or later, for Claude Code:
 
 ```bash
 uvx reask install
@@ -147,6 +147,12 @@ in all of them: "ask again", "I don't get the question".
 **It installed, but nothing happens.** Start a new session, so the agent picks up the new skill.
 Then check that the file is there: `~/.claude/skills/reask/SKILL.md` for a global Claude Code
 install. For the plugin, run `/plugin` and look for `reask`.
+
+**The install fails before anything is written.** The route's runtime is missing or too old. The
+`npx` lines need Node.js 22.20 or later. The Python route needs Python 3.11 or later: on an older
+Python, `uvx` says the current Python version `does not satisfy Python>=3.11`, and `pipx` says
+`No matching distribution found for reask`. Upgrade the runtime, or use a route that needs
+neither from [More ways to install](https://github.com/Nezhinskiy/reask#more-ways-to-install).
 
 **It says nothing is pending.** The agent found no open question in this session, for example
 because it has already moved on. Name the decision: `/reask the question about the cache key`.

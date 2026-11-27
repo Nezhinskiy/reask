@@ -6,6 +6,9 @@ notes.
 ## Unreleased
 
 - The README has a Troubleshooting section.
+- The README says which runtime each install route needs (Node.js 22.20 or later for the Skills
+  CLI, Python 3.11 or later for the Python route), and Troubleshooting covers an install that
+  fails because that runtime is missing or too old.
 
 ## 0.4.0 (2026-11-06)
 
