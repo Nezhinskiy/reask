@@ -4,6 +4,13 @@
 [![PyPI](https://img.shields.io/pypi/v/reask)](https://pypi.org/project/reask/)
 [![License: MIT](https://img.shields.io/badge/license-MIT-blue)](https://github.com/Nezhinskiy/reask/blob/main/LICENSE)
 
+reask is an [Agent Skill](https://agentskills.io) for developers who work with Claude Code, Codex,
+Cursor or Gemini CLI. When your coding agent asks a question you cannot answer, `/reask` makes it
+ask the same question again as a briefing you can decide from.
+
+**Status:** alpha. Latest release 0.4.0 (2026-11-06), one maintainer. CI tests the Claude Code
+installs only; the Codex, Cursor and Gemini CLI install lines below are not tested here.
+
 **Five letters, and you understand the decision.** Your agent asked you something and you cannot
 answer it: you lost the context, the options are jargon, or you cannot see what actually differs
 between them. Type `/reask`. The same question comes back written for someone who just walked in:
@@ -18,11 +25,9 @@ npx skills add Nezhinskiy/reask --global --agent cursor        # Cursor
 npx skills add Nezhinskiy/reask --global --agent gemini-cli    # Gemini CLI
 ```
 
-These use the [Skills CLI](https://github.com/vercel-labs/skills). CI installs the skill for Claude
-Code only; the Codex, Cursor and Gemini CLI lines go through the same Skills CLI and are not tested
-here. The Claude Code plugin, Python and claude.ai routes are
-[further down](https://github.com/Nezhinskiy/reask#more-ways-to-install). reask is an
-[Agent Skill](https://agentskills.io): one file,
+These use the [Skills CLI](https://github.com/vercel-labs/skills). The Claude Code plugin, Python
+and claude.ai routes are [further down](https://github.com/Nezhinskiy/reask#more-ways-to-install).
+The skill is one file,
 [`SKILL.md`](https://github.com/Nezhinskiy/reask/blob/main/skills/reask/SKILL.md).
 
 ## How to use it
