@@ -18,7 +18,9 @@ npx skills add Nezhinskiy/reask --global --agent cursor        # Cursor
 npx skills add Nezhinskiy/reask --global --agent gemini-cli    # Gemini CLI
 ```
 
-These use the [Skills CLI](https://github.com/vercel-labs/skills). The Claude Code plugin, Python
+These use the [Skills CLI](https://github.com/vercel-labs/skills).
+They need Node.js 22.20 or later, the version the Skills CLI 1.7.0
+requires; `npx` ships with Node.js. The Claude Code plugin, Python
 and claude.ai routes are
 [further down](https://github.com/Nezhinskiy/reask#more-ways-to-install). reask is an
 [Agent Skill](https://agentskills.io): one file,
@@ -110,7 +112,7 @@ installs it for every agent the Skills CLI knows.
 A plugin's skills are namespaced, so installed this way it answers to `/reask:reask`, and to plain
 requests such as "ask again". Updates arrive with `/plugin marketplace update reask`.
 
-**Python**, for Claude Code:
+**Python**, for Claude Code. This route needs Python 3.11 or later:
 
 ```bash
 uvx reask install
@@ -143,6 +145,17 @@ to ask; reask works on a question the agent has already asked and you cannot yet
 **`/reask` is not recognised.** The command depends on how you installed it: `/reask` with the
 Skills CLI or Python, `/reask:reask` as a Claude Code plugin, `$reask` in Codex. Plain words work
 in all of them: "ask again", "I don't get the question".
+
+**The install stops on Python 3.10 or older.** `uvx reask install` and `pipx run reask install`
+need Python 3.11 or later, and the resolver gives up before it installs anything:
+
+```text
+error: No solution found when resolving tool dependencies
+  cause: Because the current Python version (3.10.22) does not satisfy Python>=3.11 and all versions of reask depend on Python>=3.11, we can conclude that all versions of reask cannot be used.
+```
+
+Point the command at a newer interpreter, for example `uvx --python 3.11 reask install`, or
+`pipx run --python 3.11 reask install`.
 
 **It installed, but nothing happens.** Start a new session, so the agent picks up the new skill.
 Then check that the file is there: `~/.claude/skills/reask/SKILL.md` for a global Claude Code

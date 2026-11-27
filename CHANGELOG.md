@@ -6,6 +6,8 @@ notes.
 ## Unreleased
 
 - The README has a Troubleshooting section.
+- The README states the Node.js and Python versions the install routes need, and Troubleshooting
+  covers an install that stops on an older interpreter.
 
 ## 0.4.0 (2026-11-06)
 
