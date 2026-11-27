@@ -103,6 +103,16 @@ and the option is yours to take or leave.
 In Claude Code the question arrives with its answers as options to pick, the recommended one
 first.
 
+## Why it works
+
+Agents ask good questions in the wrong register: they have the whole session in context and
+you do not. reask fixes the register, not the question. It keeps the decision yours (it never
+starts on its default), states each option's downside at full strength, and ties the
+recommendation to facts from your work, so you can overrule it with one reply.
+
+It does not ask questions of its own. Tools that interview you before a task starts decide *what*
+to ask; reask works on a question the agent has already asked and you cannot yet answer.
+
 ## More ways to install
 
 Leaving off `--global` installs the skill into the current project instead, and `--agent '*'`
@@ -135,16 +145,6 @@ Settings > Capabilities > Skills.
 
 **By hand:** copy `skills/reask/SKILL.md` into a `reask/` folder in your agent's skills
 directory.
-
-## Why it works
-
-Agents ask good questions in the wrong register: they have the whole session in context and
-you do not. reask fixes the register, not the question. It keeps the decision yours (it never
-starts on its default), states each option's downside at full strength, and ties the
-recommendation to facts from your work, so you can overrule it with one reply.
-
-It does not ask questions of its own. Tools that interview you before a task starts decide *what*
-to ask; reask works on a question the agent has already asked and you cannot yet answer.
 
 ## Troubleshooting
 
