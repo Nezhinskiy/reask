@@ -88,10 +88,12 @@ With reask installed, the same words bring back:
 >
 > **Recommendation:** A, leaning. It replaces my earlier pick (B) because adding a column with a fixed default is instant, so the column can be NOT NULL from the start. B's advantage only matters while the fill-in script is running.
 
-Both replies are real output from Claude Opus 5.5 with reask 0.3.0 on a small test project, trimmed
-to this one question. The first option here is new: the agent had not offered it before, and it
-replaced its own earlier plan. That does not happen on every question, and the option is yours to
-take or leave.
+Both replies are real output from Claude Opus 5.5 on a small test project, trimmed to this one
+question. The reask reply came from a pre-release build between 0.3.0 and 0.4.0, whose `SKILL.md`
+differs from the released 0.3.0 only in its version number; 0.4.0 has changed the skill since. The
+transcript is not published in this repository. The first option here is new: the agent had not
+offered it before, and it replaced its own earlier plan. That does not happen on every question,
+and the option is yours to take or leave.
 
 In Claude Code the question arrives with its answers as options to pick, the recommended one
 first.
