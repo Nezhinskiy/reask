@@ -11,6 +11,9 @@ judged by how an agent behaves with the change, not by how the prose reads.
   with the transcript. A transcript is the reproduction.
 - **A change to what the skill does**: open an issue first. The briefing's five parts and its
   word budget are deliberate, and a proposal is cheaper to discuss than a pull request.
+- **A task to pick up**: issues labelled
+  [`help wanted`](https://github.com/Nezhinskiy/reask/issues?q=is%3Aissue+is%3Aopen+label%3A%22help+wanted%22)
+  say what done looks like, how to verify it and where to start.
 - **A security problem**: see [SECURITY.md](SECURITY.md). Do not open a public issue.
 
 ## Changing `SKILL.md`
@@ -60,6 +63,16 @@ or copy it over your installed skill with `uv run reask install --force`.
 Test behaviour, not incidental shape: each assertion should fail if the behaviour it names
 breaks. When you add an assertion, break the line of code it protects and watch the test go red
 before you trust it; say in the pull request which line you broke.
+
+## Coding assistants
+
+You may use coding assistants. Say in the pull request which parts a tool wrote. Run the checks
+under [Development](#development) (`uv run pytest --cov`, `uv run ruff check .`,
+`uv run ruff format --check .`, `uv run mypy`, `uv run python -m scripts.check_skill`) before you
+open it. Read every changed line and be able to explain it: a pull request whose author cannot
+answer a reviewer's question about its own code is closed. A `SKILL.md` change still needs the
+before and after transcripts above, from real runs. Issues and comments must be written, or at
+least checked, by you.
 
 ## Pull requests
 

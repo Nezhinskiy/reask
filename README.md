@@ -169,7 +169,11 @@ with the transcript.
 ## Contributing and security
 
 Behaviour reports with a transcript are the most useful contribution; see
-[CONTRIBUTING.md](https://github.com/Nezhinskiy/reask/blob/main/CONTRIBUTING.md). Report
+[CONTRIBUTING.md](https://github.com/Nezhinskiy/reask/blob/main/CONTRIBUTING.md). Tasks that are
+ready to pick up carry the
+[`help wanted`](https://github.com/Nezhinskiy/reask/issues?q=is%3Aissue+is%3Aopen+label%3A%22help+wanted%22)
+label. You may use a coding assistant: say in the pull request which parts it wrote, and be ready
+to explain every changed line yourself. Report
 vulnerabilities privately, as described in
 [SECURITY.md](https://github.com/Nezhinskiy/reask/blob/main/SECURITY.md). Every release is built
 in CI and carries a

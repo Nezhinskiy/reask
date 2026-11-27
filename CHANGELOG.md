@@ -6,6 +6,8 @@ notes.
 ## Unreleased
 
 - The README has a Troubleshooting section.
+- The README opens with what reask is and a status line, and links the `help wanted` issues.
+  CONTRIBUTING says how to contribute with a coding assistant.
 
 ## 0.4.0 (2026-11-06)
 

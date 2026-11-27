@@ -11,3 +11,8 @@ For a SKILL.md change: a before and an after transcript of the same situation, a
 model you ran them on. For code: what you ran, pasted, not paraphrased, and for each new
 assertion the line of code you broke to watch it fail.
 -->
+
+## Coding assistants
+
+- [ ] If a coding assistant wrote part of this change, I name those parts above, and I have read
+      every changed line and can explain it.
